@@ -1,0 +1,23 @@
+{
+  "name": "grape-cms",
+  "version": "0.0.1",
+  "description": "node.js based CMS ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WE-FE-TEAM/grape-cms.git"
+  },
+  "keywords": [
+    "CMS",
+    "node-CMS"
+  ],
+  "author": "grape-team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WE-FE-TEAM/grape-cms/issues"
+  },
+  "homepage": "https://github.com/WE-FE-TEAM/grape-cms#readme"
+}
