@@ -1,0 +1,71 @@
+#!/bin/sh
+
+# author  : wangcheng
+
+######################################
+#      grape project 初始化脚本
+#   1. copy node_modules到每个模块
+#   2. copy index.js 到 dist/app中
+######################################
+
+
+Prepare(){
+    cwd=$(pwd)
+    projectRoot=${cwd}
+    srcDir="${projectRoot}/src/"
+    nodeModulesDir="${projectRoot}/node_modules/"
+    distDir="${projectRoot}/dist/"
+    distAppDir="${distDir}/app/"
+
+
+
+    if [ ! -d ${nodeModulesDir} ]
+    then
+        echo "没有node_modules目录, 请先执行npm install"
+        exit
+    fi
+
+    if [ ! -d ${distDir} ]
+    then
+        mkdir ${distDir}
+    fi
+
+    if [ ! -d ${distAppDir} ]
+    then
+        mkdir ${distAppDir}
+    fi
+}
+
+CopyNodeModules(){
+    cd ${srcDir}
+    for module in `ls .`
+    do
+        if [ -d ${module} ]
+        then
+            echo ${module}
+            cp -rf ${nodeModulesDir} "./${module}/node_modules"
+        fi
+    done
+}
+
+CopyIndex(){
+    indexFile="${srcDir}/index.js"
+#    babelFile="${srcDir}/.babelrc"
+    if [ -f ${indexFile} ]
+    then
+        cp ${indexFile} ${distAppDir}
+    fi
+
+#    if [ -f ${babelFile} ]
+#    then
+#        cp ${babelFile} ${distAppDir}
+#    fi
+}
+
+Copy(){
+#    CopyNodeModules
+    CopyIndex
+}
+
+Prepare
+Copy

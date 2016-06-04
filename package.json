@@ -4,7 +4,9 @@
   "description": "node.js based CMS ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "server:dev": "NODE_ENV=development nodemon --watch dist/app --watch dist/resource-map --watch dist/views dist/app/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "env:init": "scripty"
   },
   "repository": {
     "type": "git",
@@ -19,5 +21,13 @@
   "bugs": {
     "url": "https://github.com/WE-FE-TEAM/grape-cms/issues"
   },
-  "homepage": "https://github.com/WE-FE-TEAM/grape-cms#readme"
+  "homepage": "https://github.com/WE-FE-TEAM/grape-cms#readme",
+  "dependencies": {
+    "babel-plugin-transform-runtime": "^6.4.3",
+    "grapejs": "^1.0.14",
+    "validate.js": "^0.10.0"
+  },
+  "devDependencies": {
+    "scripty": "^1.6.0"
+  }
 }
