@@ -11,6 +11,7 @@
 'use strict';
 
 const validate = require("validate.js");
+const mongoose = require('mongoose');
 
 
 class Base extends grape.ControllerBase {
@@ -44,6 +45,10 @@ class Base extends grape.ControllerBase {
         }
 
         return true;
+    }
+
+    model( modelName ){
+        return mongoose.model( modelName );
     }
 
 }

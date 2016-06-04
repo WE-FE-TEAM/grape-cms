@@ -24,7 +24,10 @@
   "homepage": "https://github.com/WE-FE-TEAM/grape-cms#readme",
   "dependencies": {
     "babel-plugin-transform-runtime": "^6.4.3",
-    "grapejs": "^1.0.14",
+    "connect-redis": "^3.0.2",
+    "express-session": "^1.13.0",
+    "grapejs": "^1.1.0",
+    "mongoose": "^4.4.19",
     "validate.js": "^0.10.0"
   },
   "devDependencies": {

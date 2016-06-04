@@ -20,9 +20,17 @@
     password : '登录密码',
     // 0: 系统管理员; 1: 普通管理员; 2: 普通用户
     level : [0|1|2],
+    //用户是否可正常使用: 0 正常; 1 被禁用
+    enabled : 0,
     //用户对应的多个 角色
     roles : [ 'role_id 1', 'role_id 2' ]
 }
+```
+
+约束:
+
+```javascript
+db.users.createIndex( { userName : 1}, { unique : true } )
 ```
 
 ## 角色表 db.roles
