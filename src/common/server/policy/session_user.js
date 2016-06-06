@@ -12,14 +12,20 @@ const PolicyBase = grape.get('policy_base');
 class SessionUserPolicy extends PolicyBase{
 
     async execute(){
-        let session = this.req.session;
+        let http = this.http;
+        let session = http.req.session;
         let userName = session.userName;
 
         let User = this.model('User');
 
-        let result = await User.find({ userName : userName}).exec();
+        let result = await User.findOne({ userName : userName}).exec();
+        
+        if( result ){
+            let user = new User( result );
+            http.setUser( user );
+        }
 
-        grape.console.log( result );
+        // grape.console.log( result );
     }
 }
 

@@ -12,28 +12,31 @@ const ControllerBase = grape.get('controller_base');
 
 class PassportController extends ControllerBase{
 
+    //登陆之后, 跳转页面逻辑
+    afterLoginJump(){
+        let session = this.http.req.session;
+        let url = session.loginJump || this.urls.dashIndex;
+        this.http.redirect( url );
+    }
+
     //渲染登录页面
     async loginAction(){
 
         let session = this.http.req.session;
-        let pv = session.pv || 0;
-        pv++;
 
-        session.pv = pv;
+        let user = this.http.getUser();
+        if( user ){
+            //用户已经登陆了
+            return this.afterLoginJump();
+        }
 
-        let User = this.model('User');
+        //读取上一次登陆的错误信息
+        let errorMsg = session.loginError;
+        session.loginError = null;
+        
+        this.http.assign('loginError', errorMsg);
 
-        let temp = new User({
-            userName : 'test1',
-            password : 'pwd',
-            roles :  [ '1111', '222', '333' ]
-        });
-
-        let result = await temp.save();
-
-        grape.console.log( result );
-
-        this.http.res.end('in login page, pv: ' + pv);
+        this.http.render('passport/page/login/login.tpl');
     }
 
     //执行登录操作
@@ -56,21 +59,42 @@ class PassportController extends ControllerBase{
         }).exec();
 
         if( result ){
-            //登录成功
-            return this.json({
-                status : 0,
-                data : {
-                    userName : result.userName
-                }
-            });
+
+            if( ! User.isUserDisabled( result ) ){
+                //登录成功
+                this.http.req.session.userName = userName;
+
+                return this.afterLoginJump();
+                
+            }
+
+            this.http.req.session.loginError = '用户被禁用!!';
+
+            
         }else{
             //登录失败
-            return this.json({
-                status : -1,
-                message : '用户不存在, 或者用户名/密码错误'
-            });
+            this.http.req.session.loginError = '用户不存在, 或者用户名/密码错误!!';
+            
         }
 
+        return this.http.redirect( this.urls.logInPage );
+
+    }
+
+    //同步接口, 退出登陆状态
+    logoutAction(){
+
+        this.http.req.session.userName = null;
+        //跳转到登陆页
+        this.http.redirect( this.urls.logInPage );
+    }
+
+    //TODO delete  开发时使用,获取当前登陆用户的信息
+    async userInfoAction(){
+        let http = this.http;
+        let user = http.getUser();
+        
+        this.json( user );
     }
 }
 

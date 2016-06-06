@@ -20,6 +20,7 @@ class HttpBase extends Http {
 
         super.init( ...data );
 
+        this.user = null;
     }
 
     /**

@@ -42,11 +42,35 @@ let userSchema = mongoose.Schema({
 });
 
 
+/////////////////// 静态方法  ///////////////////////
+
 //用户密码加密后存储
 userSchema.statics.hashPassword = function( password ){
     const salt = '`12wrpowjf[wu2u;-=JKLjw';
     const hash = crypto.createHash('sha256');
     return hash.update('gcms' + password + salt).digest('hex');
+};
+
+
+/**
+ * 用户是否被禁用
+ * @param userDoc {object}
+ * @returns {*|boolean}
+ */
+userSchema.statics.isUserDisabled = function( userDoc ){
+    return userDoc && userDoc.enabled === 1;
+};
+
+
+////////////////  实例方法  //////////////////
+
+
+/**
+ * 判断当前用户是否被禁用
+ * @return {boolean}  true 当前用户被禁用; false 用户可以正常登陆系统
+ */
+userSchema.methods.isUserDisabled = function(){
+    return this.enabled === 1;
 };
 
 

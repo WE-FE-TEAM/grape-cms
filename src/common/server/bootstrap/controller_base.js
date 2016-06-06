@@ -13,12 +13,21 @@
 const validate = require("validate.js");
 const mongoose = require('mongoose');
 
+const cms = global.cms;
+
 
 class Base extends grape.ControllerBase {
 
     init(http){
         super.init(http);
 
+        //cms config
+        this.cmsConfig = grape.configManager.getConfig('cms');
+        
+        //系统中的URL
+        this.urls = this.cmsConfig.urls;
+
+        http.assign('cms_urls', this.urls );
     }
 
     json( data ){

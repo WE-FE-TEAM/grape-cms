@@ -10,6 +10,14 @@ const path = require('path');
 const Entrance = require('grapejs');
 
 
+//CMS中全局对象
+let cms = {};
+
+Object.defineProperty( global, 'cms', {
+    value : cms,
+    writable : false
+} );
+
 let appPathRoot = __dirname;
 let appStaticPath = path.dirname(appPathRoot) + '/static';
 let appViewPath = path.dirname(appPathRoot) + '/views';

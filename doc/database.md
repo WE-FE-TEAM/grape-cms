@@ -48,6 +48,12 @@ db.users.createIndex( { userName : 1}, { unique : true } )
 }
 ```
 
+约束:
+
+```javascript
+db.roles.createIndex( { roleName : 1}, { unique : true } )
+```
+
 
 ## 栏目表 db.channels
 
@@ -56,8 +62,8 @@ db.users.createIndex( { userName : 1}, { unique : true } )
     _id : '',
     channelName : '栏目名',
     url : '查看栏目的URL',
-    //栏目类型: parent: 容器栏目; article: 文章栏目; json: 数据栏目; asset_upload: 图片上传栏目 
-    type : 'article',
+    //栏目类型: container: 容器栏目; article: 文章栏目; json: 数据栏目; asset_upload: 图片上传栏目 
+    channelType : 'article',
     //如果是 文章栏目, 则该栏目下的文章, 应该必须具备的一些字段模板
     articleTemplate : {},
     //父栏目的ID
@@ -82,11 +88,11 @@ db.users.createIndex( { userName : 1}, { unique : true } )
         'module+controller+action',
         'module+controller+action'
     ]
-    url : '该操作的URL',
+    //url : '该操作的URL',
     //如果对当前动作有权限, 那么对关联的其他动作也有权限
     //subUrls不能直接设置权限(即不会出现在权限编辑界面上), 权限是完全关联到 对应的主action上的
     //比如 "新增文章" 动作, 其实包含了  1. 显示新增文章入口页面的URL; 2. 点击保存的URL
-    subUrls : [ '该动作相关联的其他动作1', '关联的其他动作2' ]
+    //subUrls : [ '该动作相关联的其他动作1', '关联的其他动作2' ]
 }
 ```
 
