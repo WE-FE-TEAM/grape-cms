@@ -20,10 +20,12 @@ let roleSchema = new mongoose.Schema(
                 background : false
             }
         },
-        permissions : [ String ]
-}, {
-    collection : 'roles'
-}
+        permissions : [ mongoose.Schema.Types.Mixed ]
+}, 
+    {
+        collection : 'roles',
+        timestamps: { createdAt: 'createdAt', updatedAt : 'updatedAt' }
+    }
 );
 
 

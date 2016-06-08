@@ -6,6 +6,13 @@
 
 权限控制, 只控制到 栏目(`channel`) 级别, **不再**细化到具体的文件级别.
 
+栏目大体分为两类: 系统级和用户级.
+
+* 系统级栏目: 系统自带, 不能新增删除;
+    * 系统级栏目包括: channelManage:  栏目管理; roleManage : 角色管理; userManage 用户管理
+* 用户级栏目: 允许用户新增/编辑/删除;
+    * 用户级栏目包括: container: 容器栏目; article: 文章栏目; data: 数据栏目; resource: 图片上传栏目; 
+
 一个权限, 由2部分构成: 栏目 以及 对栏目下的操作: 栏目由 栏目ID(channelId) 来限定; 对栏目下操作, 通过 `operationName` 来限定.
 
 一个操作(`operationName`), 可能对应1个或多个真实的`URL`, 每个`URL` 都解析为 `module`+`controller`+`action` 来表示 
@@ -39,11 +46,16 @@ db.users.createIndex( { userName : 1}, { unique : true } )
 {
     _id : '',
     roleName : '角色名',
-    //该角色拥有的权限: operationName&channelId 来表达一个权限
+    //该角色拥有的权限:  operationGroup  channelId 来表达一个权限
     permissions : [
-        'operationName&channelId',
-        'operationName&channelId',
-        'operationName&channelId'
+        {
+            operationGroup : 'xxx',
+            channelId : 'channelId'
+        },
+        {
+            operationGroup : 'xxx',
+            channelId : 'channelId'
+        }
     ]
 }
 ```
@@ -62,14 +74,17 @@ db.roles.createIndex( { roleName : 1}, { unique : true } )
     _id : '',
     channelName : '栏目名',
     url : '查看栏目的URL',
-    //栏目类型: container: 容器栏目; article: 文章栏目; json: 数据栏目; asset_upload: 图片上传栏目 
+    //栏目类型: container: 容器栏目; article: 文章栏目; data: 数据栏目; resource: 图片上传栏目; 
+    // 系统级自带栏目类型: channelManage:  栏目管理; roleManage : 角色管理; userManage 用户管理
     channelType : 'article',
+    //是否为系统级栏目, 系统级栏目, 不能修改
+    isSystem : false,
     //如果是 文章栏目, 则该栏目下的文章, 应该必须具备的一些字段模板
     articleTemplate : {},
     //父栏目的ID
-    parentId : 'xxx',
+    parentId : ObjectId('xxxxx'),
     //如果该栏目类型是容器栏目parent, 该栏目包含的子栏目ID数组
-    children : [ 'channelId1', 'channelId2' ]
+    //children : [ 'channelId1', 'channelId2' ]
 }
 ```
 

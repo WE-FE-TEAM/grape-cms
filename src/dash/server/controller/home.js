@@ -15,12 +15,24 @@ class HomeController extends ControllerBase{
 
     indexAction(){
 
-        this.http.res.end('后台系统首页');
+        this.http.render('dash/page/home/index/index.tpl');
     }
 
     testAction(){
 
         this.http.res.end(' dash home test page');
+    }
+
+    userManageAction(){
+        this.http.res.end(' 用户管理页面');
+    }
+
+    roleManageAction(){
+        this.http.res.end(' 角色管理页面');
+    }
+
+    channelManageAction(){
+        this.http.res.end(' 栏目管理');
     }
 }
 

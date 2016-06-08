@@ -17,7 +17,7 @@ module.exports = {
 
     channel : {
 
-        '*' : [ 'session_user', 'login_filter', 'channel_permission_check' ]
+        '*' : [ 'session_user', 'login_filter' ]
 
     },
 

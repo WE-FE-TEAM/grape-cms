@@ -9,8 +9,22 @@
 
 const ControllerBase = grape.get('controller_base');
 
+const cmsUtils = global.cms.utils;
+
 
 class ChannelController extends ControllerBase {
+    
+    //异步接口: 返回当前用户有权限的整个 频道树 的数据
+    async userChannelsDataAction(){
+        let http = this.http;
+        let user = http.getUser();
+        let Channel = this.model('Channel');
+
+        let wholeTree = await cmsUtils.getUserAvailableChannelTree( user, this.cmsConfig.rootChannelId );
+
+        this.json( wholeTree );
+
+    }
     
     //渲染  添加栏目页面
     addAction(){}
@@ -28,6 +42,29 @@ class ChannelController extends ControllerBase {
         let channelId = ( req.channelId || '' ).trim();
 
     }
+    
+    //删除栏目
+    doDeleteAction(){
+        this.http.res.end('删除栏目操作');
+    }
+
+    articleAction(){
+        this.http.res.end('显示某文章栏目');
+    }
+
+    dataAction(){
+        this.http.res.end('显示某json栏目');
+    }
+
+    resourceAction(){
+        this.http.res.end('显示某资源上传栏目');
+    }
+
+    containerAction(){
+        this.http.res.end('显示某 容器 栏目');
+    }
+
+
 }
 
 

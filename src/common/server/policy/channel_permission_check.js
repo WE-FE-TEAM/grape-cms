@@ -11,13 +11,18 @@
 const PolicyBase = grape.get('policy_base');
 
 
+const cms = global.cms;
+
+const cmsUtils = cms.utils;
+
+
 class ChannelPermissionCheckFilter extends PolicyBase {
 
     async execute(){
 
-        const Operation = this.model('Operation');
+
         const Channel = this.model('Channel');
-        const Role = this.model('role');
+        const Role = this.model('Role');
 
         let user = this.http.getUser();
 
@@ -27,26 +32,24 @@ class ChannelPermissionCheckFilter extends PolicyBase {
         //channel ID 必须放在 query 部分
         let channelId = ( req.query.channelId || '' ).trim();
         if( ! channelId ){
-            return http.e404();
+            grape.log.info('请求query中缺少 channelId, 不进行权限校验 ');
+            return;
         }
 
-        let currentActionPath = `${http.module}+${http.controller}+${http.action}`;
+        //超级管理员, 具有所有权限
+        if( user.isSuperAdmin() ){
+            return;
+        }
 
         let userRoles = user.roles;
+        
 
-        //找到当前URL对应的 operationName
-        let operation = await Operation.findOne({ actionList : currentActionPath }).exec();
-
-        if( ! operation ){
-            return http.e404();
-        }
-
-        let operationName = operation.operationName;
+        let permissionPath = cmsUtils.getPermissionPath( http.module, http.controller, http.action, channelId );
 
         //查找对 channelId 的 operationName 有权限 并且 在用户所属角色组中的 角色 是否存在
         let matchedRole = await Role.findOne(
             {
-                permissions : `${operationName}&${channelId}`,
+                permissions : permissionPath,
                 _id : {
                     $in : userRoles
                 }

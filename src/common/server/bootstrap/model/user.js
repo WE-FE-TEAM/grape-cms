@@ -38,7 +38,8 @@ let userSchema = mongoose.Schema({
     },
     roles : [ String ]
 }, {
-    collection : 'users'
+    collection : 'users',
+    timestamps: { createdAt: 'createdAt', updatedAt : 'updatedAt' }
 });
 
 
@@ -71,6 +72,14 @@ userSchema.statics.isUserDisabled = function( userDoc ){
  */
 userSchema.methods.isUserDisabled = function(){
     return this.enabled === 1;
+};
+
+/**
+ * 用户是否为 超级管理员, 超级管理员具有所有的权限 
+ * @returns {boolean}
+ */
+userSchema.methods.isSuperAdmin = function(){
+    return this.level === 0;
 };
 
 

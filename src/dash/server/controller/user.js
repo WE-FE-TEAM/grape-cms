@@ -66,6 +66,14 @@ class UserController extends ControllerBase{
         });
 
     }
+    
+    editAction(){
+        this.http.res.end('编辑用户权限页面');
+    }
+    
+    doUpdateAction(){
+        this.http.res.end('更新用户权限接口');
+    }
 }
 
 

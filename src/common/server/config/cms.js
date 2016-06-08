@@ -27,23 +27,73 @@ let urls = {
     dashIndex : URL_PREFIX + 'dash/home/index'
 };
 
+//URL到对应的操作组名的映射
+let urlOperationGroupMap = {
+
+    //栏目管理
+    'dash/home/channelManage' : 'home.channelManage.view',
+    //角色管理
+    'dash/home/roleManage' : 'home.roleManage.view',
+    //用户管理
+    'dash/home/userManage' : 'home.userManage.view',
+
+    //查看容器栏目
+    'dash/channel/container' : 'channel.container.view',
+    //新增子栏目
+    'dash/channel/add' : 'channel.container.addChild',
+    'dash/channel/doAdd' : 'channel.container.addChild',
+    //删除子栏目
+    'dash/channel/doDelete' : 'channel.container.deleteChild',
+
+    
+    //查看文章栏目
+    'dash/channel/article' : 'channel.article.view',
+    //查看文章
+    'dash/article/view' : 'article.view',
+    //新增文章
+    'dash/article/add' : 'article.add',
+    'dash/article/doAdd' : 'article.add',
+    //编辑文章
+    'dash/article/edit' : 'article.edit',
+    'dash/article/doUpdate' : 'article.edit',
+    //删除文章
+    'dash/article/doDelete' : 'article.delete',
+    //发布文章
+    'dash/article/doPublish' : 'article.publish',
+    
+    
+    //数据栏目相关
+    //查看数据栏目
+    'dash/channel/data' : 'channel.data.view',
+    //查看数据
+    'dash/data/view' : 'data.view',
+    //新增数据
+    'dash/data/add' : 'data.add',
+    'dash/data/doAdd' : 'data.add',
+    //编辑数据
+    'dash/data/edit' : 'data.edit',
+    'dash/data/doUpdate' : 'data.edit',
+    //删除数据
+    'dash/data/doDelete' : 'data.delete',
+    //发布数据
+    'dash/data/doPublish' : 'data.publish',
+    
+    
+    //文件上传栏目 相关
+    //查看文件上传栏目
+    'dash/channel/resource' : 'channel.resource.view'
+
+};
+
 
 module.exports = {
     
     rootChannelId : '5755366bb470a1c0cfed8221',
-    
-    //系统中所有的栏目类型
-    CHANNEL_TYPES : {
-        //容器栏目
-        CONTAINER : 'container',
-        //文章类型栏目
-        ARTICLE : 'article',
-        //数据栏目
-        JSON : 'json',
-        //资源上传栏目
-        ASSET_UPLOAD : 'asset_upload'
-    },
-    
-    urls : urls
+
+    urlPrefix : URL_PREFIX,
+
+    urls : urls,
+
+    urlOperationGroupMap : urlOperationGroupMap
     
 };
