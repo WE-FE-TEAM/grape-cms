@@ -2,5 +2,5 @@
 {% extends 'common:page/dash-layout.tpl' %}
 
 {% block dash_block_main %}
-cms dash board index
+ 用户管理
 {% endblock %}

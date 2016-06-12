@@ -29,11 +29,11 @@ utils.url2OperationGroup = function ( url ){
 
 /**
  * 返回栏目真是的访问URL
- * @param url {string} 只包含 module/controller/action 的URL
+ * @param channel {object} 某个栏目的数据
  * @return {string}
  */
-utils.getChannelRealUrl = function( url ){
-    return cmsConfig.urlPrefix + url;
+utils.getChannelRealUrl = function( channel ){
+    return cmsConfig.urlPrefix + channel.url + '?channelId=' + encodeURIComponent( channel._id.toString() );
 };
 
 /**

@@ -22,8 +22,29 @@ class ChannelController extends ControllerBase {
 
         let wholeTree = await cmsUtils.getUserAvailableChannelTree( user, this.cmsConfig.rootChannelId );
 
-        this.json( wholeTree );
+        this.json( {
+            status : 0,
+            data : wholeTree
+        } );
 
+    }
+
+    //异步方法: 根据channelId, 获取该channel对一个的所有祖先id数组路径
+    async channelPathAction(){
+
+        let http = this.http;
+
+        let channelId = http.req.query.channelId;
+
+        let Channel = this.model('Channel');
+
+        let arr = await Channel.getChannelPath( channelId );
+
+        this.json( {
+            status : 0,
+            //因为 model 获取的是 从叶子节点开始
+            data : arr
+        } );
     }
     
     //渲染  添加栏目页面

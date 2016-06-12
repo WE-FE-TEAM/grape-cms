@@ -10,6 +10,8 @@
 const $ = require('./jquery.1.9.1.js');
 
 
+window.jQuery = $;
+
 //设置 默认禁止XHR缓存
 $.ajaxSetup({
     cache : false

@@ -67,6 +67,54 @@ class UserController extends ControllerBase{
 
     }
     
+    //判断用户名是否存在
+    async userNameExistAction(){
+
+        const User = this.model('User');
+
+        let http = this.http;
+        
+        let userName = ( http.req.query.userName || '' ).trim();
+        
+        if( ! userName ){
+            return this.json({
+                status : -1,
+                message : '用户名为空!!'
+            });
+        }
+
+        let result = {
+            status : 0,
+            message : ''
+        };
+        
+        try{
+
+            let user = await User.findOne({ userName : userName }).exec();
+
+            if( user ){
+                //该用户名已经存在
+                result.data = true;
+            }else{
+                result.data = false;
+            }
+            
+        }catch(e){
+            
+            grape.log.warn( e );
+            
+            result = {
+                status : 500,
+                message : '系统出错, 请稍后再试',
+                debugInfo : e.message
+            };
+            
+        }
+        
+        this.json( result );
+        
+    }
+    
     editAction(){
         this.http.res.end('编辑用户权限页面');
     }

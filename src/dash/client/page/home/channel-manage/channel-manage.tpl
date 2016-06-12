@@ -2,5 +2,5 @@
 {% extends 'common:page/dash-layout.tpl' %}
 
 {% block dash_block_main %}
-cms dash board index
+栏目管理
 {% endblock %}

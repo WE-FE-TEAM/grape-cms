@@ -1,0 +1,51 @@
+
+
+#dash-menu{
+
+  padding: 20px 0;
+  text-align: left;
+
+  a{
+    text-decoration: none;
+  }
+
+  .menu-list{
+    padding: 0 24px;
+  }
+  
+  .menu-item{
+    
+  }
+  
+  .menu-item{
+
+    .menu-item-text{
+
+      &:hover{
+        background: #fef1e9;
+      }
+    }
+
+  }
+
+  .menu-item-selected{
+    color: #f37327;
+    background: #fef1e9;
+  }
+
+  //子菜单
+  .sub-menu-container{
+
+    .menu-list{
+      display: none;
+    }
+  }
+
+  //展开子菜单
+  .sub-menu-unfold{
+
+    .menu-list{
+      display: block;
+    }
+  }
+}

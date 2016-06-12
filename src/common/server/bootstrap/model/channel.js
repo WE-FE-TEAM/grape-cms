@@ -57,7 +57,7 @@ channelSchema.statics.getSubChannels = async function( parentId ){
         //mongoose 不允许直接在 document 上增加属性, 因此必须转成 JSON !!!!
         //因为上线find时, 继续调用了  lean ,所以已经转成 JSON 了
         // channel = channel.toJSON();
-        channel.realUrl = cms.utils.getChannelRealUrl( channel.url );
+        channel.realUrl = cms.utils.getChannelRealUrl( channel );
 
         return Channel.getSubChannels( channel._id ).then( ( children ) => {
             channel.children = children;
@@ -77,6 +77,10 @@ channelSchema.statics.getChannelTree = async function( channelId ){
     let out = null;
     let Channel = mongoose.model('Channel' );
 
+    if( ! channelId ){
+        return out;
+    }
+
 
     let temp = await Promise.all( [ Channel.findOne({ _id : channelId }).lean(true), Channel.getSubChannels( channelId ) ] );
 
@@ -84,6 +88,40 @@ channelSchema.statics.getChannelTree = async function( channelId ){
         out = temp[0];
         out.children = temp[1] || [];
     }
+
+    return out;
+};
+
+/**
+ * 根据channelId,找到其对应的所有祖先栏目的ID路径
+ * @param channelId {string} 要查找祖先栏目ID的栏目
+ * @return {array} 从根栏目ID,到 channelId 的所有栏目ID
+ */
+channelSchema.statics.getChannelPath = async function( channelId ){
+
+    channelId = channelId.toString();
+
+    let Channel = mongoose.model('Channel' );
+
+    let out = [  ];
+
+    if( ! channelId ){
+        return out;
+    }
+
+    let channel = await Channel.findOne({ _id : channelId }).lean( true );
+
+    if( channel ){
+
+        out.push( channel );
+
+        if( channel.parentId ){
+            let parentPath = await Channel.getChannelPath( channel.parentId );
+            out = out.concat( parentPath );
+        }
+
+    }
+
 
     return out;
 };

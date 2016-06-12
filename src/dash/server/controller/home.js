@@ -24,15 +24,15 @@ class HomeController extends ControllerBase{
     }
 
     userManageAction(){
-        this.http.res.end(' 用户管理页面');
+        this.http.render('dash/page/home/user-manage/user-manage.tpl');
     }
 
     roleManageAction(){
-        this.http.res.end(' 角色管理页面');
+        this.http.render('dash/page/home/role-manage/role-manage.tpl');
     }
 
     channelManageAction(){
-        this.http.res.end(' 栏目管理');
+        this.http.render('dash/page/home/channel-manage/channel-manage.tpl');
     }
 }
 
