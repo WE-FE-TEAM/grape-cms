@@ -1,0 +1,36 @@
+
+$title-height:50px;
+
+.r-we-dialog{
+
+  //关闭按钮
+  .j-dialog-close-btn{
+    position: absolute;
+    right: 25px;
+    top: ($title-height - 20) / 2;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    color: #686868;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1;
+  }
+
+  //title 部分
+  .j-dialog-title-con{
+
+
+    position: relative;
+    height: $title-height;
+    line-height: $title-height;
+    margin: 0 25px;
+    border-bottom: 1px solid #f4f4f4;
+
+    .j-dialog-title{
+      font-size: 16px;
+      color: #2b2b2b;
+    }
+
+  }
+}

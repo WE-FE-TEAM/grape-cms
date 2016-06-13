@@ -20,6 +20,8 @@ let utils = {};
 
 cms.utils = utils;
 
+module.exports = utils;
+
 
 //根据URL来获取所属的 操作组 
 utils.url2OperationGroup = function ( url ){
@@ -155,6 +157,4 @@ function filterChannelTree( channel, channelIdList ){
 
     return result;
 }
-
-module.exports = utils;
 

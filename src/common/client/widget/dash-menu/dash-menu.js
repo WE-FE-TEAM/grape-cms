@@ -51,7 +51,7 @@ let singleton = {
 
         Promise.all([  dashService.getUserMenuTree(), dashService.getChannelPath({ channelId : currentChannelId}) ])
             .then( ( arr ) => {
-                console.log( arr );
+                // console.log( arr );
                 let all = arr[0];
                 let current = arr[1];
                 let menuData = null;

@@ -1,0 +1,27 @@
+
+.r-dialog-container{
+
+  .r-dialog-portal{
+
+    //遮罩层
+    .r-dialog-mask{
+      position: fixed;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      opacity: .2;
+      filter: alpha(opacity=20)\9;
+    }
+
+    //弹窗容器
+    .r-dialog-wrap{
+      position: absolute;
+      background: #fff;
+    }
+
+  }
+}

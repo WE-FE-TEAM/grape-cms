@@ -9,10 +9,12 @@
 
 const userService = require('./user-service');
 const dashService = require('./dash-service');
+const channelService = require('./channel-service.js');
 
 let serviceMap = {
     user : userService,
-    dash : dashService
+    dash : dashService,
+    channel : channelService
 };
 
 let singleton = {

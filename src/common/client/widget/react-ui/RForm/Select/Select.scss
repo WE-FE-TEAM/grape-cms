@@ -1,0 +1,95 @@
+
+
+.r-select{
+
+    $border-color: #e5e5e5;
+    $border-highlight-color: #3a84cf;
+    $text-color: #2b2b2b;
+
+    @mixin text-holder-active{
+        border-color: $border-highlight-color;
+
+        .arrow{
+            color: $border-highlight-color;
+        }
+    }
+
+    position: relative;
+    display: inline-block;
+    width: 120px;
+    font-size: 14px;
+
+    //当前选中的文字
+    .r-select-indicator{
+        height: 34px;
+        line-height: 34px;
+        padding: 0 25px 0 9px;
+        border: 1px solid $border-color;
+        overflow: hidden;
+        color: $text-color;
+        text-align: left;
+        cursor: pointer;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius:2px;
+
+        .arrow{
+            position: absolute;
+            top: 0;
+            right: 11px;
+            color: $border-color;
+
+            .icon-down3{
+                font-size: 16px;
+                line-height: 34px;
+            }
+        }
+
+        &:hover{
+
+            @include text-holder-active();
+        }
+    }
+
+    //下拉列表
+    .r-select-list-container{
+        display: none;
+        position: absolute;
+        left: 0;
+        top: 36px;
+        width: 100%;
+        padding: 8px 0;
+        background: #fff;
+        border: 1px solid $border-color;
+        z-index: 20;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius:2px;
+
+        .r-select-option{
+            height: 33px;
+            line-height: 33px;
+            padding: 0 0 0 9px;
+            color: $text-color;
+            cursor: pointer;
+            margin: 0;
+
+            &:hover{
+                color: $border-highlight-color;
+            }
+
+        }
+    }
+
+    &.r-select-option-showing{
+
+        .r-select-indicator{
+            @include text-holder-active();
+        }
+
+        .r-select-list-container{
+            display: block;
+        }
+    }
+}
+

@@ -25,7 +25,13 @@ let channelSchema = new mongoose.Schema(
             enum : [ 'container', 'article', 'data', 'resource', 'channelManage', 'roleManage', 'userManage' ],
             default : 'container'
         },
-        articleTemplate : {},
+        url : {
+            type : String  ,
+            required : true
+        },
+        articleTemplate : {
+            type : String
+        },
         parentId : {
             type : mongoose.Schema.Types.ObjectId
         }
@@ -126,6 +132,74 @@ channelSchema.statics.getChannelPath = async function( channelId ){
     return out;
 };
 
+/**
+ * 判断用户添加的栏目类型, 是否合法. 用户只能添加 普通栏目, 系统级栏目, 不允许  添加
+ * @param channelType {string}
+ * @returns {boolean}
+ */
+channelSchema.statics.isChannelTypeValida = function( channelType ){
+    const validArr = [ 'container', 'article', 'data', 'resource' ];
+    return validArr.indexOf( channelType ) >= 0;
+};
+
+/**
+ * 判断channelId的直接子栏目中, 是否存在同名的栏目
+ * @param parentId {string} 父级栏目ID
+ * @param channelName {string} 栏目名
+ * @returns {boolean}
+ */
+channelSchema.statics.isNameExist = async function( parentId, channelName ){
+
+    channelName = channelName.trim();
+
+    let Channel = mongoose.model('Channel' );
+
+    let out = false;
+
+    let temp = await Channel.findOne({ parentId : parentId, channelName : channelName }).exec();
+
+    if( temp ){
+        //已经存在同名的栏目
+        out = true;
+    }
+
+    return out;
+};
+
+/**
+ * 根据栏目类型, 返回 查看栏目对应的URL
+ * @param channelType {string} 栏目类型
+ * @returns {string} 查看该类型栏目的URL
+ */
+channelSchema.statics.getChannelUrlByType = function( channelType ){
+
+    let url = '';
+
+    const type2urlMap = {
+        container : 'dash/channel/view',
+        article : 'dash/channel/view',
+        data : 'dash/channel/view',
+        resource : 'dash/channel/view',
+
+        //下面是系统级的栏目类型
+        channelManage : 'dash/home/channelManage',
+        roleManage : 'dash/home/roleManage',
+        userManage : 'dash/home/userManage'
+    };
+
+    url = type2urlMap[channelType] || '';
+
+    return url;
+};
+
+/**
+ * 判断栏目类型是否为  文章栏目
+ * @param channelType {string}
+ * @returns {boolean}
+ */
+channelSchema.statics.isArticleChannel = function( channelType ){
+    return channelType === 'article';
+};
 
 let Channel = mongoose.model('Channel', channelSchema );
 

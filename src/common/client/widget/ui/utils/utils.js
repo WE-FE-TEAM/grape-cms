@@ -9,6 +9,7 @@
 const moment = require('moment');
 
 const timeUtil = require('./time-utils.js');
+const channelUtil = require('./channel-utils');
 
 function myFocus(sel, start, end) {
     try{
@@ -35,6 +36,7 @@ module.exports = utils;
 
 //子utils
 utils.timeUtil = timeUtil;
+utils.channelUtil = channelUtil;
 
 //将光标定位到输入框的最后
 utils.moveCursorEnd = function( element ){

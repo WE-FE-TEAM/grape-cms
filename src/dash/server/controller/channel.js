@@ -51,8 +51,94 @@ class ChannelController extends ControllerBase {
     addAction(){}
     
     //实际执行 添加栏目动作
-    doAddAction(){
+    async doAddAction(){
+
+        let http = this.http;
+
+        let Channel = this.model('Channel');
+
+        let body = http.req.body;
+
+        let parentId = body.channelId;
+        let channelName = ( body.channelName || '' ).trim();
+        let channelType = body.channelType;
+
+        if( ! channelName ){
+            return this.json({
+                status : -1,
+                message : `栏目名 不能为空!!`
+            });
+        }
         
+        let isTypeValid = Channel.isChannelTypeValida( channelType );
+
+        let channelUrl = Channel.getChannelUrlByType( channelType );
+        
+        if( ! isTypeValid || ! channelUrl ){
+            return this.json({
+                status : -1,
+                message : `栏目类型[${channelType}]非法!! 只能添加 普通栏目`
+            });
+        }
+
+        let articleTemplate = null;
+        if( Channel.isArticleChannel( channelType ) ){
+
+            articleTemplate = body.articleTemplate;
+
+            try{
+                articleTemplate = articleTemplate.trim();
+                if( ! articleTemplate ){
+                    throw new Error('articleTemplate must not be empty for article channel!');
+                }
+                articleTemplate = JSON.stringify( articleTemplate );
+            }catch(e){
+                grape.log.warn( e );
+                return this.json({
+                    status : -1,
+                    message : '文章模板 必须是 JSON !!'
+                });
+            }
+
+        }
+
+
+        
+        let temp = await Channel.isNameExist( parentId, channelName );
+        
+        if( temp ){
+            //已经存在同名的栏目
+            return this.json({
+                status : -1,
+                message : `父栏目下已经存在同名的栏目!`
+            });
+        }
+
+        let channel = new Channel({
+            channelName : channelName,
+            channelType : channelType,
+            parentId : parentId,
+            isSystem : false,
+            url : channelUrl,
+            articleTemplate : articleTemplate
+        });
+
+        try{
+            let out = await channel.save();
+            this.json({
+                status : 0,
+                message : '添加栏目成功',
+                data : out
+            });
+        }catch(e){
+            grape.log.warn( e );
+            this.json({
+                status : -1,
+                message : '添加栏目失败',
+                debugInfo : e.message
+            });
+        }
+
     }
 
     //查看某个栏目
@@ -66,7 +152,43 @@ class ChannelController extends ControllerBase {
     
     //删除栏目
     doDeleteAction(){
-        this.http.res.end('删除栏目操作');
+
+        let http = this.http;
+
+        let Channel = this.model('Channel');
+
+        let body = http.req.body;
+
+        let channelId = body.channelId;
+
+        let channel = null;
+        try{
+            channel = Channel.findOne({ _id : channelId }).lean( true );
+        }catch(e){
+            grape.log.warn( e );
+            return this.json({
+                status : -1,
+                message : '服务异常',
+                debugInfo : e.message
+            });
+        }
+
+        if( ! channel ){
+            return this.json({
+                status : -1,
+                message : '找不到该栏目!!'
+            });
+        }
+
+        if( channel.isSystem ){
+            //系统级栏目, 不允许删除
+            return this.json({
+                status : -1,
+                message : '系统级栏目, 不允许删除!!'
+            });
+        }
+
+        //找出该栏目下的所有子栏目, 全部删除
     }
 
     articleAction(){

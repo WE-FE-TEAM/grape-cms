@@ -15,6 +15,7 @@ const adapters = {
 
 };
 
+const URL_PREFIX = '/cms';
 
 const apiConf = {
 

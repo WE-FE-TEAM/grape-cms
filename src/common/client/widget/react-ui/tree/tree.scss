@@ -1,0 +1,25 @@
+
+.r-tree{
+
+  //树节点
+  .r-tree-node{
+
+    .r-tree-node-label{
+      line-height: 40px;
+    }
+  }
+
+  //子树
+  .r-tree-sub-list{
+    padding: 0 0 0 20px;
+  }
+
+  //收起子树
+  .r-tree-sub-collapse{
+
+    .r-tree-sub-list{
+      display: none;
+    }
+  }
+
+}
