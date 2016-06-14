@@ -1,4 +1,4 @@
-{# CMS后台首页页面 #}
+{# CMS后台 栏目管理 页面 #}
 {% extends 'common:page/dash-layout.tpl' %}
 
 {% block dash_block_main %}

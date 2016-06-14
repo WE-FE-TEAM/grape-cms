@@ -9,10 +9,10 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 
-const ChannelTree = require('dash:widget/ui/channel-tree/channel-tree.js');
-const AddChannelDialog = require('dash:widget/ui/add-channel-dialog/add-channel-dialog.js');
-const EditChannelDialog = require('dash:widget/ui/edit-channel-dialog/edit-channel-dialog.js');
-const DeleteChannelDialog = require('dash:widget/ui/delete-channel-dialog/delete-channel-dialog.js');
+const ChannelTree = require('dash:widget/ui/channel/channel-tree/channel-tree.js');
+const AddChannelDialog = require('dash:widget/ui/channel/add-channel-dialog/add-channel-dialog.js');
+const EditChannelDialog = require('dash:widget/ui/channel/edit-channel-dialog/edit-channel-dialog.js');
+const DeleteChannelDialog = require('dash:widget/ui/channel/delete-channel-dialog/delete-channel-dialog.js');
 
 
 class App extends React.Component {

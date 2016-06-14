@@ -17,8 +17,6 @@ const service = require('common:widget/ui/service/service-factory.js');
 const RDialog = require('common:widget/react-ui/RWeDialog/RWeDialog.js');
 const RForm = require('common:widget/react-ui/RForm/RForm.js');
 
-const ChannelTypeSelect = require('dash:widget/ui/channel-type-select/channel-type-select.js');
-
 const TextInput = RForm.TextInput;
 
 const channelService = service.getService('channel');
@@ -149,7 +147,7 @@ class EditChannelDialog extends React.Component{
                     <div className="form-group">
                         <label for="article-template" className="col-sm-2 control-label">文章栏目模板</label>
                         <div className="col-sm-10">
-                            <textarea ref="articleTemplate" id="article-template" name="articleTemplate" className="form-control" rows="4" placeholder="输入栏目名称" defaultValue={ JSON.stringify(channel.articleTemplate) }></textarea>
+                            <textarea ref="articleTemplate" id="article-template" name="articleTemplate" className="form-control" rows="4" placeholder="输入文章模板" defaultValue={ JSON.stringify(channel.articleTemplate) }></textarea>
                         </div>
                     </div>
                     <div className="form-group">
