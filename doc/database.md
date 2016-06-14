@@ -47,16 +47,11 @@ db.users.createIndex( { userName : 1}, { unique : true } )
     _id : '',
     roleName : '角色名',
     //该角色拥有的权限:  operationGroup  channelId 来表达一个权限
-    permissions : [
-        {
-            operationGroup : 'xxx',
-            channelId : 'channelId'
-        },
-        {
-            operationGroup : 'xxx',
-            channelId : 'channelId'
-        }
-    ]
+    permissions : {
+        'channelIdXXX' : [ 'operationGroup1', 'operationGroup2' ],
+        'channelIdXXX' : [ 'operationGroup1', 'operationGroup2' ],
+        'channelIdXXX' : [ 'operationGroup1', 'operationGroup2' ]
+    }
 }
 ```
 

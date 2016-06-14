@@ -30,7 +30,7 @@ let channelSchema = new mongoose.Schema(
             required : true
         },
         articleTemplate : {
-            type : String
+            type : mongoose.Schema.Types.Mixed
         },
         parentId : {
             type : mongoose.Schema.Types.ObjectId
@@ -99,9 +99,9 @@ channelSchema.statics.getChannelTree = async function( channelId ){
 };
 
 /**
- * 根据channelId,找到其对应的所有祖先栏目的ID路径
+ * 根据channelId,找到其对应的所有祖先栏目
  * @param channelId {string} 要查找祖先栏目ID的栏目
- * @return {array} 从根栏目ID,到 channelId 的所有栏目ID
+ * @return {array} 从根栏目ID,到 channelId 的所有栏目
  */
 channelSchema.statics.getChannelPath = async function( channelId ){
 
@@ -200,6 +200,87 @@ channelSchema.statics.getChannelUrlByType = function( channelType ){
 channelSchema.statics.isArticleChannel = function( channelType ){
     return channelType === 'article';
 };
+
+
+/**
+ * 从频道树的JSON中, 遍历取出所有的ID数组
+ * @param data {object} 某一个栏目及其包含的所有子栏目数据
+ * @returns {Array} 该栏目及其子孙栏目所有的ID数组
+ */
+function pickIdFromTree( data ){
+
+    let out = [];
+
+    if( data ){
+        out.push( data._id );
+        let children = data.children || [];
+        children.forEach( function( obj ){
+            let subList = pickIdFromTree( obj );
+            out = out.concat( subList );
+        } );
+    }
+
+    return out;
+}
+
+/**
+ * 根据栏目ID, 获取包含其所有子孙栏目的ID数组
+ * @param parentId {string} 栏目ID
+ * @rerun {array}
+ */
+channelSchema.statics.getIdTree = async function( parentId ){
+
+    let out = [];
+
+    let Channel = mongoose.model('Channel' );
+
+    let wholeTree = await Channel.getChannelTree( parentId );
+
+    if( wholeTree ){
+        //成功获取到parentId及其包含的所有
+        out = pickIdFromTree( wholeTree );
+    }
+
+    return out;
+};
+
+/**
+ * 删除channelId对应的栏目, 包括其下面的所有子孙栏目, 以及所有这些栏目下的文章/数据/文件
+ * @param channelId {string}
+ * @returns {boolean}
+ */
+channelSchema.statics.deleteChannelById = async function( channelId ){
+
+    let out = false;
+
+    let Channel = mongoose.model('Channel' );
+    let Role = mongoose.model('Role');
+
+    //获取到该栏目包含的所有子孙栏目ID
+    let idList = await Channel.getIdTree( channelId );
+    
+    if( idList && idList.length > 0 ){
+        //从栏目表中, 删除所有ID
+        let temp = await Channel.remove({ _id : { $in : idList } });    
+        
+        //从角色表中, 删除所有的栏目ID字段
+        let unsetMap = {};
+        idList.forEach( function( id ){
+            unsetMap[`permissions.${id}`] = '';
+        });
+        let temp2 = await Role.update( {}, { $unset : unsetMap } ).exec();
+        
+        //TODO 从文章表中, 删除所有属于这些栏目下的文章
+        //TODO 从数据表中, 删除所有属于这些栏目下的数据
+        //TODO 从文件上传表中, 删除所有属于这些栏目下的文件
+        
+        out = true;
+    }
+    
+    
+    return out;
+};
+
 
 let Channel = mongoose.model('Channel', channelSchema );
 

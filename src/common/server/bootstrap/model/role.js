@@ -20,7 +20,7 @@ let roleSchema = new mongoose.Schema(
                 background : false
             }
         },
-        permissions : [ mongoose.Schema.Types.Mixed ]
+        permissions : {}
 }, 
     {
         collection : 'roles',

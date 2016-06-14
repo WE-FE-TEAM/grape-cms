@@ -11,6 +11,7 @@ const ReactDOM = require('react-dom');
 
 const ChannelTree = require('dash:widget/ui/channel-tree/channel-tree.js');
 const AddChannelDialog = require('dash:widget/ui/add-channel-dialog/add-channel-dialog.js');
+const EditChannelDialog = require('dash:widget/ui/edit-channel-dialog/edit-channel-dialog.js');
 const DeleteChannelDialog = require('dash:widget/ui/delete-channel-dialog/delete-channel-dialog.js');
 
 
@@ -73,6 +74,11 @@ class App extends React.Component {
             addDialog = <AddChannelDialog channel={ addParent } onRequestClose={ this.closeDialog.bind( this, 'isShowAdd') } />;
         }
 
+        let editDialog = null;
+        if( state.isShowEdit ){
+            editDialog = <EditChannelDialog channel={ state.isShowEdit } onRequestClose={ this.closeDialog.bind( this, 'isShowEdit') } />;
+        }
+
         let deleteDialog = null;
         if( state.isShowDelete ){
             deleteDialog = <DeleteChannelDialog channel={ state.isShowDelete } onRequestClose={ this.closeDialog.bind( this, 'isShowDelete') } />;
@@ -83,6 +89,7 @@ class App extends React.Component {
                 <h1>栏目管理</h1>
                 <ChannelTree addChannel={ this.addSubChannel } editChannel={ this.editChannel } deleteChannel={ this.deleteChannel } />
                 { addDialog }
+                { editDialog }
                 { deleteDialog }
             </div>
         );

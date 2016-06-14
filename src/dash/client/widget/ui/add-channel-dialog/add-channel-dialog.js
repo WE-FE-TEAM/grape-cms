@@ -50,11 +50,22 @@ class AddChannelDialog extends React.Component{
 
         let type = this.refs.channelType.getValue();
 
-        let articleTemplate = {};
+        let articleTemplate = null;
 
         if( channelUtil.isArticleChannel( type ) ){
             articleTemplate = this.refs.articleTemplate.value;
+            try{
+                articleTemplate = JSON.parse( articleTemplate );
+            }catch(e){
+                this.setState({
+                    errorMsg : '文章模板必须是 JSON 格式!'
+                });
+                return;
+            }
         }
+
+        //发送字符串, 避免 boolean 类型丢失
+        articleTemplate = JSON.stringify( articleTemplate );
 
         let data = {
             channelId : channel._id,

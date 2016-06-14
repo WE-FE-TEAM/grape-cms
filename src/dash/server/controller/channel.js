@@ -86,12 +86,17 @@ class ChannelController extends ControllerBase {
 
             articleTemplate = body.articleTemplate;
 
+            // console.log( articleTemplate );
+
             try{
-                articleTemplate = articleTemplate.trim();
+
                 if( ! articleTemplate ){
                     throw new Error('articleTemplate must not be empty for article channel!');
                 }
-                articleTemplate = JSON.stringify( articleTemplate );
+
+                articleTemplate = JSON.parse( articleTemplate );
+                
+                // articleTemplate = JSON.stringify( articleTemplate );
             }catch(e){
                 grape.log.warn( e );
                 return this.json({
@@ -149,9 +154,96 @@ class ChannelController extends ControllerBase {
         let channelId = ( req.channelId || '' ).trim();
 
     }
+
+    //异步接口: 修改栏目属性
+    async doUpdateAction(){
+
+        let http = this.http;
+
+        let Channel = this.model('Channel');
+
+        let body = http.req.body;
+
+        let channelId = body.channelId;
+        let channelName = ( body.channelName || '' ).trim();
+
+        if( ! channelName ){
+            return this.json({
+                status : -1,
+                message : `栏目名 不能为空!!`
+            });
+        }
+
+        let channel = null;
+        try{
+            channel = await Channel.findOne({ _id : channelId }).exec();
+        }catch(e){
+            grape.log.warn( e );
+            return this.json({
+                status : -1,
+                message : '服务异常',
+                debugInfo : e.message
+            });
+        }
+
+        if( ! channel ){
+            return this.json({
+                status : -1,
+                message : '未找到该 channelId 对应的栏目数据!'
+            });
+        }
+
+        if( channelName !== channel.channelName ){
+            //检查新的栏目名, 是否在同一级已经存在
+            let temp = await Channel.isNameExist( channel.parentId, channelName );
+            if( temp ){
+                //已经存在同名的栏目
+                return this.json({
+                    status : -1,
+                    message : `父栏目下已经存在同名的栏目!`
+                });
+            }
+        }
+
+        //文章栏目, 用户可以修改文章模板
+        let articleTemplate = null;
+
+        if( Channel.isArticleChannel( channel.channelType ) ){
+
+            articleTemplate = body.articleTemplate;
+
+            // console.log( articleTemplate );
+
+            try{
+
+                // articleTemplate = JSON.stringify( articleTemplate );
+                articleTemplate = JSON.parse( articleTemplate );
+
+            }catch(e){
+                grape.log.warn( e );
+                return this.json({
+                    status : -1,
+                    message : '文章模板 必须是 JSON !!'
+                });
+            }
+
+        }
+
+        channel.channelName = channelName;
+        channel.articleTemplate = articleTemplate;
+
+        let result = await channel.update({ channelName : channelName, articleTemplate : articleTemplate }).exec();
+
+        console.log( result );
+
+        this.json({
+            status : 0,
+            message : '更新栏目成功'
+        });
+    }
     
     //删除栏目
-    doDeleteAction(){
+    async doDeleteAction(){
 
         let http = this.http;
 
@@ -163,7 +255,7 @@ class ChannelController extends ControllerBase {
 
         let channel = null;
         try{
-            channel = Channel.findOne({ _id : channelId }).lean( true );
+            channel = await Channel.findOne({ _id : channelId }).lean( true );
         }catch(e){
             grape.log.warn( e );
             return this.json({
@@ -188,7 +280,22 @@ class ChannelController extends ControllerBase {
             });
         }
 
-        //找出该栏目下的所有子栏目, 全部删除
+        //删除
+        try{
+            let result = await Channel.deleteChannelById( channelId );
+            this.json({
+                status : 0,
+                message : '删除栏目成功'
+            });
+        }catch(e){
+            grape.log.error( e );
+            return this.json({
+                status : -1,
+                message : '执行删除异常',
+                debugInfo : e.message
+            });
+        }
+
     }
 
     articleAction(){

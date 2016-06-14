@@ -60,12 +60,14 @@ var TextInput = React.createClass({
 
         var provider = props.validateProvider || ValidateProvider.getInstance();
 
+        var isShowPlaceholder = ! props.value;
+
         return {
             validateProvider : provider,
             value : props.value,
             invalidMessageList : [],
             //是否显示placeholder
-            isShowPlaceholder : true
+            isShowPlaceholder : isShowPlaceholder
         };
     },
 

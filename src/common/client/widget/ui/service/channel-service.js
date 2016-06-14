@@ -25,6 +25,13 @@ const apiConf = {
         dataType: 'json'
     },
 
+    /* 编辑栏目接口 */
+    editChannel: {
+        url: URL_PREFIX + '/dash/channel/doUpdate',
+        method: 'POST',
+        dataType: 'json'
+    },
+
     /* 删除栏目接口 */
     deleteChannel: {
         url: URL_PREFIX + '/dash/channel/doDelete',
