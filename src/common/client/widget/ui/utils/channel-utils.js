@@ -7,10 +7,10 @@
 'use strict';
 
 
-let singleton = {};
+let utils = {};
 
 
-module.exports = singleton;
+module.exports = utils;
 
 
 //所有系统支持的栏目类型
@@ -48,7 +48,7 @@ const channelTypeText = {
  * @param channel
  * @returns {boolean}
  */
-singleton.canAddChild = function( channel ){
+utils.canAddChild = function( channel ){
 
     let out = false;
 
@@ -63,7 +63,7 @@ singleton.canAddChild = function( channel ){
  * @param channelType {string}
  * @returns {boolean}
  */
-singleton.isArticleChannel = function( channelType ){
+utils.isArticleChannel = function( channelType ){
     return channelType === channelTypes.article;
 };
 
@@ -72,6 +72,150 @@ singleton.isArticleChannel = function( channelType ){
  * @param channelType {string}
  * @returns {string}
  */
-singleton.getChannelTypeText = function( channelType ){
+utils.getChannelTypeText = function( channelType ){
     return channelTypeText[ channelType ];
+};
+
+
+/**
+ * 根据 栏目类型, 获取该栏目支持的所有操作列表
+ * @param channelType {string} 栏目类型
+ * @returns {Array} 该栏目支持的所有操作列表
+ */
+utils.getChannelOperationSet = function( channelType ){
+
+    let out = [];
+
+    const channelTypeOperationMap = {
+
+        //容器栏目的操作集合
+        container : [
+                {
+                    text : '查看栏目',
+                    value : 'channel.view'
+                },
+                {
+                    text : '编辑栏目',
+                    value : 'channel.update'
+                },
+                {
+                    text : '删除栏目',
+                    value : 'channel.delete'
+                },
+                {
+                    text : '添加子栏目',
+                    value : 'channel.container.addChild'
+                }
+            ],
+        //文章栏目对应操作集合
+        article : [
+            {
+                text : '查看栏目',
+                value : 'channel.view'
+            },
+            {
+                text : '编辑栏目',
+                value : 'channel.update'
+            },
+            {
+                text : '删除栏目',
+                value : 'channel.delete'
+            },
+            {
+                text : '查看文章',
+                value : 'article.view'
+            },
+            {
+                text : '新增文章',
+                value : 'article.add'
+            },
+            {
+                text : '编辑文章',
+                value : 'article.edit'
+            },
+            {
+                text : '发布文章',
+                value : 'article.publish'
+            },
+            {
+                text : '删除文章',
+                value : 'article.delete'
+            }
+        ],
+        //数据栏目对应操作集合
+        data : [
+            {
+                text : '查看栏目',
+                value : 'channel.view'
+            },
+            {
+                text : '编辑栏目',
+                value : 'channel.update'
+            },
+            {
+                text : '删除栏目',
+                value : 'channel.delete'
+            },
+            {
+                text : '查看数据',
+                value : 'data.view'
+            },
+            {
+                text : '新增数据',
+                value : 'data.add'
+            },
+            {
+                text : '编辑数据',
+                value : 'data.edit'
+            },
+            {
+                text : '发布数据',
+                value : 'data.publish'
+            },
+            {
+                text : '删除数据',
+                value : 'data.delete'
+            }
+        ],
+        //文件上传栏目的操作集合
+        resource : [
+            {
+                text : '查看栏目',
+                value : 'channel.view'
+            },
+            {
+                text : '编辑栏目',
+                value : 'channel.update'
+            },
+            {
+                text : '删除栏目',
+                value : 'channel.delete'
+            }
+        ],
+
+        //下面三个是系统自带的栏目
+        channelManage : [
+            {
+                text : '查看栏目',
+                value : 'channel.view'
+            }
+        ],
+        roleManage : [
+            {
+                text : '查看栏目',
+                value : 'channel.view'
+            }
+        ],
+        userManage : [
+            {
+                text : '查看栏目',
+                value : 'channel.view'
+            }
+        ]
+
+    };
+
+    out = channelTypeOperationMap[channelType];
+
+    return out;
 };

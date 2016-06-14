@@ -18,6 +18,13 @@ const URL_PREFIX = '/cms';
 
 const apiConf = {
 
+    /* 获取所有的栏目数据 */
+    getAllTree: {
+        url: URL_PREFIX + '/dash/channel/getAllTree',
+        method: 'GET',
+        dataType: 'json'
+    },
+
     /* 新增栏目接口 */
     addChannel: {
         url: URL_PREFIX + '/dash/channel/doAdd',

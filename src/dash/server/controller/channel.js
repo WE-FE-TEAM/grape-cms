@@ -13,6 +13,19 @@ const cmsUtils = global.cms.utils;
 
 
 class ChannelController extends ControllerBase {
+
+    //异步接口: 返回所有的栏目数据
+    async getAllTreeAction(){
+
+        let Channel = this.model('Channel');
+
+        let result = await Channel.getChannelTree( this.cmsConfig.rootChannelId );
+
+        this.json( {
+            status : 0,
+            data : result
+        } );
+    }
     
     //异步接口: 返回当前用户有权限的整个 频道树 的数据
     async userChannelsDataAction(){

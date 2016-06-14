@@ -38,16 +38,18 @@ let urlOperationGroupMap = {
     'dash/home/userManage' : 'home.userManage.view',
 
     //查看容器栏目
-    'dash/channel/container' : 'channel.container.view',
+    'dash/channel/container' : 'channel.view',
     //新增子栏目
     'dash/channel/add' : 'channel.container.addChild',
     'dash/channel/doAdd' : 'channel.container.addChild',
-    //删除子栏目
-    'dash/channel/doDelete' : 'channel.container.deleteChild',
+    //编辑栏目
+    'dash/channel/doUpdate' : 'channel.update',
+    //删除栏目
+    'dash/channel/doDelete' : 'channel.delete',
 
     
     //查看文章栏目
-    'dash/channel/article' : 'channel.article.view',
+    'dash/channel/article' : 'channel.view',
     //查看文章
     'dash/article/view' : 'article.view',
     //新增文章
@@ -64,7 +66,7 @@ let urlOperationGroupMap = {
     
     //数据栏目相关
     //查看数据栏目
-    'dash/channel/data' : 'channel.data.view',
+    'dash/channel/data' : 'channel.view',
     //查看数据
     'dash/data/view' : 'data.view',
     //新增数据
@@ -81,7 +83,7 @@ let urlOperationGroupMap = {
     
     //文件上传栏目 相关
     //查看文件上传栏目
-    'dash/channel/resource' : 'channel.resource.view'
+    'dash/channel/resource' : 'channel.view'
 
 };
 

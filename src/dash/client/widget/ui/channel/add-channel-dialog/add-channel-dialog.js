@@ -36,10 +36,10 @@ class AddChannelDialog extends React.Component{
             errorMsg : ''
         };
 
-        this.addSubmit = this.addSubmit.bind( this );
+        this.submit = this.submit.bind( this );
     }
 
-    addSubmit( e ){
+    submit( e ){
 
         if( this.state.isLoading ){
             return;
@@ -133,7 +133,7 @@ class AddChannelDialog extends React.Component{
 
         return (
             <RDialog { ...dialogProps }>
-                <RForm action="/cms/dash/channel/doAdd" method="POST" className="form-horizontal" onSubmit={ this.addSubmit }>
+                <RForm action="/cms/dash/channel/doAdd" method="POST" className="form-horizontal" onSubmit={ this.submit }>
                     <input type="hidden" name="channelId" value={ channel._id } />
                     <div className="form-group">
                         <label for="name-input" className="col-sm-2 control-label">栏目名</label>

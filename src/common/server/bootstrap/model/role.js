@@ -29,7 +29,28 @@ let roleSchema = new mongoose.Schema(
 );
 
 
+/**
+ * 判断 是否存在同名的角色
+ * @param roleName {string} 栏目名
+ * @returns {boolean}
+ */
+roleSchema.statics.isNameExist = async function( roleName ){
 
+    roleName = roleName.trim();
+
+    let Role = mongoose.model('Role' );
+
+    let out = false;
+
+    let temp = await Role.findOne({ roleName : roleName }).exec();
+
+    if( temp ){
+        //已经存在同名的角色
+        out = true;
+    }
+
+    return out;
+};
 
 
 

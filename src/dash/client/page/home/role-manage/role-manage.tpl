@@ -6,7 +6,9 @@
 {% endblock %}
 
 {% block block_body_js %}
+{% script %}
 require(["dash:page/home/role-manage/role-manage.js"] , function(app){
     app.init();
 });
+{% endscript %}
 {% endblock %}
