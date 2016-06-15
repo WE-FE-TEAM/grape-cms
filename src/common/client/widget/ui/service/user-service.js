@@ -24,7 +24,15 @@ const apiConf = {
         url: URL_PREFIX + '/dash/user/userNameExist',
         method: 'GET',
         dataType: 'json'
+    },
+
+    /* 创建新用户 */
+    addUser : {
+        url: URL_PREFIX + '/dash/user/doAdd',
+        method: 'POST',
+        dataType: 'json'
     }
+
 
 };
 

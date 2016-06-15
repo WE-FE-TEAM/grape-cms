@@ -34,7 +34,7 @@ let userSchema = mongoose.Schema({
     //用户等级, 数字越大, 等级越低  0: 系统管理员; 1: 普通管理员; 2: 普通用户
     level : {
         type : Number,
-        default : 999
+        default : 99
     },
     roles : {
         type : [ String ],
@@ -64,6 +64,26 @@ userSchema.statics.hashPassword = function( password ){
  */
 userSchema.statics.isUserDisabled = function( userDoc ){
     return userDoc && userDoc.enabled === 1;
+};
+
+/**
+ * 判断用户名是否存在
+ * @param userName {string} 用户名
+ * @returns {boolean} 存在返回 true; 不存在返回 false 
+ */
+userSchema.statics.isNameExist = async function( userName ){
+    
+    userName = userName.trim();
+    
+    let User = mongoose.model('User');
+    
+    let out = false;
+    
+    let temp = await User.findOne({ userName : userName }).exec();
+    
+    out = !! temp;
+    
+    return out;
 };
 
 

@@ -18,11 +18,6 @@ class HomeController extends ControllerBase{
         this.http.render('dash/page/home/index/index.tpl');
     }
 
-    testAction(){
-
-        this.http.res.end(' dash home test page');
-    }
-
     userManageAction(){
         this.http.render('dash/page/home/user-manage/user-manage.tpl');
     }

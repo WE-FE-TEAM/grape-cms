@@ -1,0 +1,15 @@
+
+.user-role-list{
+  position: relative;
+  min-height: 400px;
+  margin-top: 50px;
+  max-height: 500px;
+  overflow-y: auto;
+  font-size: 16px;
+
+  .role-item{
+    line-height: 28px;
+    height: 28px;
+    margin-bottom: 10px;
+  }
+}

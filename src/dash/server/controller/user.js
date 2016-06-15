@@ -7,34 +7,73 @@
 'use strict';
 
 
+const util = require('util');
 
 const ControllerBase = grape.get('controller_base');
 
 
 class UserController extends ControllerBase{
 
-
-    //显示添加用户界面
-    addAction(){
-
-        this.http.render('dash/page/user/add-user.tpl');
-        
-    }
-
     //异步方法,实际执行增加用户
     async doAddAction(){
 
+        let http = this.http;
+
         const User = this.model('User');
+
+        let sessionUser = http.getUser();
         
-        let body = this.http.req.body;
+        let body = http.req.body;
         
-        let userName = body.userName;
-        let password = body.password;
+        let userName = ( body.userName || '' ).trim();
+        let password = ( body.password || '').trim();
         let level = parseInt( body.level, 10 );
         if( isNaN( level ) || level < 0 ){
             level = 99;
         }
+
+        //确保当前用户创建的新用户, 等级必须等于或低于当前用户
+        let sessionUserLevel = sessionUser.level;
+        if( level < sessionUserLevel ){
+            level = sessionUserLevel + 1;
+        }
+
+        if( ! userName ){
+            return this.json({
+                status : -1,
+                message : '用户名不能为空'
+            });
+        }
+
+        if( password.length < 6 ){
+            return this.json({
+                status : -1,
+                message : '密码长度不能小于 6 个字符!'
+            });
+        }
+
+        let isNameExist = await User.isNameExist( userName );
+
+        if( isNameExist ){
+            return this.json({
+                status : -1,
+                message : '已经存在同名的用户!!'
+            });
+        }
+
         let roles = body.roles || [];
+
+        try{
+            roles = JSON.parse( body.roles );
+            if( ! util.isArray(roles) ){
+                throw new Error(' user.roles 必须是数组');
+            }
+        }catch(e){
+            return this.json({
+                status : -1,
+                message : '用户对应角色, 必须是 数组 !'
+            });
+        }
 
         //原始密码加密
         password = User.hashPassword( password );
