@@ -12,6 +12,9 @@ const ReactDOM = require('react-dom');
 const service = require('common:widget/ui/service/service-factory.js');
 
 const AddRoleDialog = require('dash:widget/ui/role/add-role-dialog/add-role-dialog.js');
+const EditRoleDialog = require('dash:widget/ui/role/edit-role-dialog/edit-role-dialog.js');
+const DeleteRoleDialog = require('dash:widget/ui/role/delete-role-dialog/delete-role-dialog.js');
+const RoleList = require('dash:widget/ui/role/role-list/role-list.js');
 
 
 const channelService = service.getService('channel');
@@ -35,6 +38,12 @@ class App extends React.Component {
 
         this.onAddClick = this.onAddClick.bind( this );
         this.onAddRoleSuccess = this.onAddRoleSuccess.bind( this );
+
+        this.onRoleEdit = this.onRoleEdit.bind( this );
+        this.onRoleEditSuccess = this.onRoleEditSuccess.bind( this );
+
+        this.onRoleDelete = this.onRoleDelete.bind( this );
+        this.onRoleDeleteSuccess = this.onRoleDeleteSuccess.bind( this );
     }
 
     closeDialog( dialogType ){
@@ -55,6 +64,26 @@ class App extends React.Component {
 
     }
 
+    onRoleEdit( roleData ){
+        this.setState({
+            isShowEdit : roleData
+        });
+    }
+
+    onRoleEditSuccess(){
+
+    }
+
+    onRoleDelete( roleData ){
+        this.setState({
+            isShowDelete : roleData
+        });
+    }
+
+    onRoleDeleteSuccess(){
+
+    }
+
     render(){
 
         let props = this.props;
@@ -70,13 +99,38 @@ class App extends React.Component {
             />;
         }
 
+        let editDialog = null;
+        if( state.isShowEdit ){
+            editDialog = <EditRoleDialog
+                role={ state.isShowEdit }
+                onSuccess={ this.onRoleEditSuccess }
+                onRequestClose={ this.closeDialog.bind( this, 'isShowEdit') }
+                channelTree={ props.channelTree }
+            />;
+        }
+
+        let deleteDialog = null;
+        if( state.isShowDelete ){
+            deleteDialog = <DeleteRoleDialog
+                role={ state.isShowDelete }
+                onSuccess={ this.onRoleDeleteSuccess }
+                onRequestClose={ this.closeDialog.bind( this, 'isShowDelete') }
+                channelTree={ props.channelTree }
+            />;
+        }
+
         return (
             <div>
                 <h1>角色管理</h1>
                 <div>
                     <button onClick={ this.onAddClick } type="button" className="btn btn-lg btn-primary">新增角色</button>
                 </div>
+                <div>
+                    <RoleList onRoleEdit={ this.onRoleEdit } onRoleDelete={ this.onRoleDelete } />
+                </div>
                 { addDialog }
+                { editDialog }
+                { deleteDialog }
             </div>
         );
     }

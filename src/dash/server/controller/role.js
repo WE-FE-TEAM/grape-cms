@@ -12,10 +12,31 @@ const ControllerBase = grape.get('controller_base');
 
 
 class RoleController extends ControllerBase {
+    
 
+    //异步接口: 获取所有的角色列表
+    async allAction(){
 
-    addAction(){
-        this.http.res.end('新增角色页面');
+        let Role = this.model('Role');
+
+        let data = null;
+
+        try{
+            data = await Role.getAll();
+        }catch(e){
+            grape.log.warn( e );
+            return this.json({
+                status : -1,
+                message : '获取角色数据异常',
+                debugInfo : e.message
+            });
+        }
+
+        this.json({
+            status : 0,
+            message : '',
+            data : data
+        });
     }
 
     //异步接口: 添加角色
@@ -80,21 +101,130 @@ class RoleController extends ControllerBase {
         }
 
     }
+    
+    //异步接口: 修改角色
+    async doUpdateAction(){
+        let http = this.http;
 
-    viewAction(){
-        this.http.res.end('查看角色页面');
+        let Role = this.model('Role');
+
+        let body = http.req.body;
+
+        let roleId = body.roleId;
+        let roleName = ( body.roleName || '' ).trim();
+        let permissions = body.permissions;
+
+        if( ! roleName ){
+            return this.json({
+                status : -1,
+                message : `角色名 不能为空!!`
+            });
+        }
+
+        try{
+            permissions = JSON.parse( permissions );
+        }catch(e){
+            grape.log.warn( e );
+            return this.json({
+                status : -1,
+                message : '权限字段必须是 object 字面量!!',
+                debugInfo : e.message
+            });
+        }
+
+        let role = null;
+        try{
+            role = await Role.findOne({ _id : roleId }).exec();
+        }catch(e){
+            grape.log.warn( e );
+            return this.json({
+                status : -1,
+                message : '服务异常',
+                debugInfo : e.message
+            });
+        }
+
+        if( ! role ){
+            return this.json({
+                status : -1,
+                message : '未找到该 roleId 对应的角色数据!'
+            });
+        }
+
+        if( roleName !== role.roleName ){
+            //用户修改了角色名
+            //判断是否存在同名的角色
+            let isNameExist = await Role.isNameExist( roleName );
+
+            if( isNameExist ){
+                return this.json({
+                    status : -1,
+                    message : '已经存在同名的角色!!'
+                });
+            }
+        }
+
+
+        try{
+            let out = await role.update( { roleName : roleName, permissions : permissions } ).exec();
+            this.json({
+                status : 0,
+                message : '修改角色成功',
+                data : out
+            });
+        }catch(e){
+            grape.log.warn( e );
+            this.json({
+                status : -1,
+                message : '修改角色失败',
+                debugInfo : e.message
+            });
+        }
     }
 
-    editAction(){
-        this.http.res.end('编辑角色页面');
-    }
+    async doDeleteAction(){
 
-    doUpdateAction(){
-        this.http.res.end('更新角色接口');
-    }
+        let http = this.http;
 
-    doDeleteAction(){
-        this.http.res.end('删除角色接口');
+        let Role = this.model('Role');
+
+        let body = http.req.body;
+
+        let roleId = body.roleId;
+
+        let role = null;
+        try{
+            role = await Role.findOne({ _id : roleId }).exec();
+        }catch(e){
+            grape.log.warn( e );
+            return this.json({
+                status : -1,
+                message : '服务异常',
+                debugInfo : e.message
+            });
+        }
+
+        if( ! role ){
+            return this.json({
+                status : -1,
+                message : '未找到该 roleId 对应的角色数据!'
+            });
+        }
+
+        try{
+            await Role.deleteRoleById( roleId );
+            this.json({
+                status : 0,
+                message : '删除角色成功'
+            });
+        }catch(e){
+            grape.log.warn( e );
+            this.json({
+                status : -1,
+                message : '系统异常',
+                debugInfo : e.message
+            });
+        }
     }
 }
 

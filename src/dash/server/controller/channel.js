@@ -242,12 +242,9 @@ class ChannelController extends ControllerBase {
 
         }
 
-        channel.channelName = channelName;
-        channel.articleTemplate = articleTemplate;
-
         let result = await channel.update({ channelName : channelName, articleTemplate : articleTemplate }).exec();
 
-        console.log( result );
+        grape.log.info( result );
 
         this.json({
             status : 0,

@@ -1,5 +1,5 @@
 /**
- * 新增角色弹窗
+ * 编辑 角色弹窗
  * Created by jess on 16/6/14.
  */
 
@@ -26,17 +26,21 @@ const roleService = service.getService('role');
 const channelUtil = utils.channelUtil;
 
 
-class AddRoleDialog extends React.Component {
+class EditRoleDialog extends React.Component {
 
     constructor( props ){
+
         super(props);
 
+        let role = props.role;
+
         this.state = {
+            role : role,
             isLoading : false,
             errorMsg : ''
         };
 
-        this.rolePermission = {};
+        this.rolePermission = role.permissions;
 
         this.submit = this.submit.bind( this );
         this.handlePermissionChange = this.handlePermissionChange.bind( this );
@@ -49,7 +53,7 @@ class AddRoleDialog extends React.Component {
 
         let roleName = this.refs.roleName.getValue().trim();
 
-        console.log( 'add role submit: ', this.rolePermission );
+        console.log( 'edit role submit: ', this.rolePermission );
 
         if( ! roleName ){
             this.setState({
@@ -60,18 +64,20 @@ class AddRoleDialog extends React.Component {
 
         let searchConf = utils.getSearchConf();
 
+
         let data = {
             channelId : searchConf.channelId,
+            roleId : this.state.role._id,
             roleName : roleName,
             permissions : JSON.stringify( this.rolePermission )
         };
 
-        roleService.addRole( data )
+        roleService.updateRole( data )
             .then( ( req ) => {
                 if( req.requestStatus === roleService.STATUS.SUCCESS ){
                     let out = req.data;
                     if( out.status === 0 ){
-                        alert('添加角色成功');
+                        alert('编辑角色成功');
                         location.reload();
                         return;
                     }
@@ -122,10 +128,10 @@ class AddRoleDialog extends React.Component {
         let dialogProps = {
             showing : true,
             isAutoCenter : false,
-            title : '新增角色',
+            title : '编辑角色',
             onRequestClose : props.onRequestClose,
             dialog : {
-                className : 'add-role-dialog',
+                className : 'edit-role-dialog',
                 style : {
                 }
             }
@@ -146,22 +152,22 @@ class AddRoleDialog extends React.Component {
                     <div className="form-group">
                         <label for="name-input" className="col-sm-2 control-label">角色名</label>
                         <div className="col-sm-10">
-                            <TextInput ref="roleName" id="name-input" name="roleName" type="text" placeholder="输入角色名称" />
+                            <TextInput value={ state.role.roleName } ref="roleName" id="name-input" name="roleName" type="text" placeholder="输入角色名称" />
                         </div>
                     </div>
                     <div className="form-group">
-                        <label className="col-sm-2 control-label">设置角色权限</label>
+                        <label className="col-sm-2 control-label">编辑角色权限</label>
                         <div className="col-sm-10">
                             <RolePermissionTree
                                 collapsed={ false }
                                 onPermissionChange={ this.handlePermissionChange }
                                 channelTree={ props.channelTree }
-                                rolePermission={ {} } />
+                                rolePermission={ state.role.permissions }  />
                         </div>
                     </div>
                     <div className="form-group">
                         <div className="col-sm-offset-2 col-sm-10">
-                            <button type="submit" className="btn btn-default">增加</button>
+                            <button type="submit" className="btn btn-default">保存</button>
                         </div>
                     </div>
                     { error }
@@ -173,4 +179,4 @@ class AddRoleDialog extends React.Component {
 
 
 
-module.exports = AddRoleDialog;
+module.exports = EditRoleDialog;

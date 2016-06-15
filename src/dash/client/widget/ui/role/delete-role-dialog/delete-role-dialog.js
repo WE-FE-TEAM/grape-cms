@@ -1,5 +1,5 @@
 /**
- * 新增角色弹窗
+ * 删除 角色弹窗
  * Created by jess on 16/6/14.
  */
 
@@ -26,20 +26,21 @@ const roleService = service.getService('role');
 const channelUtil = utils.channelUtil;
 
 
-class AddRoleDialog extends React.Component {
+class DeleteRoleDialog extends React.Component {
 
     constructor( props ){
+
         super(props);
 
+        let role = props.role;
+
         this.state = {
+            role : role,
             isLoading : false,
             errorMsg : ''
         };
 
-        this.rolePermission = {};
-
         this.submit = this.submit.bind( this );
-        this.handlePermissionChange = this.handlePermissionChange.bind( this );
     }
 
     submit(){
@@ -47,31 +48,20 @@ class AddRoleDialog extends React.Component {
             return;
         }
 
-        let roleName = this.refs.roleName.getValue().trim();
-
-        console.log( 'add role submit: ', this.rolePermission );
-
-        if( ! roleName ){
-            this.setState({
-                errorMsg : '角色名不能为空'
-            });
-            return;
-        }
-
         let searchConf = utils.getSearchConf();
+
 
         let data = {
             channelId : searchConf.channelId,
-            roleName : roleName,
-            permissions : JSON.stringify( this.rolePermission )
+            roleId : this.state.role._id
         };
 
-        roleService.addRole( data )
+        roleService.deleteRole( data )
             .then( ( req ) => {
                 if( req.requestStatus === roleService.STATUS.SUCCESS ){
                     let out = req.data;
                     if( out.status === 0 ){
-                        alert('添加角色成功');
+                        alert('删除角色成功');
                         location.reload();
                         return;
                     }
@@ -94,25 +84,6 @@ class AddRoleDialog extends React.Component {
         });
     }
 
-    handlePermissionChange(channel, operationValue, isChecked){
-
-        let operationGroup = this.rolePermission[channel._id] || [];
-
-        let index = operationGroup.indexOf( operationValue );
-
-        if( isChecked && index < 0 ){
-            //增加权限
-            operationGroup.push( operationValue );
-        }
-        if( ! isChecked && index >= 0 ){
-            //取消权限
-            operationGroup.splice( index, 1);
-        }
-
-        this.rolePermission[channel._id] = operationGroup;
-
-    }
-
     render(){
 
         let props = this.props;
@@ -121,12 +92,13 @@ class AddRoleDialog extends React.Component {
 
         let dialogProps = {
             showing : true,
-            isAutoCenter : false,
-            title : '新增角色',
+            isAutoCenter : true,
+            title : '删除角色',
             onRequestClose : props.onRequestClose,
             dialog : {
-                className : 'add-role-dialog',
+                className : 'delete-role-dialog',
                 style : {
+                    width : 700
                 }
             }
         };
@@ -142,26 +114,21 @@ class AddRoleDialog extends React.Component {
 
         return (
             <RDialog { ...dialogProps }>
-                <RForm action="/cms/dash/role/doAdd" method="POST" className="form-horizontal" onSubmit={ this.submit }>
+                <RForm action="/cms/dash/role/doDelete" method="POST" className="form-horizontal" onSubmit={ this.submit }>
                     <div className="form-group">
                         <label for="name-input" className="col-sm-2 control-label">角色名</label>
                         <div className="col-sm-10">
-                            <TextInput ref="roleName" id="name-input" name="roleName" type="text" placeholder="输入角色名称" />
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <label className="col-sm-2 control-label">设置角色权限</label>
-                        <div className="col-sm-10">
-                            <RolePermissionTree
-                                collapsed={ false }
-                                onPermissionChange={ this.handlePermissionChange }
-                                channelTree={ props.channelTree }
-                                rolePermission={ {} } />
+                            { state.role.roleName }
                         </div>
                     </div>
                     <div className="form-group">
                         <div className="col-sm-offset-2 col-sm-10">
-                            <button type="submit" className="btn btn-default">增加</button>
+                            <div className="col-xs-6">
+                                <button onClick={ this.submit } type="button" className="btn btn-danger">确认删除</button>
+                            </div>
+                            <div className="col-xs-6">
+                                <button onClick={ props.onRequestClose } type="button" className="btn btn-primary">取消</button>
+                            </div>
                         </div>
                     </div>
                     { error }
@@ -173,4 +140,4 @@ class AddRoleDialog extends React.Component {
 
 
 
-module.exports = AddRoleDialog;
+module.exports = DeleteRoleDialog;

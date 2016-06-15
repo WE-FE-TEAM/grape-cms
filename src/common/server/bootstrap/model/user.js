@@ -36,8 +36,12 @@ let userSchema = mongoose.Schema({
         type : Number,
         default : 999
     },
-    roles : [ String ]
+    roles : {
+        type : [ String ],
+        default : []
+    }
 }, {
+    minimize : false,
     collection : 'users',
     timestamps: { createdAt: 'createdAt', updatedAt : 'updatedAt' }
 });

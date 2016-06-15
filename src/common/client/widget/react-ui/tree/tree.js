@@ -55,7 +55,13 @@ class TreeNode extends React.Component{
         let list = arr.map( ( obj, index ) => {
             let key = index;
             return (
-                <TreeNode key={ key } childrenKey={ props.childrenKey }  data={ obj } className={ props.className } nodeLabelRenderer={ props.nodeLabelRenderer } />
+                <TreeNode
+                    key={ key }
+                    collapsed={ props.collapsed }
+                    childrenKey={ props.childrenKey }
+                    data={ obj }
+                    className={ props.className }
+                    nodeLabelRenderer={ props.nodeLabelRenderer } />
             );
         });
 
@@ -132,7 +138,12 @@ class Tree extends React.Component{
 
         return (
             <ul className={ className }>
-                <TreeNode data={ props.data } childrenKey={ props.childrenKey } className={ props.nodeClassName } nodeLabelRenderer={ props.nodeLabelRenderer } />
+                <TreeNode
+                    data={ props.data }
+                    childrenKey={ props.childrenKey }
+                    className={ props.nodeClassName }
+                    collapsed={ props.collapsed }
+                    nodeLabelRenderer={ props.nodeLabelRenderer } />
             </ul>
         );
     }

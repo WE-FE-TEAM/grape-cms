@@ -68,6 +68,8 @@ RWeDialog.defaultProps = {
 
     isAutoCenter : true,
 
+    zIndex : 1050,
+
     dialog : {
         className : '',
         style : {

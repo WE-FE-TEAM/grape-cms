@@ -69,7 +69,11 @@ class RolePermissionTree extends React.Component {
             <dl className="role-permission-con">
                 <dt>角色权限</dt>
                 <dd className="role-permission-tree">
-                    <Tree childrenKey="children" nodeLabelRenderer={ this.nodeLabelRender } data={ props.channelTree } />
+                    <Tree
+                        collapsed={ props.collapsed }
+                        childrenKey="children"
+                        nodeLabelRenderer={ this.nodeLabelRender }
+                        data={ props.channelTree } />
                 </dd>
             </dl>
         );
