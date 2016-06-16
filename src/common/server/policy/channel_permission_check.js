@@ -29,12 +29,7 @@ class ChannelPermissionCheckFilter extends PolicyBase {
         let http = this.http;
         let req = http.req;
 
-        //channel ID 必须放在 query 部分, 如果是 POST, 必须在 POST 里
-        let data = req.query;
-        if( req.method === 'post' ){
-            data = req.body;
-        }
-        let channelId = ( data.channelId || '' ).trim();
+        let channelId = http.getChannelId();
         if( ! channelId ){
             grape.log.info('请求query中缺少 channelId, 不进行权限校验 ');
             return;

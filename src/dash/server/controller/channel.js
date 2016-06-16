@@ -60,9 +60,6 @@ class ChannelController extends ControllerBase {
         } );
     }
     
-    //渲染  添加栏目页面
-    addAction(){}
-    
     //实际执行 添加栏目动作
     async doAddAction(){
 
@@ -162,9 +159,35 @@ class ChannelController extends ControllerBase {
     //查看某个栏目
     async viewAction(){
 
+        const Channel = this.model('Channel');
+
         let http = this.http;
         let req = http.req;
-        let channelId = ( req.channelId || '' ).trim();
+        let channelId = http.getChannelId();
+
+        let channel = await Channel.findOne({ _id : channelId });
+        
+        if( ! channel ){
+            grape.log.info(`找不到channelId[${channelId}]对应的栏目`);
+            return http.e404();
+        }
+
+        http.assign('channel', channel);
+        
+        let channelType = channel.channelType;
+        
+        switch( channelType ){
+            case 'container' :
+                return http.render('dash/page/channel/channel-container/channel-container.tpl');
+            case 'article' :
+                return http.render('dash/page/channel/channel-article/channel-article.tpl');
+            case 'data' :
+                return http.render('dash/page/channel/channel-data/channel-data.tpl');
+            case 'resource' :
+                return http.render('dash/page/channel/channel-resource/channel-resource.tpl');
+            default:
+                return http.e404();
+        }
 
     }
 
@@ -308,7 +331,7 @@ class ChannelController extends ControllerBase {
 
     }
 
-    articleAction(){
+    article(){
         this.http.res.end('显示某文章栏目');
     }
 

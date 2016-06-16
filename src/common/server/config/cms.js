@@ -47,6 +47,9 @@ let urlOperationGroupMap = {
     //删除栏目
     'dash/channel/doDelete' : 'channel.delete',
 
+
+    //查看栏目
+    'dash/channel/view' : 'channel.view',
     
     //查看文章栏目
     'dash/channel/article' : 'channel.view',

@@ -84,24 +84,38 @@ utils.getUserAvailableChannelIds = async function( user ){
             });
         }else{
             //普通用户, 先获取用户具有的所有角色
-            let userRoles = await User.find({ _id : user._id },  { roles : 1, _id : 0 });
-            userRoles = userRoles.map( ( obj ) => {
-                return obj.roles;
-            });
+            let userRoles = await User.findOne({ _id : user._id },  { roles : 1, _id : 0 });
+            userRoles = user.roles || [] ;
+
             //找出这些角色具有的所有权限
             let userPermissions = await Role.find({ _id : { $in : userRoles }}, { permissions : 1, _id : 0 });
+
             userPermissions = userPermissions.reduce( ( result, current ) => {
-                let temp = current.map( ( permission ) => {
-                    return permission.operationGroup + '&' + permission.channelId;
-                } );
-                return result.concat( temp );
-            }, [] );
+
+                let permissions = current.permissions || {} ;
+
+                for( var channelId in permissions ){
+                    if( permissions.hasOwnProperty(channelId) ){
+                        let arr = permissions[channelId] || [];
+                        let temp = result[channelId] || [];
+                        temp = temp.concat( arr );
+                        result[channelId] = temp;
+                    }
+                }
+
+                return result;
+            }, {} );
             
             //遍历所有的栏目, 找出用户有权限访问的
             result.forEach( ( channel ) => {
-                let permissionStr = utils.url2OperationGroup( channel.url ) + '&' + channel._id;
-                if( userPermissions.indexOf( permissionStr ) >= 0 ){
-                    out.push( channel._id.toString() );
+
+                let channelId = channel._id.toString();
+                let viewOperationName = utils.url2OperationGroup( channel.url );
+
+                let result = userPermissions[channelId];
+
+                if( result && result.indexOf( viewOperationName ) >= 0 ){
+                    out.push( channelId );
                 }
             });
         }

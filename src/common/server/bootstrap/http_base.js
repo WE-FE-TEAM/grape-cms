@@ -21,6 +21,16 @@ class HttpBase extends Http {
         super.init( ...data );
 
         this.user = null;
+
+        let req = this.req;
+        //channel ID 必须放在 query 部分, 如果是 POST, 必须在 POST 里
+        let temp = req.query;
+        if( req.method === 'post' ){
+            temp = req.body;
+        }
+        let channelId = ( temp.channelId || '' ).trim();
+
+        this.channelId = channelId;
     }
 
     /**
@@ -39,6 +49,10 @@ class HttpBase extends Http {
 
     getUser(){
         return this.user;
+    }
+
+    getChannelId(){
+        return this.channelId;
     }
 
 }

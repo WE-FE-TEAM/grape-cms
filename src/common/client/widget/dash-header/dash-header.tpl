@@ -5,6 +5,9 @@
         <span class="user-name">{{ $request.user.userName | raw }}</span>
         <ul class="nav navbar-nav navbar-right">
             <li>
+                <a target="_blank" href="http://jsonmate.com/">JSON在线编辑器</a>
+            </li>
+            <li>
                 <a href="##">帮助文档</a>
             </li>
             <li>

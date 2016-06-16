@@ -1,8 +1,15 @@
 {# 文章类型的栏目页面 #}
-{% extends 'common:page/layout.tpl' %}
+{% extends 'common:page/dash-layout.tpl' %}
 
-{% block block_body %}
-<div id="pages-container">
-    文章类型的栏目
-</div>
+{% block dash_block_main %}
+<div id="app"></div>
+{% endblock %}
+
+
+{% block block_body_js %}
+{% script %}
+require(["dash:page/channel/channel-article/channel-article.js"] , function(app){
+app.init();
+});
+{% endscript %}
 {% endblock %}
