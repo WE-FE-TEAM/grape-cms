@@ -26,6 +26,11 @@ class LoginFilter extends PolicyBase {
             return grape.prevent();
         }
 
+        if( user.isUserDisabled() ){
+            //用户被禁用,不能访问系统
+            return this.http.sendStatus(403);
+        }
+
     }
 }
 

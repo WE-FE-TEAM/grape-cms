@@ -9,6 +9,7 @@
 const crypto = require('crypto');
 const mongoose = require('mongoose');
 
+let cms = global.cms;
 
 let userSchema = mongoose.Schema({
 
@@ -134,6 +135,72 @@ userSchema.methods.isSuperAdmin = function(){
     return this.level === 0;
 };
 
+
+/**
+ * 获取 **普通用户** 具有的所有权限
+ * 获取当前用户具有的所有权限
+ * @returns {{}}
+ */
+userSchema.methods.getAllPermissions = async function(){
+
+    const Role = mongoose.model('Role');
+
+    let out = {};
+
+    let userRoles = this.roles || [] ;
+
+    //找出这些角色具有的所有权限
+    let userPermissions = await Role.find({ _id : { $in : userRoles }}, { permissions : 1, _id : 0 });
+
+    out = userPermissions.reduce( ( result, current ) => {
+
+        let permissions = current.permissions || {} ;
+
+        for( var channelId in permissions ){
+            if( permissions.hasOwnProperty(channelId) ){
+                let arr = permissions[channelId] || [];
+                let temp = result[channelId] || [];
+                temp = temp.concat( arr );
+                result[channelId] = temp;
+            }
+        }
+
+        return result;
+    }, {} );
+
+    return out;
+};
+
+/**
+ * 判断当前用户, 是否对 channelId 具有 url 对应的操作权限
+ * @param channelId {string} 当前栏目ID
+ * @param url {string} 对该栏目下的操作, 由  module/controller/action  组成
+ * @returns {boolean} true 用户具有访问权限; false 用户不能访问
+ */
+userSchema.methods.canAccess = async function( channelId, url ){
+
+    let out = this.isSuperAdmin();
+
+    if( ! out ){
+        //对非超级管理员的普通用户, 才进行权限判断
+        let userPermissions = await this.getAllPermissions();
+        let utils = cms.utils;
+        let operationName = utils.url2OperationGroup( url );
+
+        out = userPermissions[channelId];
+
+        console.log( out );
+
+        console.log( operationName );
+
+        if( out ){
+            out = out.indexOf( operationName ) >= 0;
+        }
+
+    }
+
+    return out;
+};
 
 let User = mongoose.model('User', userSchema);
 

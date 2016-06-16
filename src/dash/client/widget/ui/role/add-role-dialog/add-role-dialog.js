@@ -75,14 +75,14 @@ class AddRoleDialog extends React.Component {
                         location.reload();
                         return;
                     }
-                    return Promise.reject( out.message );
+                    return Promise.reject( new Error(out.message) );
                 }
-                return Promise.reject();
+                return Promise.reject( new Error('系统返回异常') );
             })
-            .catch( ( msg ) => {
+            .catch( ( e ) => {
                 this.setState({
                     isLoading : false,
-                    errorMsg : msg || '服务器异常'
+                    errorMsg : e.message || '服务器异常'
                 });
             });
 

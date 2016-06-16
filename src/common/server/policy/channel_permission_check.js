@@ -19,11 +19,7 @@ const cmsUtils = cms.utils;
 class ChannelPermissionCheckFilter extends PolicyBase {
 
     async execute(){
-
-
-        const Channel = this.model('Channel');
-        const Role = this.model('Role');
-
+        
         let user = this.http.getUser();
 
         let http = this.http;
@@ -31,8 +27,7 @@ class ChannelPermissionCheckFilter extends PolicyBase {
 
         let channelId = http.getChannelId();
         if( ! channelId ){
-            grape.log.info('请求query中缺少 channelId, 不进行权限校验 ');
-            return;
+            return http.sendStatus( 403 );
         }
 
         //超级管理员, 具有所有权限
@@ -40,22 +35,12 @@ class ChannelPermissionCheckFilter extends PolicyBase {
             return;
         }
 
-        let userRoles = user.roles;
-        
 
-        let permissionPath = cmsUtils.getPermissionPath( http.module, http.controller, http.action, channelId );
+        let actionPath = cmsUtils.getActionPath( http.module, http.controller, http.action );
 
-        //查找对 channelId 的 operationName 有权限 并且 在用户所属角色组中的 角色 是否存在
-        let matchedRole = await Role.findOne(
-            {
-                permissions : permissionPath,
-                _id : {
-                    $in : userRoles
-                }
-            }
-        ).exec();
+        let canAccess = await user.canAccess( channelId, actionPath );
 
-        if( ! matchedRole ){
+        if( ! canAccess ){
             //用户没有权限
             return http.sendStatus( 403 );
         }

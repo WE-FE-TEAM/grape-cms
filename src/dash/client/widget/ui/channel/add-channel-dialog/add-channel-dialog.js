@@ -86,9 +86,12 @@ class AddChannelDialog extends React.Component{
                     }else{
                         return Promise.reject( new Error( data.message ) );
                     }
+
                 }
+                return Promise.reject( new Error('系统返回异常') );
             })
             .catch( ( e ) => {
+                
                 this.setState({
                     isLoading : false,
                     errorMsg : e.message || '保存栏目失败'

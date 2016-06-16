@@ -6,24 +6,41 @@
 'use strict';
 
 
+const loginFilter = [ 'session_user', 'login_filter' ];
+
+const accessFilter = [ 'session_user', 'login_filter', 'channel_permission_check' ];
+
 module.exports = {
     
-    '*' : [ 'session_user', 'login_filter' ],
+    '*' : loginFilter,
 
     home : {
 
-        '*' : [ 'session_user', 'login_filter' ]
+        '*' : accessFilter,
+
+        'index' : loginFilter
     },
 
     channel : {
 
-        '*' : [ 'session_user', 'login_filter' ]
+        '*' : accessFilter,
 
+        'getAllTree' : loginFilter,
+
+        'userChannelsData' : loginFilter,
+        
+        'channelPath' : loginFilter
+
+    },
+
+    role : {
+
+        '*' : accessFilter
     },
 
     user : {
 
-        '*' : [ 'session_user', 'login_filter', 'channel_permission_check' ]
+        '*' : accessFilter
 
     }
     

@@ -13,6 +13,8 @@ const ReactDOM = require('react-dom');
 
 const service = require('common:widget/ui/service/service-factory.js');
 
+const utils = require('common:widget/ui/utils/utils.js');
+
 const roleService = service.getService('role');
 
 const AddUserDialog = require('dash:widget/ui/user/add-user-dialog/add-user-dialog.js');
@@ -125,7 +127,13 @@ let singleton = {
 
     init : function(){
 
-        roleService.getAll()
+        let searchConf = utils.getSearchConf();
+
+        let data = {
+            channelId : searchConf.channelId
+        };
+
+        roleService.getAll( data )
             .then( ( res ) => {
                 if( res.requestStatus === roleService.STATUS.SUCCESS ){
                     let out = res.data;

@@ -104,7 +104,7 @@ utils.getChannelOperationSet = function( channelType ){
                 },
                 {
                     text : '添加子栏目',
-                    value : 'channel.container.addChild'
+                    value : 'channel.add'
                 }
             ],
         //文章栏目对应操作集合
@@ -204,12 +204,36 @@ utils.getChannelOperationSet = function( channelType ){
             {
                 text : '查看栏目',
                 value : 'channel.view'
+            },
+            {
+                text : '新增角色',
+                value : 'role.add'
+            },
+            {
+                text : '编辑角色',
+                value : 'role.update'
+            },
+            {
+                text : '删除角色',
+                value : 'role.delete'
             }
         ],
         userManage : [
             {
                 text : '查看栏目',
                 value : 'channel.view'
+            },
+            {
+                text : '新增用户',
+                value : 'user.add'
+            },
+            {
+                text : '编辑用户',
+                value : 'user.update'
+            },
+            {
+                text : '删除用户',
+                value : 'user.delete'
             }
         ]
 

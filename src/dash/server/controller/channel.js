@@ -330,22 +330,7 @@ class ChannelController extends ControllerBase {
         }
 
     }
-
-    article(){
-        this.http.res.end('显示某文章栏目');
-    }
-
-    dataAction(){
-        this.http.res.end('显示某json栏目');
-    }
-
-    resourceAction(){
-        this.http.res.end('显示某资源上传栏目');
-    }
-
-    containerAction(){
-        this.http.res.end('显示某 容器 栏目');
-    }
+    
 
 
 }

@@ -31,17 +31,30 @@ let urls = {
 let urlOperationGroupMap = {
 
     //栏目管理
-    'dash/home/channelManage' : 'home.channelManage.view',
+    'dash/home/channelManage' : 'channel.view',
+    
+    
     //角色管理
-    'dash/home/roleManage' : 'home.roleManage.view',
+    'dash/home/roleManage' : 'channel.view',
+    'dash/role/all' : 'channel.view',
+    'dash/role/doAdd' : 'role.add',
+    'dash/role/doUpdate' : 'role.update',
+    'dash/role/doDelete' : 'role.delete',
+
+
     //用户管理
-    'dash/home/userManage' : 'home.userManage.view',
+    'dash/home/userManage' : 'channel.view',
+    'dash/user/userNameExist' : 'channel.view',
+    'dash/user/list' : 'channel.view',
+    'dash/user/doAdd' : 'user.add',
+    'dash/user/doUpdate' : 'user.update',
+    'dash/user/doDelete' : 'user.delete',
 
     //查看容器栏目
     'dash/channel/container' : 'channel.view',
     //新增子栏目
-    'dash/channel/add' : 'channel.container.addChild',
-    'dash/channel/doAdd' : 'channel.container.addChild',
+    'dash/channel/add' : 'channel.add',
+    'dash/channel/doAdd' : 'channel.add',
     //编辑栏目
     'dash/channel/doUpdate' : 'channel.update',
     //删除栏目

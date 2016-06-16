@@ -43,12 +43,20 @@ class ServiceBase {
 
         return new Promise( (resolve, reject) => {
 
+            let header = {};
+
+            if( conf.dataType === 'json' ){
+                //对于返回JSON格式的, 设置自定义header, 方便服务端识别
+                header['x-grape-res-expect'] = 'json';
+            }
+
             let options = {
                 url: conf.url,
                 data: finalData,
                 method: conf.method || conf.type,
                 cache: conf.cache === true,
                 dataType: conf.dataType,
+                headers : header,
                 error : (xhr) => {
                     resolve( {
                         requestStatus : this.STATUS.ERROR

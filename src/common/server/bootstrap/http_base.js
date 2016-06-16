@@ -25,7 +25,8 @@ class HttpBase extends Http {
         let req = this.req;
         //channel ID 必须放在 query 部分, 如果是 POST, 必须在 POST 里
         let temp = req.query;
-        if( req.method === 'post' ){
+        
+        if( req.method.toLowerCase() === 'post' ){
             temp = req.body;
         }
         let channelId = ( temp.channelId || '' ).trim();
@@ -40,6 +41,43 @@ class HttpBase extends Http {
     argumentValidateFail( message ){
         this.assign( 'message', message );
         this.e404();
+    }
+
+    //是否本次请求应该返回JSON格式
+    shouldResponseJson(){
+        let resType = ( this.req.get('x-grape-res-expect') || '' ).toLowerCase();
+        return resType === 'json';
+    }
+
+    sendStatus( status, data ){
+
+        if( this.shouldResponseJson() ){
+
+            status += '';
+
+            let message = '';
+
+            switch( status ){
+                case '403':
+                    message = '您没有权限执行该操作!!';
+                    break;
+                case '404':
+                    message = '请求地址不存在!!';
+                    break;
+                default :
+                    message = '';
+            }
+
+            if( message ){
+                this.json({
+                    status : -1,
+                    message : message
+                });
+                return grape.prevent();
+            }
+        }
+
+        return super.sendStatus( status, data );
     }
 
     setUser( user ){

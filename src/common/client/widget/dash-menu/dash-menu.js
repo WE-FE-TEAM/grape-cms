@@ -49,7 +49,7 @@ let singleton = {
 
         let currentChannelId = searchConf.channelId || null;
 
-        Promise.all([  dashService.getUserMenuTree(), dashService.getChannelPath({ channelId : currentChannelId}) ])
+        Promise.all([  dashService.getUserMenuTree( { channelId : currentChannelId} ), dashService.getChannelPath({ channelId : currentChannelId}) ])
             .then( ( arr ) => {
                 // console.log( arr );
                 let all = arr[0];

@@ -49,17 +49,6 @@ utils.getActionPath = function( module, controller, action){
     return `${module}/${controller}/${action}`;
 };
 
-/**
- * 根据URL所属的 module/controller/action 以及当前栏目ID, 计算对应的权限字符串格式
- * @param module {string} 
- * @param controller {string}
- * @param action {string}
- * @param channelId {string} 栏目ID
- * @returns {string}
- */
-utils.getPermissionPath = function( module, controller, action, channelId ){
-    return `${module}/${controller}/${action}&${channelId}`;
-};
 
 /**
  * 查找用户具有的所有有查看权限的 栏目 
@@ -83,28 +72,9 @@ utils.getUserAvailableChannelIds = async function( user ){
                 return obj._id.toString();
             });
         }else{
-            //普通用户, 先获取用户具有的所有角色
-            let userRoles = await User.findOne({ _id : user._id },  { roles : 1, _id : 0 });
-            userRoles = user.roles || [] ;
 
-            //找出这些角色具有的所有权限
-            let userPermissions = await Role.find({ _id : { $in : userRoles }}, { permissions : 1, _id : 0 });
-
-            userPermissions = userPermissions.reduce( ( result, current ) => {
-
-                let permissions = current.permissions || {} ;
-
-                for( var channelId in permissions ){
-                    if( permissions.hasOwnProperty(channelId) ){
-                        let arr = permissions[channelId] || [];
-                        let temp = result[channelId] || [];
-                        temp = temp.concat( arr );
-                        result[channelId] = temp;
-                    }
-                }
-
-                return result;
-            }, {} );
+            //普通用户, 获取到所有的权限
+            let userPermissions = await user.getAllPermissions();
             
             //遍历所有的栏目, 找出用户有权限访问的
             result.forEach( ( channel ) => {

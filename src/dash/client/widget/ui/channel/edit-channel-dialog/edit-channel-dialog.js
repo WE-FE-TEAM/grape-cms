@@ -80,10 +80,11 @@ class EditChannelDialog extends React.Component{
                         //成功
                         alert('修改栏目成功');
                         location.reload();
-                    }else{
-                        return Promise.reject( new Error( data.message ) );
+                        return;
                     }
+                    return Promise.reject( new Error( data.message ) );
                 }
+                return Promise.reject( new Error('系统返回异常') );
             })
             .catch( ( e ) => {
                 this.setState({
