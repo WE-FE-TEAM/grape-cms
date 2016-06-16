@@ -19,11 +19,25 @@ const RDialog = require('common:widget/react-ui/RWeDialog/RWeDialog.js');
 const RForm = require('common:widget/react-ui/RForm/RForm.js');
 
 const TextInput = RForm.TextInput;
+const Select = RForm.Select;
 
 const UserRoleList = require('dash:widget/ui/user/user-role-list/user-role-list.js');
 
 
 const userService = service.getService('user');
+
+
+
+const enabledData = [
+    {
+        value : 0,
+        text : '启用'
+    },
+    {
+        value : 1,
+        text : '禁用'
+    }
+];
 
 
 class AddUserDialog extends React.Component{
@@ -35,11 +49,14 @@ class AddUserDialog extends React.Component{
         this.state = {
             isLoading : false,
             errorMsg : '',
-            userRoles : []
+            user : props.user,
+            userRoles : props.user.roles || []
         };
         
         this.submit = this.submit.bind( this );
         this.onRoleChange = this.onRoleChange.bind( this );
+
+        this.onOptionClick = this.onOptionClick.bind( this );
     }
     
     submit(){
@@ -47,25 +64,30 @@ class AddUserDialog extends React.Component{
             return;
         }
 
+        let user = this.state.user;
+
         let searchConf = utils.getSearchConf();
         
         let userName = this.refs.userName.getValue();
         let password = this.refs.password.getValue();
+
         let roles = this.state.userRoles;
 
         let data = {
             channelId : searchConf.channelId,
+            userId : user._id,
+            enabled : user.enabled,
             userName : userName,
             password : password,
             roles : JSON.stringify( roles )
         };
 
-        userService.addUser( data )
+        userService.updateUser( data )
             .then( ( req ) => {
                 if( req.requestStatus === userService.STATUS.SUCCESS ){
                     let out = req.data;
                     if( out.status === 0 ){
-                        alert('创建用户成功');
+                        alert('更新用户成功');
                         location.reload();
                         return;
                     }
@@ -107,20 +129,30 @@ class AddUserDialog extends React.Component{
             userRoles : userRoles
         });
     }
+
+    //修改用户的 启用状态
+    onOptionClick( value, text ){
+        let user = this.state.user;
+        user.enabled = parseInt( value, 10);
+        this.setState({
+            user : user
+        });
+    }
     
     render(){
 
         let props = this.props;
         let state = this.state;
 
+        let user = state.user;
 
         let dialogProps = {
             showing : true,
             isAutoCenter : false,
-            title : '新增用户',
+            title : '编辑用户',
             onRequestClose : props.onRequestClose,
             dialog : {
-                className : 'add-user-dialog',
+                className : 'edit-user-dialog',
                 style : {
                 }
             }
@@ -137,17 +169,23 @@ class AddUserDialog extends React.Component{
         
         return (
             <RDialog { ...dialogProps }>
-                <RForm action="/cms/dash/user/doAdd" method="POST" className="form-horizontal" onSubmit={ this.submit }>
+                <RForm action="/cms/dash/user/doUpdate" method="POST" className="form-horizontal" onSubmit={ this.submit }>
                     <div className="form-group">
                         <label for="name-input" className="col-sm-2 control-label">用户名</label>
                         <div className="col-sm-10">
-                            <TextInput ref="userName" id="name-input" name="userName" type="text" placeholder="输入用户名称" />
+                            <TextInput ref="userName" id="name-input" name="userName" type="text" value={ user.userName } placeholder="输入用户名称" />
                         </div>
                     </div>
                     <div className="form-group">
                         <label for="password-input" className="col-sm-2 control-label">登录密码</label>
                         <div className="col-sm-10">
-                            <TextInput ref="password" id="password-input" name="password" type="password" placeholder="登录密码" />
+                            <TextInput ref="password" id="password-input" name="password" type="password" placeholder="修改登录密码" />
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <label for="enable-input" className="col-sm-2 control-label">是否启用</label>
+                        <div className="col-sm-10">
+                            <Select name="enable-input" value={ user.enabled } data={ enabledData } onOptionClick={ this.onOptionClick } />
                         </div>
                     </div>
                     <div className="form-group">
@@ -162,7 +200,7 @@ class AddUserDialog extends React.Component{
                     </div>
                     <div className="form-group">
                         <div className="col-sm-offset-2 col-sm-10">
-                            <button type="submit" className="btn btn-default">增加</button>
+                            <button type="submit" className="btn btn-warning">保存</button>
                         </div>
                     </div>
                     { error }

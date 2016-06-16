@@ -11,6 +11,7 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 
+const Paginate = require('react-paginate');
 
 function noop(){}
 
@@ -31,7 +32,24 @@ class RTable extends React.Component {
 
     //渲染翻页组件
     renderPagination(){
-        return null;
+
+        let props = this.props;
+
+        if( ! props.pagination ){
+            return null;
+        }
+
+        return ( <div className="clearfix r-table-page-container">
+            <Paginate
+                containerClassName="pagination"
+                activeClassName="active"
+                pageNum={ props.totalPage }
+                forceSelected={ props.currentPage }
+                clickCallback={ props.onPageChange }
+                marginPagesDisplayed={ 2 }
+                pageRangeDisplayed={ 5 }
+            />
+        </div> );
     }
 
     render(){
@@ -99,6 +117,7 @@ RTable.defaultProps = {
     pagination : false,
     pageSize : 10,
     totalPage : 1,
+    currentPage : 0,
     onPageChange : noop
 };
 

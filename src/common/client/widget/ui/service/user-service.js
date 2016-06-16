@@ -31,6 +31,27 @@ const apiConf = {
         url: URL_PREFIX + '/dash/user/doAdd',
         method: 'POST',
         dataType: 'json'
+    },
+
+    /* 编辑用户信息 */
+    updateUser : {
+        url: URL_PREFIX + '/dash/user/doUpdate',
+        method: 'POST',
+        dataType: 'json'
+    },
+
+    /*  删除用户信息 */
+    deleteUser : {
+        url: URL_PREFIX + '/dash/user/doDelete',
+        method: 'POST',
+        dataType: 'json'
+    },
+
+    /* 获取某个区间内的用户列表 */
+    getUserList : {
+        url: URL_PREFIX + '/dash/user/list',
+        method: 'GET',
+        dataType: 'json'
     }
 
 

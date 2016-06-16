@@ -13,6 +13,7 @@ const ReactDOM = require('react-dom');
 const RLoadingIndicator = require('common:widget/react-ui/RLoadIndicator/RLoadIndicator.js');
 const RTable = require('common:widget/react-ui/RTable/RTable.js');
 
+const utils = require('common:widget/ui/utils/utils.js');
 const service = require('common:widget/ui/service/service-factory.js');
 
 const roleService = service.getService('role');
@@ -40,7 +41,13 @@ class RoleList extends React.Component {
             isLoading : true
         });
 
-        roleService.getAll()
+        let searchConf = utils.getSearchConf();
+
+        let data = {
+            channelId : searchConf.channelId
+        };
+
+        roleService.getAll( data )
             .then( (req) => {
                 if( req.requestStatus === roleService.STATUS.SUCCESS ){
                     let out = req.data;

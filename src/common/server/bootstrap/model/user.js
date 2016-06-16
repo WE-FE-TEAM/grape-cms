@@ -86,6 +86,34 @@ userSchema.statics.isNameExist = async function( userName ){
     return out;
 };
 
+/**
+ * 获取到所有的 用户数组, 按照 用户创建时间 升序 排列
+ * @returns {Array}
+ */
+userSchema.statics.getAll = async function(){
+
+    let User = mongoose.model('User');
+
+    let out = [];
+
+    //按 创建时间 升序 排列
+    out = await User.find({}).sort( { createdAt : 1 } ).lean( true );
+
+    return out;
+
+};
+
+/**
+ * 判断用户的 enabled 字段, 是否在合法取值范围
+ * @param enabled {int}  整型
+ * @returns {boolean}
+ */
+userSchema.statics.isEnableValid = function( enabled ){
+
+    return [ 0, 1 ].indexOf( enabled ) >= 0;
+
+};
+
 
 ////////////////  实例方法  //////////////////
 

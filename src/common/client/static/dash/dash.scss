@@ -6,6 +6,10 @@
   width: 100%;
   background: #fff;
 
+  .row{
+    height: 100%;
+  }
+
   //菜单栏
   .sidebar{
     position: absolute;
@@ -19,6 +23,8 @@
 
   //右侧主面板
   .main{
+    height: 100%;
     padding: 20px 40px;
+    overflow-y: auto;
   }
 }

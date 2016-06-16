@@ -16,6 +16,10 @@ const service = require('common:widget/ui/service/service-factory.js');
 const roleService = service.getService('role');
 
 const AddUserDialog = require('dash:widget/ui/user/add-user-dialog/add-user-dialog.js');
+const EditUserDialog = require('dash:widget/ui/user/edit-user-dialog/edit-user-dialog.js');
+const DeleteUserDialog = require('dash:widget/ui/user/delete-user-dialog/delete-user-dialog.js');
+
+const UserList = require('dash:widget/ui/user/user-list/user-list.js');
 
 class App extends React.Component {
 
@@ -31,6 +35,9 @@ class App extends React.Component {
         
         this.onUserAdd = this.onUserAdd.bind( this );
         this.onUserAddSuccess = this.onUserAddSuccess.bind( this );
+
+        this.onUserEdit = this.onUserEdit.bind( this );
+        this.onUserDelete = this.onUserDelete.bind( this );
     }
 
     closeDialog( dialogType ){
@@ -49,6 +56,18 @@ class App extends React.Component {
 
     }
 
+    onUserEdit( user ){
+        this.setState({
+            isShowEdit : user
+        });
+    }
+
+    onUserDelete( user ){
+        this.setState({
+            isShowDelete : user
+        });
+    }
+
     render(){
 
         let props = this.props;
@@ -63,13 +82,37 @@ class App extends React.Component {
             />;
         }
 
+        let editDialog = null;
+        if( state.isShowEdit ){
+            editDialog = <EditUserDialog
+                user={ state.isShowEdit }
+                onRequestClose={ this.closeDialog.bind( this, 'isShowEdit') }
+                roleList={ props.roleList }
+            />;
+        }
+
+        let deleteDialog = null;
+        if( state.isShowDelete ){
+            deleteDialog = <DeleteUserDialog
+                user={ state.isShowDelete }
+                onRequestClose={ this.closeDialog.bind( this, 'isShowDelete') }
+                roleList={ props.roleList }
+            />;
+        }
+
         return (
             <div>
                 <h1>用户管理</h1>
                 <div>
                     <button onClick={ this.onUserAdd } type="button" className="btn btn-lg btn-primary">新增用户</button>
                 </div>
+                <div>
+                    <h3>系统中用户列表</h3>
+                    <UserList onUserEdit={ this.onUserEdit } onUserDelete={ this.onUserDelete } />
+                </div>
                 { addDialog }
+                { editDialog }
+                { deleteDialog }
             </div>
         );
     }

@@ -1,4 +1,10 @@
 
 .r-table{
 
+  //翻页组件容器
+  .r-table-page-container{
+    .pagination{
+      float: right;
+    }
+  }
 }
