@@ -1,0 +1,133 @@
+/**
+ * 将 ueditor 封装成 React 的组件
+ * Created by jess on 16/6/17.
+ */
+
+
+'use strict';
+
+
+var React = require('react');
+var ReactDOM = require('react-dom');
+
+
+function noop(){}
+
+
+class RichEditor extends React.Component{
+
+    constructor(props){
+
+        super(props);
+
+        this.state = {
+            value : props.value
+        };
+
+        this.onChange = this.onChange.bind( this );
+    }
+
+    componentDidMount(){
+
+        // let script = ReactDOM.findDOMNode( this.refs.ueditorscript );
+
+        this.editor = UE.getEditor( this.props.id );
+
+        this.editor.addListener('contentChange', this.onChange );
+
+        this.editor.addListener('ready', () => {
+            this.updateEditor();
+        });
+
+    }
+
+    componentWillUnmount(){
+
+        this.editor.removeListener('contentChange', this.onChange );
+        this.editor.destroy();
+        this.editor = null;
+    }
+
+    // componentWillReceiveProps( nextProps ){
+    //     if( nextProps.value !== this.state.value ){
+    //         this.setState({
+    //             value : nextProps.value
+    //         });
+    //     }
+    // }
+
+    shouldComponentUpdate(nextProps, nextState){
+        // return nextState.value !== this.state.value;
+        return false;
+    }
+
+    componentDidUpdate(){
+        this.updateEditor();
+    }
+
+    onChange( eventType ){
+
+        let editor = this.editor;
+
+        if( eventType === 'contentchange'){
+            //内容修改
+            let value = editor.getContent();
+            if( value !== this.state.value ){
+                this.setState({
+                    value : value
+                });
+                this.props.onChange( value, this );
+            }
+        }
+
+    }
+
+
+    updateEditor(){
+        this.editor.setContent( this.state.value );
+    }
+
+    getValue(){
+        return this.editor.getContent();
+    }
+
+
+    render(){
+
+        let props = this.props;
+
+        let className = 'r-rich-editor ' + ( props.className || '' );
+
+        let containerProps = {
+
+            className : className,
+            ref : 'container'
+        };
+
+        let editorProps = {
+            id : props.id,
+            name : props.name,
+            ref : 'ueditorscript'
+        };
+
+        return (
+            <div {...containerProps}>
+                <script { ...editorProps }></script>
+            </div>
+        );
+    }
+}
+
+
+RichEditor.defaultProps = {
+
+    value : '',
+    className : '',
+    id : '',
+    name : '',
+    onChange : noop
+};
+
+
+
+module.exports = RichEditor;

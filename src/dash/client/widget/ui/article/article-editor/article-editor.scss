@@ -1,0 +1,20 @@
+
+.article-editor{
+
+  position: relative;
+
+  .r-textarea{
+
+    textarea{
+      display: block;
+      width: 100%;
+      min-height: 200px;
+    }
+  }
+
+  .split-line{
+    font-size: 20px;
+    color: red;
+    margin: 30px auto;
+  }
+}

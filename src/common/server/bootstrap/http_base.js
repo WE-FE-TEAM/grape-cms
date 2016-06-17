@@ -32,6 +32,8 @@ class HttpBase extends Http {
         let channelId = ( temp.channelId || '' ).trim();
 
         this.channelId = channelId;
+
+        this.assign('channelId', channelId);
     }
 
     /**
@@ -64,6 +66,9 @@ class HttpBase extends Http {
                 case '404':
                     message = '请求地址不存在!!';
                     break;
+                case '500':
+                    message = '系统错误';
+                    break;
                 default :
                     message = '';
             }
@@ -78,6 +83,22 @@ class HttpBase extends Http {
         }
 
         return super.sendStatus( status, data );
+    }
+
+    error( msg, err ){
+        if( this.shouldResponseJson() ){
+            let data = {
+                status : -1,
+                message : msg
+            };
+            if( err ){
+                data.debugInfo = err.message;
+            }
+            this.json( data );
+        }else{
+            this.sendStatus( 500, err);
+        }
+        return grape.prevent();
     }
 
     setUser( user ){

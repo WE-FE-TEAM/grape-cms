@@ -42,6 +42,13 @@ module.exports = {
 
         '*' : accessFilter
 
+    },
+
+    article : {
+        
+        '*' : accessFilter,
+
+        'view' : loginFilter
     }
     
 };

@@ -9,6 +9,8 @@ var React  = require('react');
 var TextInput = require('./TextInput/TextInput.js');
 var Checkbox = require('./Checkbox/Checkbox.js');
 var Select = require('./Select/Select.js');
+var Textarea = require('./Textarea/Textarea.js');
+var RichEditor = require('./RichEditor/RichEditor.js');
 var ValidateProvider = require('./ValidateProvider/ValidateProvider.js');
 
 
@@ -133,6 +135,8 @@ var RForm = React.createClass({
 RForm.TextInput = TextInput;
 RForm.Checkbox = Checkbox;
 RForm.Select = Select;
+RForm.Textarea = Textarea;
+RForm.RichEditor = RichEditor;
 RForm.ValidateProvider = ValidateProvider;
 
 

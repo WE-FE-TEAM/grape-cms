@@ -9,6 +9,8 @@
 
 const mongoose = require('mongoose');
 
+const sysUtil = require('util');
+
 const cms = global.cms;
 
 const cmsConfig = grape.configManager.getConfig('cms');
@@ -17,6 +19,7 @@ const urlOperationGroupMap = cmsConfig.urlOperationGroupMap;
 
 const channelTypeOperationMap = cmsConfig.channelTypeOperationMap;
 
+const articleFieldTypes = cmsConfig.articleFieldTypes;
 
 let utils = {};
 
@@ -153,3 +156,64 @@ function filterChannelTree( channel, channelIdList ){
     return result;
 }
 
+/**
+ * 判断输入的文章模板, 是否合法
+ * @param templateStr {string} 文章模板字符串
+ * @returns {string}
+ */
+utils.isArticleTemplateValid = function( templateStr ){
+
+    let out = '';
+
+    let template = templateStr;
+
+    if( sysUtil.isString( templateStr ) ){
+        try{
+            template = JSON.parse( templateStr );
+        }catch(e){
+            return e.message;
+        }
+    }
+
+    if( ! sysUtil.isObject(template) ){
+        return '文章模板必须是 {} 类型的JSON格式!';
+    }
+
+    let fields = template.fields;
+
+    if( ! sysUtil.isArray( fields ) ){
+        return '文章模板必须包含 fields 的数组字段!';
+    }
+
+    let keys = [];
+
+    //禁止文章模板中出现的 key
+    const forbiddenKeys = [ 'articleName' ];
+
+    for( var i = 0, len = fields.length; i < len; i++ ){
+        let conf = fields[i];
+        let key = conf.key;
+        let label = conf.label;
+        let type = conf.type;
+
+        if( ! key || ! label || ! type ){
+            return `文章模板中, 单个输入域必须包含 key label type 3个字段!!`;
+        }
+
+        if( forbiddenKeys.indexOf(key) >= 0 ){
+            return `文章模板中, 不能包含 这些key: [ ${ forbiddenKeys.join(' ') } ]`;
+        }
+
+        if( keys.indexOf(key) >= 0 ){
+            return `文章模板中, 存在相同的 key[${key}] 字段!!`;
+        }
+
+        if( articleFieldTypes.indexOf(type) < 0 ){
+            return `文章模板中, 存在非法的字段类型: ${type}`;
+        }
+
+        keys.push( key );
+    }
+
+    return out;
+};

@@ -1,0 +1,39 @@
+{
+  "fields" : [
+    {
+      "key" : "title",
+      "label" : "文章标题",
+      "type" : "text",
+      "defaultValue" : "默认的文章标题",
+      "placeholder" : "这里输入文章标题"
+    },
+    {
+      "key" : "keywords",
+      "label" : "文章关键字",
+      "type" : "text",
+      "defaultValue" : "",
+      "placeholder" : "输入文章关键字, 多个关键字用\",\"隔开"
+    },
+    {
+      "key" : "articlePic",
+      "label" : "标题图",
+      "type" : "text",
+      "defaultValue" : "",
+      "placeholder" : "文章的题图, 输入图片的URL"
+    },
+    {
+      "key" : "abstract",
+      "label" : "文章简介",
+      "type" : "textarea",
+      "defaultValue" : "默认的文章简介",
+      "placeholder" : "这里输入文章简介, 可以输入多行文字"
+    },
+    {
+      "key" : "body",
+      "label" : "文章内容",
+      "type" : "richtext",
+      "defaultValue" : "",
+      "placeholder" : "文章内容区域, 富文本输入框"
+    }
+  ]
+}

@@ -159,6 +159,16 @@ const channelTypeOperationMap = {
     ]
 };
 
+//文章模板中, 支持的所有输入类型
+const articleFieldTypes = [
+    //单行输入框
+    'text',
+    //多行输入框
+    'textarea',
+    //富文本输入框
+    'richtext'
+];
+
 module.exports = {
     
     rootChannelId : '5755366bb470a1c0cfed8221',
@@ -169,6 +179,8 @@ module.exports = {
 
     urlOperationGroupMap : urlOperationGroupMap,
 
-    channelTypeOperationMap : channelTypeOperationMap
+    channelTypeOperationMap : channelTypeOperationMap,
+    
+    articleFieldTypes : articleFieldTypes
     
 };

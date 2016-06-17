@@ -12,7 +12,7 @@ let singleton = {
 
     init : function(){
 
-        alert('文章栏目内容');
+        
     }
 };
 

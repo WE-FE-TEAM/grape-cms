@@ -105,8 +105,17 @@ class ChannelController extends ControllerBase {
                 }
 
                 articleTemplate = JSON.parse( articleTemplate );
+
+                let out = cmsUtils.isArticleTemplateValid( articleTemplate );
+
+                if( out ){
+                    return this.json({
+                        status : -1,
+                        message : out
+                    });
+                }
                 
-                // articleTemplate = JSON.stringify( articleTemplate );
+
             }catch(e){
                 grape.log.warn( e );
                 return this.json({
@@ -254,6 +263,15 @@ class ChannelController extends ControllerBase {
 
                 // articleTemplate = JSON.stringify( articleTemplate );
                 articleTemplate = JSON.parse( articleTemplate );
+
+                let out = cmsUtils.isArticleTemplateValid( articleTemplate );
+
+                if( out ){
+                    return this.json({
+                        status : -1,
+                        message : out
+                    });
+                }
 
             }catch(e){
                 grape.log.warn( e );

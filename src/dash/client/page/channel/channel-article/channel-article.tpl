@@ -2,7 +2,9 @@
 {% extends 'common:page/dash-layout.tpl' %}
 
 {% block dash_block_main %}
-<div id="app"></div>
+<div id="app">
+    <a class="btn btn-primary btn-lg" target="_self" href="/cms/dash/article/add?channelId={{ channelId | url_encode }}">创建文章</a>
+</div>
 {% endblock %}
 
 

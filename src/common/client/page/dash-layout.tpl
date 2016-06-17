@@ -5,6 +5,11 @@
 <link rel="stylesheet" type="text/css" href="/client/static/dash/dash.scss">
 {% endblock %}
 
+{% block block_head_js %}
+<script src="/client/static/ueditor/ueditor.config.js"></script>
+<script src="/client/static/ueditor/ueditor.all.js"></script>
+{% endblock %}
+
 {# 通用header #}
 {% block block_header %}
     {% widget "common:widget/dash-header/dash-header.tpl" %}

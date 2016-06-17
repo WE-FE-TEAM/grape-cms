@@ -113,9 +113,19 @@ db.roles.createIndex( { roleName : 1}, { unique : true } )
 {
     _id : '',
     channelId : '文章所处栏目的ID',
+    articleName : '文章名字',
     //文章内容, 字段要匹配该栏目的文章模板
     data : {}
 }
+```
+
+
+约束:
+
+文章的 `articleName` 在所属的 `channelId` 下, 必须是惟一的, 不必全局惟一
+
+```javascript
+
 ```
 
 

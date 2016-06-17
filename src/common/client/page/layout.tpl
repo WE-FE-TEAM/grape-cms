@@ -9,8 +9,7 @@
         <script>
             window._jHeadStart = ( new Date() ).getTime();
         </script>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+
         {# 360 浏览器就会在读取到这个标签后，立即切换对应的极速核 #}
         <meta name="renderer" content="webkit">
         <meta name="viewport" content="width=device-width, initial-scale=1">
