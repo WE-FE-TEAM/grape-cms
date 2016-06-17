@@ -60,10 +60,12 @@ class DeleteChannelDialog extends React.Component{
                         //成功
                         alert('删除栏目成功');
                         location.reload();
+                        return;
                     }else{
                         return Promise.reject( new Error( data.message ) );
                     }
                 }
+                return Promise.reject( new Error('系统返回异常') );
             })
             .catch( ( e ) => {
                 this.setState({

@@ -83,6 +83,7 @@ class AddChannelDialog extends React.Component{
                         //成功
                         alert('新增栏目成功');
                         location.reload();
+                        return;
                     }else{
                         return Promise.reject( new Error( data.message ) );
                     }

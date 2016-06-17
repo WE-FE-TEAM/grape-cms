@@ -188,7 +188,7 @@ class UserController extends ControllerBase{
 
         //确保当前用户, 不能修改 比自己权限更高的用户
         let sessionUserLevel = sessionUser.level;
-        if( level <= sessionUserLevel ){
+        if( level < sessionUserLevel ){
             return this.json({
                 status : -1,
                 message : '您不能修改权限高于自己的用户!!'
@@ -358,7 +358,7 @@ class UserController extends ControllerBase{
 
         //确保当前用户, 不能修改 比自己权限更高的用户
         let sessionUserLevel = sessionUser.level;
-        if( level <= sessionUserLevel ){
+        if( level < sessionUserLevel ){
             return this.json({
                 status : -1,
                 message : '您不能修改权限高于自己的用户!!'
