@@ -14,16 +14,22 @@ class SessionUserPolicy extends PolicyBase{
     async execute(){
         let http = this.http;
         let session = http.req.session;
-        let userName = session.userName;
+        let userId = session.userId;
 
         let User = this.model('User');
 
-        let result = await User.findOne({ userName : userName}).exec();
-        
-        if( result ){
-            let user = new User( result );
-            http.setUser( user );
+        try{
+            let result = await User.findOne({ _id : userId}).exec();
+            if( result ){
+                // let user = new User( result );
+                http.setUser( result );
+            }
+        }catch(e){
+
         }
+
+        
+
 
         // grape.console.log( result );
     }

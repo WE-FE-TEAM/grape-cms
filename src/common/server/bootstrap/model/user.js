@@ -89,6 +89,7 @@ userSchema.statics.isNameExist = async function( userName ){
 
 /**
  * 获取到所有的 用户数组, 按照 用户创建时间 升序 排列
+ * 排除掉系统中的超级管理员
  * @returns {Array}
  */
 userSchema.statics.getAll = async function(){
@@ -98,7 +99,7 @@ userSchema.statics.getAll = async function(){
     let out = [];
 
     //按 创建时间 升序 排列
-    out = await User.find({}).sort( { createdAt : 1 } ).lean( true );
+    out = await User.find({  level : { $ne : 0 }  } ).sort( { createdAt : 1 } ).lean( true );
 
     return out;
 
@@ -179,13 +180,37 @@ userSchema.methods.getAllPermissions = async function(){
  */
 userSchema.methods.canAccess = async function( channelId, url ){
 
+    let utils = cms.utils;
+    
     let out = this.isSuperAdmin();
 
     if( ! out ){
         //对非超级管理员的普通用户, 才进行权限判断
-        let userPermissions = await this.getAllPermissions();
-        let utils = cms.utils;
+
         let operationName = utils.url2OperationGroup( url );
+        
+        const Channel = mongoose.model('Channel');
+        
+        //先获取到栏目对象, 判断该类型栏目, 是否能进行指定操作
+        //防止用户进行非法操作时, 修改 channelId 为他有权限的, 但是该栏目, 根本就不支持的操作
+        let channel = null;
+        
+        try{
+            channel = await Channel.findOne({ _id : channelId }).exec();
+        }catch(e){
+            
+        }
+        
+        if( ! channel ){
+            return false;
+        }
+
+        if( ! channel.isOperationValid(operationName) ){
+            //该栏目不支持这个操作
+            return false;
+        }
+        
+        let userPermissions = await this.getAllPermissions();
 
         out = userPermissions[channelId];
 

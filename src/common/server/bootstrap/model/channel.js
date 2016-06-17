@@ -8,6 +8,8 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
+const cms = global.cms;
+
 //整个后台系统, 也当做是一个栏目来处理, 根栏目, 直接固定该栏目的
 
 let channelSchema = new mongoose.Schema(
@@ -281,6 +283,33 @@ channelSchema.statics.deleteChannelById = async function( channelId ){
     
     return out;
 };
+
+
+
+
+/************     下面是栏目实例的方法     *************/
+
+
+/**
+ * 判断当前栏目, 是否可以进行某个操作
+ * @param operationName {string} 操作名
+ * @returns {boolean}
+ */
+channelSchema.methods.isOperationValid = function( operationName ){
+    
+    const utils = cms.utils;
+    
+    let out = false;
+    
+    let channelType = this.channelType;
+
+    let supportedOperationList = utils.getChannelSupportedOperationList( channelType );
+
+    out = supportedOperationList.indexOf( operationName ) >= 0;
+    
+    return out;
+};
+
 
 
 let Channel = mongoose.model('Channel', channelSchema );

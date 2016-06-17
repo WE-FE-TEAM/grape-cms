@@ -9,11 +9,13 @@
 
 const mongoose = require('mongoose');
 
-let cms = global.cms;
+const cms = global.cms;
 
-let cmsConfig = grape.configManager.getConfig('cms');
+const cmsConfig = grape.configManager.getConfig('cms');
 
-let urlOperationGroupMap = cmsConfig.urlOperationGroupMap;
+const urlOperationGroupMap = cmsConfig.urlOperationGroupMap;
+
+const channelTypeOperationMap = cmsConfig.channelTypeOperationMap;
 
 
 let utils = {};
@@ -26,6 +28,15 @@ module.exports = utils;
 //根据URL来获取所属的 操作组 
 utils.url2OperationGroup = function ( url ){
     return urlOperationGroupMap[url];
+};
+
+/**
+ * 根据栏目类型, 获取该栏目支持的所有操作集合
+ * @param channelType {string} 栏目类型
+ * @returns {Array}
+ */
+utils.getChannelSupportedOperationList = function( channelType ){
+    return channelTypeOperationMap[ channelType ] || [];
 };
 
 

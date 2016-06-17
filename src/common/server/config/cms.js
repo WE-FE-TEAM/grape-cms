@@ -103,6 +103,61 @@ let urlOperationGroupMap = {
 
 };
 
+//不同类型的栏目, 对应的各自下支持的所有操作集合
+const channelTypeOperationMap = {
+    //容器栏目的操作集合
+    container : [
+        'channel.view',
+        'channel.update',
+        'channel.delete',
+        'channel.add'
+    ],
+    //文章栏目对应操作集合
+    article : [
+        'channel.view',
+        'channel.update',
+        'channel.delete',
+        'article.view',
+        'article.add',
+        'article.edit',
+        'article.publish',
+        'article.delete'
+    ],
+    //数据栏目对应操作集合
+    data : [
+        'channel.view',
+        'channel.update',
+        'channel.delete',
+        'data.view',
+        'data.add',
+        'data.edit',
+        'data.publish',
+        'data.delete'
+    ],
+    //文件上传栏目的操作集合
+    resource : [
+        'channel.view',
+        'channel.update',
+        'channel.delete'
+    ],
+
+    //下面三个是系统自带的栏目
+    channelManage : [
+        'channel.view'
+    ],
+    roleManage : [
+        'channel.view',
+        'role.add',
+        'role.update',
+        'role.delete'
+    ],
+    userManage : [
+        'channel.view',
+        'user.add',
+        'user.update',
+        'user.delete'
+    ]
+};
 
 module.exports = {
     
@@ -112,6 +167,8 @@ module.exports = {
 
     urls : urls,
 
-    urlOperationGroupMap : urlOperationGroupMap
+    urlOperationGroupMap : urlOperationGroupMap,
+
+    channelTypeOperationMap : channelTypeOperationMap
     
 };

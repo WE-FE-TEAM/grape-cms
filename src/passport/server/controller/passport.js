@@ -16,6 +16,7 @@ class PassportController extends ControllerBase{
     afterLoginJump(){
         let session = this.http.req.session;
         let url = session.loginJump || this.urls.dashIndex;
+        session.loginJump = this.urls.dashIndex;
         this.http.redirect( url );
     }
 
@@ -62,7 +63,7 @@ class PassportController extends ControllerBase{
 
             if( ! User.isUserDisabled( result ) ){
                 //登录成功
-                this.http.req.session.userName = userName;
+                this.http.req.session.userId = result._id.toString();
 
                 return this.afterLoginJump();
                 
