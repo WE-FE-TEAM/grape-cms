@@ -25,6 +25,19 @@ let articleSchema = new mongoose.Schema(
         },
         data : {
             type : mongoose.Schema.Types.Mixed
+        },
+        //最后修改文章内容的用户ID
+        editUserId : {
+            type : String
+        },
+        //最后发布文章的用户ID
+        publishUserId : {
+            type : String
+        },
+        //最后发布日期
+        publishedAt : {
+            type : Date,
+            default : null
         }
 
     },

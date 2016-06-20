@@ -20,6 +20,8 @@ const ArticleEditor = require('dash:widget/ui/article/article-editor/article-edi
 const ACTION_ADD = 'add';
 const ACTION_EDIT = 'edit';
 
+const articleService = service.getService('article');
+
 class App extends React.Component{
 
     render(){
@@ -65,11 +67,28 @@ let singleton = {
         
         let article = null;
         
-        if( action === 'add' ){
+        if( action === ACTION_ADD ){
             //新创建文章
             singleton.render( channel, action, article );
-        }else if( action === 'edit' ){
+        }else if( action === ACTION_EDIT ){
             //异步请求文章数据, 再渲染
+            let searchConf = utils.getSearchConf();
+
+            articleService.getArticle( { channelId : searchConf.channelId, articleId : searchConf.articleId } )
+                .then( ( req ) => {
+                    if( req.requestStatus === articleService.STATUS.SUCCESS ){
+                        let out = req.data;
+                        if( out.status === 0 ){
+                            singleton.render( channel, ACTION_EDIT, out.data );
+                            return;
+                        }
+                        return Promise.reject( new Error(out.message) );
+                    }
+                    return Promise.reject( new Error('请求该文章详情出错!') );
+                })
+                .catch( (e) => {
+                    alert( e.message );
+                });
         }
     },
     

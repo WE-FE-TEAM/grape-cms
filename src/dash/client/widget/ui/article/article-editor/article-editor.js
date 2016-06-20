@@ -80,7 +80,9 @@ class ArticleEditor extends React.Component {
             //新增
             promise = articleService.addArticle( allData );
         }else{
+            allData.articleId = article._id;
             //编辑
+            promise = articleService.updateArticle( allData );
         }
 
         promise.then( ( req ) => {
@@ -95,6 +97,7 @@ class ArticleEditor extends React.Component {
             }
             return Promise.reject( new Error('系统返回异常') );
         } ).catch( (e) => {
+            alert( e.message );
             this.setState({
                 isLoading : false,
                 errorMsg : e.message || '系统返回异常'
@@ -123,8 +126,8 @@ class ArticleEditor extends React.Component {
             placeholder : placeholder
         };
 
-        if( article && article[key] ){
-            inputProps.value = article[key];
+        if( article && article.data ){
+            inputProps.value = article.data[key];
         }
 
         let input = null;
