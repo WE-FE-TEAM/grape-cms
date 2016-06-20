@@ -18,7 +18,7 @@ class LoginFilter extends PolicyBase {
 
         if( ! user ){
             //用户未登陆, 跳转到登陆页
-            let req = this.http.req;
+            let req = this.http.req;         
             let session = req.session;
             let loginJumpURL = req.originalUrl || this.urls.dashIndex;
             session.loginJump = loginJumpURL;

@@ -96,9 +96,10 @@ class HttpBase extends Http {
             }
             this.json( data );
         }else{
+            grape.log.warn( msg );
             this.sendStatus( 500, err);
         }
-        return grape.prevent();
+
     }
 
     setUser( user ){

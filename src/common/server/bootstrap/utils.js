@@ -11,6 +11,8 @@ const mongoose = require('mongoose');
 
 const sysUtil = require('util');
 
+const fse = require('fs-extra');
+
 const cms = global.cms;
 
 const cmsConfig = grape.configManager.getConfig('cms');
@@ -216,4 +218,23 @@ utils.isArticleTemplateValid = function( templateStr ){
     }
 
     return out;
+};
+
+
+////////////  文件/目录 相关操作   //////////////////////
+
+/**
+ * 创建目录, 相当于  mkdir -p dirPath
+ * @param dirPath {string}
+ * @returns {Promise}
+ */
+utils.mkdirp = function( dirPath ){
+    return new Promise( function(resolve, reject){
+        fse.mkdirp( dirPath, function(err){
+            if( err ){
+                return reject(err);
+            }
+            resolve( true );
+        } )
+    } );
 };

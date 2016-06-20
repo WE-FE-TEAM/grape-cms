@@ -13,6 +13,10 @@ var ReactDOM = require('react-dom');
 
 function noop(){}
 
+var id = 0;
+function uuid(){
+    return 'rich-editor--' + ( i ++);
+}
 
 class RichEditor extends React.Component{
 
@@ -21,7 +25,8 @@ class RichEditor extends React.Component{
         super(props);
 
         this.state = {
-            value : props.value
+            value : props.value,
+            id : props.id || uuid()
         };
 
         this.onChange = this.onChange.bind( this );
@@ -31,7 +36,7 @@ class RichEditor extends React.Component{
 
         // let script = ReactDOM.findDOMNode( this.refs.ueditorscript );
 
-        this.editor = UE.getEditor( this.props.id );
+        this.editor = UE.getEditor( this.state.id );
 
         this.editor.addListener('contentChange', this.onChange );
 
@@ -94,6 +99,7 @@ class RichEditor extends React.Component{
 
     render(){
 
+        let state = this.state;
         let props = this.props;
 
         let className = 'r-rich-editor ' + ( props.className || '' );
@@ -105,7 +111,7 @@ class RichEditor extends React.Component{
         };
 
         let editorProps = {
-            id : props.id,
+            id : state.id,
             name : props.name,
             ref : 'ueditorscript'
         };

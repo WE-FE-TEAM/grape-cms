@@ -6,7 +6,9 @@
 
 'use strict';
 
+const path = require('path');
 
+const sep = path.sep;
 
 let URL_PREFIX = grape.path.APP_URL_PREFIX;
 
@@ -174,6 +176,9 @@ module.exports = {
     rootChannelId : '5755366bb470a1c0cfed8221',
 
     urlPrefix : URL_PREFIX,
+
+    //CMS文件上传的根目录
+    uploadRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_upload`,
 
     urls : urls,
 
