@@ -3,7 +3,8 @@
 
 
 {% block block_head_js %}
-<script src="/client/static/webuploader/webuploader.js"></script>
+<!--<link rel="stylesheet" href="/client/static/webuploader/webuploader.css" />-->
+<!--<script src="/client/static/webuploader/webuploader.js"></script>-->
 {% endblock %}
 
 
@@ -11,4 +12,13 @@
 <div id="app">
     文件上传 类型栏目
 </div>
+{% endblock %}
+
+
+{% block block_body_js %}
+{% script %}
+require(["dash:page/channel/channel-resource/channel-resource.js"] , function(app){
+app.init();
+});
+{% endscript %}
 {% endblock %}

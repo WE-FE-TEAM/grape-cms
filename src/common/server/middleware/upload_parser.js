@@ -16,7 +16,7 @@ class UploadParser extends grape.MiddlewareBase{
         let http = this.http;
         let req = http.req;
 
-        let contentType = req.get('content-type').toLowerCase();
+        let contentType = ( req.get('content-type') || '' ).toLowerCase();
         if( contentType.indexOf('multipart/form-data') >= 0 ){
             //是文件上传类型的POST
             let result = await cmsUtils.parseUploadFiles( req );
