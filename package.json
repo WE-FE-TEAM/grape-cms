@@ -26,6 +26,7 @@
     "babel-plugin-transform-runtime": "^6.4.3",
     "connect-redis": "^3.0.2",
     "express-session": "^1.13.0",
+    "formidable": "^1.0.17",
     "fs-extra": "^0.30.0",
     "grapejs": "^1.1.2",
     "mongoose": "^4.4.19",

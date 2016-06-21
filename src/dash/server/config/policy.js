@@ -49,6 +49,10 @@ module.exports = {
         '*' : accessFilter,
 
         'view' : loginFilter
+    },
+
+    resource : {
+        '*' : accessFilter
     }
     
 };

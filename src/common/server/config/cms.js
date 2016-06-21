@@ -179,6 +179,8 @@ module.exports = {
 
     //CMS文件上传的根目录
     uploadRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_upload`,
+    //文件上传之后,访问文件时,要添加的URL前缀
+    uploadUrlPrefix : 'http://some.domain.com/some/path',
 
     urls : urls,
 

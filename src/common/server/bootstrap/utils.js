@@ -9,9 +9,15 @@
 
 const mongoose = require('mongoose');
 
+const path = require('path');
+const fs = require('fs');
 const sysUtil = require('util');
 
 const fse = require('fs-extra');
+
+const formidable = require('formidable');
+
+const sep = path.sep;
 
 const cms = global.cms;
 
@@ -236,5 +242,123 @@ utils.mkdirp = function( dirPath ){
             }
             resolve( true );
         } )
+    } );
+};
+
+/**
+ * 判断某个 绝对路径 是否存在
+ * @param filePath {string} 绝对路径
+ * @returns {Promise}
+ */
+utils.isFileExist = function( filePath ){
+    if( ! path.isAbsolute(filePath) ){
+        throw new Error('路径必须是绝对路径!!');
+    }
+    return new Promise( function(resolve, reject){
+        fs.stat( filePath, function(err, stats){
+            if( err ){
+                if( err.code === 'ENOENT' ){
+                    //文件不存在
+                    return resolve( false );
+                }
+                return reject( err );
+            }
+            //文件存在
+            resolve( true );
+
+        } );
+    });
+};
+
+/**
+ * 解析request请求中的文件上传数据
+ * @param req {request} express 中的请求对象
+ * @returns {Promise}
+ */
+utils.parseUploadFiles = function ( req ){
+    if( req.files ){
+        //如果已经解析过该request对象了,直接返回存在的属性
+        //如果用 formidable 对已经解析过的 request 再次解析,貌似库内部出错, 并且没有抛出来,导致请求hang住!!!!
+        return Promise.resolve({
+            fields : req.body,
+            files : req.files
+        });
+    }
+    return new Promise( function (resolve, reject) {
+        try{
+            let form = new formidable.IncomingForm();
+            form.parse(req, function(err, fields, files){
+
+                if( err ){
+
+                    return reject(err);
+                }
+                resolve({
+                    fields : fields,
+                    files : files
+                });
+            } );
+        }catch(e){
+            reject(e);
+        }
+
+    });
+};
+
+/**
+ * 移动指定的文件或目录, 到另一个地方
+ * @param src {string} 原文件的绝对路径
+ * @param dest {string} 移动之后, 文件的绝对路径
+ * @param options
+ * @returns {Promise}
+ */
+utils.move = function( src, dest, options){
+    options = options || {
+            clobber : true,
+            limit : 2
+        };
+    return new Promise( function( resolve, reject ){
+        fse.move( src, dest, options, function( err ){
+            if( err ){
+                return reject( err );
+            }
+            resolve( true );
+        } );
+    } );
+};
+
+utils.readDir = function( absolutePath, prefix ){
+    return new Promise( function(resolve, reject){
+        fs.readdir( absolutePath, function(err, files){
+            if( err ){
+                return reject(err);
+            }
+            let result = [];
+            for( var i = 0, len = files.length; i < len; i++ ){
+                let fileName = files[i];
+                if( fileName[0] === '.' ){
+                    //忽略隐藏文件
+                    continue;
+                }
+                try{
+                    let stat = fs.statSync(absolutePath + sep + fileName);
+                    let isFile = stat.isFile();
+                    let isDirectory = stat.isDirectory();
+                    if( isFile || isDirectory ){
+                        //只返回 文件/目录  两种类型
+                        result.push({
+                            name : fileName,
+                            path : ( prefix + fileName),
+                            isFile : isFile,
+                            isDirectory : isDirectory
+                        });
+                    }
+                }catch(e){
+                    return reject(e);
+                }
+            }
+
+            resolve( result );
+        } );
     } );
 };

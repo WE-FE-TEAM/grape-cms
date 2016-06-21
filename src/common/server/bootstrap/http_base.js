@@ -14,6 +14,10 @@ const grape = global.grape;
 
 const Http = grape.get('http');
 
+const cms = global.cms;
+
+const cmsUtils = cms.utils;
+
 class HttpBase extends Http {
 
     init( ...data ){
@@ -21,16 +25,19 @@ class HttpBase extends Http {
         super.init( ...data );
 
         this.user = null;
-
+        
+    }
+    
+    parseBaseArgs(){
         let req = this.req;
         //channel ID 必须放在 query 部分, 如果是 POST, 必须在 POST 里
         let temp = req.query;
-        
+
         if( req.method.toLowerCase() === 'post' ){
             temp = req.body;
         }
         let channelId = ( temp.channelId || '' ).trim();
-
+// console.log(`channelId: ${channelId}`);
         this.channelId = channelId;
 
         this.assign('channelId', channelId);
@@ -99,7 +106,7 @@ class HttpBase extends Http {
             grape.log.warn( msg );
             this.sendStatus( 500, err);
         }
-
+        
     }
 
     setUser( user ){
@@ -109,6 +116,11 @@ class HttpBase extends Http {
 
     getUser(){
         return this.user;
+    }
+    
+    setChannelId( channelId ){
+        this.channelId = channelId;
+        this.assign('channelId', channelId);
     }
 
     getChannelId(){
