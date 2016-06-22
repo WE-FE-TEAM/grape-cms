@@ -175,6 +175,11 @@ class App extends React.Component{
 
             let temp = dirArray.slice(0, index + 1);
             let path = temp.join('/');
+
+            if( index > 0 ){
+                path = path.replace(/^\.\//,'');
+            }
+
             searchConf.path = path;
 
             let url = '/cms/dash/channel/view?' + utils.json2query( searchConf );
