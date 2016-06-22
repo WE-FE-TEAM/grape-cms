@@ -16,7 +16,7 @@ fis.set('namespace', 'common');
 /**
  * 静态资源url前添加前缀
  */
-let url_prefix = '/static';
+let url_prefix = '/cmss';
 fis.match('**.{js,css,png,jpg,gif,jsx,scss,ts,eot,ttf,woff,svg,ico}', {
     domain: url_prefix
 });

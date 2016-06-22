@@ -26,7 +26,7 @@ let appMapPath = path.dirname(appPathRoot) + '/resource-map';
 let app = new Entrance({
     APP_PATH : appPathRoot,
     APP_URL_PREFIX : '/cms',
-    APP_STATIC_URL_PREFIX : '/static',
+    APP_STATIC_URL_PREFIX : '/cmss',
     APP_STATIC_PATH : appStaticPath,
     APP_VIEW_PATH : appViewPath,
     APP_MAP_PATH : appMapPath
