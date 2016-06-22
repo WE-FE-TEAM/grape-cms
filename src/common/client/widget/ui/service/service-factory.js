@@ -12,13 +12,15 @@ const dashService = require('./dash-service');
 const channelService = require('./channel-service.js');
 const roleService = require('./role-service.js');
 const articleService = require('./article-service.js');
+const resourceService = require('./resource-service.js');
 
 let serviceMap = {
     user : userService,
     dash : dashService,
     channel : channelService,
     role : roleService,
-    article : articleService
+    article : articleService,
+    resource : resourceService
 };
 
 let singleton = {

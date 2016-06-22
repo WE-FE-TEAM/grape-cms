@@ -108,7 +108,7 @@ class ResourceController extends ControllerBase {
         
         let finalDirPath = parentDirPath + sep + dirName;
 
-        if( ! this.isPathLegal( finalDirPath) ){
+        if( ! this.isPathLegal( channelId, finalDirPath) ){
             return http.error('目录路径或目录名含有非法字符!!');
         }
 

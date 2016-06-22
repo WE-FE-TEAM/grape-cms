@@ -68,11 +68,17 @@ var RCheckbox = React.createClass({
         if( ! this.props.name ){
             throw new Error('TextInput 必须包含 name 属性(props)');
         }
-        this.context.form.addField( this.props.name, this );
+        if( this.context.form ){
+            this.context.form.addField( this.props.name, this );
+        }
+
     },
 
     componentWillUnmount : function(){
-        this.context.form.removeField( this.props.name, this );
+        if( this.context.form ){
+            this.context.form.removeField( this.props.name, this );
+        }
+
     },
 
     componentDidUpdate : function(){

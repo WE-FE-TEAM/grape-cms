@@ -3,8 +3,7 @@
 
 
 {% block block_head_js %}
-<!--<link rel="stylesheet" href="/client/static/webuploader/webuploader.css" />-->
-<!--<script src="/client/static/webuploader/webuploader.js"></script>-->
+
 {% endblock %}
 
 
