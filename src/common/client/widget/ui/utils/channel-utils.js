@@ -190,6 +190,14 @@ utils.getChannelOperationSet = function( channelType ){
             {
                 text : '删除栏目',
                 value : 'channel.delete'
+            },
+            {
+                text : '创建目录',
+                value : 'resource.mkdir'
+            },
+            {
+                text : '上传文件',
+                value : 'resource.upload'
             }
         ],
 

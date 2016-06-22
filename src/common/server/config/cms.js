@@ -101,7 +101,10 @@ let urlOperationGroupMap = {
     
     //文件上传栏目 相关
     //查看文件上传栏目
-    'dash/channel/resource' : 'channel.view'
+    'dash/channel/resource' : 'channel.view',
+    'dash/resource/ls' : 'channel.view',
+    'dash/resource/mkdir' : 'resource.mkdir',
+    'dash/resource/upload' : 'resource.upload'
 
 };
 
@@ -140,7 +143,9 @@ const channelTypeOperationMap = {
     resource : [
         'channel.view',
         'channel.update',
-        'channel.delete'
+        'channel.delete',
+        'resource.mkdir',
+        'resource.upload'
     ],
 
     //下面三个是系统自带的栏目
