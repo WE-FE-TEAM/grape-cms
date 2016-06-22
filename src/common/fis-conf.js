@@ -38,12 +38,15 @@ fis.set('excludeModules', excludeModules);
  */
 fis.media('prod')
     .match("/node_modules/**.{js,jsx}", {
+        useHash : true,
         packTo : '/${static}/pkg/${namespace}_nm.js'
     })
     .match("/client/widget/**.{js,jsx,ts}", {
+        useHash : false,
         packTo : '/${static}/pkg/${namespace}_wdg.js'
     })
     .match('/client/widget/(**.{css,scss})', {
+        useHash : false,
         packTo : '/${static}/pkg/${namespace}_wdg.css'
     });
 
