@@ -51,6 +51,13 @@ const apiConf = {
         url: URL_PREFIX + '/dash/article/list',
         method: 'GET',
         dataType: 'json'
+    },
+
+    /* 获取某个文章的所有编辑历史 */
+    getArticleEditHistory : {
+        url: URL_PREFIX + '/dash/article/getEditHistory',
+        method: 'GET',
+        dataType: 'json'
     }
 
 };

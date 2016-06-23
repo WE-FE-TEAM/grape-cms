@@ -69,9 +69,14 @@ class ArticleController extends ControllerBase {
         if( out ){
             return http.error( `该栏目下已经存在同名的文章: ${articleName}`);
         }
+
+        //生成一个新的文章ID
+        let articleId = await Article.generateArticleId();
+
         
         let article = new Article({
             channelId : channelId,
+            articleId : articleId,
             articleName : articleName,
             editUserId : user._id.toString(),
             data : data
@@ -83,6 +88,7 @@ class ArticleController extends ControllerBase {
             result = await article.save();
 
         }catch(e){
+            grape.log.warn( e );
             return http.error( `保存文章异常`, e);
         }
 
@@ -124,14 +130,20 @@ class ArticleController extends ControllerBase {
         let list = [];
 
         try{
-            let arr = await Promise.all( [
-                Article.find({ channelId : channelId }, { articleName : true } ).sort({ createdAt : 1 }).count().exec(),
-                Article.find({ channelId : channelId }, { articleName : true } )
-                    .sort({ createdAt : 1 })
-                    .skip( start )
-                    .limit( num )
-                    .lean(true)
-            ] );
+
+            let arr = await Promise.all([
+                Article.getArticleNumberOfChannel( channelId ),
+                Article.getArticleList( channelId, start, num )
+            ]);
+
+            // let arr = await Promise.all( [
+            //     Article.find({ channelId : channelId }, { articleName : true } ).sort({ createdAt : 1 }).count().exec(),
+            //     Article.find({ channelId : channelId }, { articleName : true } )
+            //         .sort({ createdAt : 1 })
+            //         .skip( start )
+            //         .limit( num )
+            //         .lean(true)
+            // ] );
             total = arr[0] ;
             list = arr[1] ;
         }catch(e){
@@ -165,15 +177,16 @@ class ArticleController extends ControllerBase {
 
         let channelId = http.getChannelId();
         let articleId = ( query.articleId || '' ).trim();
+        let recordId = ( query.recordId || '' ).trim();
 
-        if( ! articleId ){
-            return http.error(`文章ID(articleId)必须指定!!`);
+        if( ! articleId || ! recordId ){
+            return http.error(`文章ID( articleId recordId )必须指定!!`);
         }
 
         let article = null;
 
         try{
-            article = await Article.findOne({ channelId : channelId, _id : articleId }).lean(true);
+            article = await Article.findOne({ channelId : channelId, _id : recordId }).lean(true);
         }catch(e){
             grape.log.warn( e );
             return http.error( `获取指定的文章详情出错!`, e);
@@ -245,7 +258,7 @@ class ArticleController extends ControllerBase {
         let article = null;
 
         try{
-            article = await Article.findOne({ channelId : channelId, _id : articleId }).exec();
+            article = await Article.findOne({ channelId : channelId, articleId : articleId }).exec();
         }catch(e){
             grape.log.warn( e );
             return http.error( `查找指定的文章异常`, e);
@@ -260,13 +273,18 @@ class ArticleController extends ControllerBase {
             }
         }
 
-        article.set('articleName', articleName);
-        article.set('data', data);
+        let articleNew = new Article({
+            channelId : channelId,
+            articleId : articleId,
+            articleName : articleName,
+            editUserId : user._id.toString(),
+            data : data
+        });
 
         let result = null;
 
         try{
-            result = await article.save();
+            result = await articleNew.save();
 
         }catch(e){
             return http.error( `保存文章异常`, e);
@@ -295,32 +313,64 @@ class ArticleController extends ControllerBase {
         let articleId = ( body.articleId || '' ).trim();
 
         if( ! articleId ){
-            return http.error(`要删除的文章ID, 不能为空!!!`);
+            return http.error(`要删除的文章ID(articleId), 不能为空!!!`);
         }
 
-        let article = null;
 
         try{
-            article = await Article.findOne({ channelId : channelId, _id : articleId }).exec();
-        }catch(e){
-            grape.log.warn( e );
-            return http.error( '获取该文章数据异常', e);
-        }
-
-        if( ! article ){
-            return http.error(`找不到[${articleId}]对应的文章数据`);
-        }
-
-        try{
-            let result = await article.remove();
+            let result = await Article.remove({ channelId : channelId, articleId : articleId }).exec();
             this.json({
                 status : 0,
-                message : '删除文章成功',
+                message : '成功删除文章, 以及该文章所有的历史记录',
                 data : result
             });
         }catch(e){
+            grape.log.warn( e );
             http.error('删除文章失败', e);
         }
+
+        // if( ! article ){
+        //     return http.error(`找不到[${articleId}]对应的文章数据`);
+        // }
+
+        // try{
+        //     let result = await article.remove();
+        //     this.json({
+        //         status : 0,
+        //         message : '删除文章成功',
+        //         data : result
+        //     });
+        // }catch(e){
+        //     http.error('删除文章失败', e);
+        // }
+    }
+
+    //异步接口: 获取某篇文章的编辑历史记录
+    async getEditHistoryAction(){
+
+        const Channel = this.model('Channel');
+        const Article = this.model('Article');
+
+        let http = this.http;
+
+        let body = http.req.query;
+
+        let user = http.getUser();
+
+        let articleId = ( body.articleId || '' ).trim();
+
+        if( ! articleId ){
+            return http.error(`文章ID( articleId ), 不能为空!!!`);
+        }
+
+        let result = await Article.getEditHistory( articleId );
+
+        this.json({
+            status : 0,
+            message : 'ok',
+            data : result
+        });
+
     }
 }
 

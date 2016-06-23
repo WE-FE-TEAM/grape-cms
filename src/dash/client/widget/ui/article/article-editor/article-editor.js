@@ -80,7 +80,7 @@ class ArticleEditor extends React.Component {
             //新增
             promise = articleService.addArticle( allData );
         }else{
-            allData.articleId = article._id;
+            allData.articleId = article.articleId;
             //编辑
             promise = articleService.updateArticle( allData );
         }
@@ -90,7 +90,13 @@ class ArticleEditor extends React.Component {
                 let out = req.data;
                 if( out.status === 0 ){
                     alert('保存文章成功');
-                    location.reload();
+
+                    let searchConf = utils.getSearchConf();
+
+                    searchConf.recordId = out.data._id;
+
+                    location.href = '/cms/dash/article/edit?' + utils.json2query( searchConf );
+
                     return;
                 }
                 return Promise.reject( new Error(out.message) );

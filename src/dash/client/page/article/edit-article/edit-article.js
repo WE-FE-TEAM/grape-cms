@@ -15,6 +15,7 @@ const utils = require('common:widget/ui/utils/utils.js');
 
 
 const ArticleEditor = require('dash:widget/ui/article/article-editor/article-editor.js');
+const ArticleEditHistory = require('dash:widget/ui/article/article-edit-history/article-edit-history.js');
 
 
 const ACTION_ADD = 'add';
@@ -30,6 +31,8 @@ class App extends React.Component{
 
         let isAdd = true;
 
+        let historyCon = null;
+
         let title = '';
         if( props.action === ACTION_ADD ){
             isAdd = true;
@@ -37,6 +40,9 @@ class App extends React.Component{
         }else if( props.action === ACTION_EDIT ){
             isAdd = false;
             title = '编辑文章';
+
+            historyCon = <ArticleEditHistory channelId={ props.channel._id } articleId={ props.article.articleId } />;
+
         }else{
             return null;
         }
@@ -45,6 +51,7 @@ class App extends React.Component{
             <div>
                 <h1>{ title }</h1>
                 <ArticleEditor channel={ props.channel } isAdd={ isAdd } article={ props.article } />
+                { historyCon }
             </div>
         );
     }
@@ -74,7 +81,7 @@ let singleton = {
             //异步请求文章数据, 再渲染
             let searchConf = utils.getSearchConf();
 
-            articleService.getArticle( { channelId : searchConf.channelId, articleId : searchConf.articleId } )
+            articleService.getArticle( { channelId : searchConf.channelId, articleId : searchConf.articleId, recordId : searchConf.recordId } )
                 .then( ( req ) => {
                     if( req.requestStatus === articleService.STATUS.SUCCESS ){
                         let out = req.data;
