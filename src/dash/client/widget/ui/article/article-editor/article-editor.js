@@ -94,7 +94,7 @@ class ArticleEditor extends React.Component {
                     let searchConf = utils.getSearchConf();
 
                     searchConf.articleId = out.data.articleId;
-                    searchConf.recordId = out.data._id;
+                    // searchConf.recordId = out.data._id;
 
                     location.href = '/cms/dash/article/edit?' + utils.json2query( searchConf );
 

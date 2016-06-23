@@ -38,8 +38,7 @@ class App extends React.Component{
         //跳转到文章编辑页面
         let data = {
             channelId : this.state.channelId,
-            articleId : article._id,
-            recordId : article.recordId
+            articleId : article.articleId
         };
         location.href = '/cms/dash/article/edit?' + utils.json2query( data );
     }

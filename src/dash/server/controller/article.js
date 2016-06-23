@@ -179,14 +179,25 @@ class ArticleController extends ControllerBase {
         let articleId = ( query.articleId || '' ).trim();
         let recordId = ( query.recordId || '' ).trim();
 
-        if( ! articleId || ! recordId ){
-            return http.error(`文章ID( articleId recordId )必须指定!!`);
+        if( ! articleId  ){
+            return http.error(`文章ID( articleId )必须指定!!`);
         }
 
         let article = null;
 
         try{
-            article = await Article.findOne({ channelId : channelId, _id : recordId }).lean(true);
+
+            if( ! recordId ){
+                //未指定某次历史ID, 取最新的数据
+                article = await Article.find({ channelId : channelId, articleId : articleId })
+                    .sort({ createdAt : -1})
+                    .limit(1)
+                    .lean(true);
+                article = article[0];
+            }else{
+                article = await Article.findOne({ channelId : channelId, _id : recordId }).lean(true);
+            }
+
         }catch(e){
             grape.log.warn( e );
             return http.error( `获取指定的文章详情出错!`, e);
