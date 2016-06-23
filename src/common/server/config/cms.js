@@ -185,6 +185,11 @@ module.exports = {
 
     urlPrefix : URL_PREFIX,
 
+    //文章的发布根目录
+    articlePublishRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_publish/article`,
+    //数据的发布根目录
+    dataPublishRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_publish/data`,
+
     //CMS文件上传的根目录
     uploadRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_upload`,
     //文件上传之后,访问文件时,要添加的URL前缀
