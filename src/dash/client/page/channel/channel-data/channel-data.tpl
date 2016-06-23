@@ -3,6 +3,14 @@
 
 {% block dash_block_main %}
 <div id="app">
-    数据 类型栏目
+JSON page
 </div>
+{% endblock %}
+
+{% block block_body_js %}
+{% script %}
+require(["dash:page/channel/channel-data/channel-data.js"] , function(app){
+app.init();
+});
+{% endscript %}
 {% endblock %}

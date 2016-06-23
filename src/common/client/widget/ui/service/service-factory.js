@@ -13,6 +13,7 @@ const channelService = require('./channel-service.js');
 const roleService = require('./role-service.js');
 const articleService = require('./article-service.js');
 const resourceService = require('./resource-service.js');
+const dataService = require('./data-service.js');
 
 let serviceMap = {
     user : userService,
@@ -20,7 +21,8 @@ let serviceMap = {
     channel : channelService,
     role : roleService,
     article : articleService,
-    resource : resourceService
+    resource : resourceService,
+    data : dataService
 };
 
 let singleton = {
