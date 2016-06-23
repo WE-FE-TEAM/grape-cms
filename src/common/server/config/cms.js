@@ -70,6 +70,9 @@ let urlOperationGroupMap = {
     'dash/channel/article' : 'channel.view',
     //查看文章
     'dash/article/view' : 'article.view',
+    'dash/article/list' : 'article.view',
+    'dash/article/detail' : 'article.view',
+    'dash/article/getEditHistory' : 'article.view',
     //新增文章
     'dash/article/add' : 'article.add',
     'dash/article/doAdd' : 'article.add',

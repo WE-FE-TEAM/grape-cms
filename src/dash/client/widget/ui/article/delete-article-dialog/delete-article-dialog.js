@@ -49,7 +49,7 @@ class DeleteArticleDialog extends React.Component {
 
         let data = {
             channelId : searchConf.channelId,
-            articleId : article._id
+            articleId : article.articleId
         };
 
         articleService.deleteArticle( data )

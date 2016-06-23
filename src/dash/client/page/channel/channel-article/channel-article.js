@@ -36,9 +36,11 @@ class App extends React.Component{
 
     onArticleEdit( article ){
         //跳转到文章编辑页面
-        location.href = '/cms/dash/article/edit?channelId='
-            + encodeURIComponent( this.state.channelId )
-            + '&articleId=' + encodeURIComponent( article._id );
+        let data = {
+            channelId : this.state.channelId,
+            articleId : article.articleId
+        };
+        location.href = '/cms/dash/article/edit?' + utils.json2query( data );
     }
 
     onArticleDelete( article ){
