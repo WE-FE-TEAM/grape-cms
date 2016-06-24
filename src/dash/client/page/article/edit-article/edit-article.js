@@ -17,7 +17,7 @@ const utils = require('common:widget/ui/utils/utils.js');
 const ArticleEditor = require('dash:widget/ui/article/article-editor/article-editor.js');
 const ArticleEditHistory = require('dash:widget/ui/article/article-edit-history/article-edit-history.js');
 
-
+const ACTION_VIEW = 'view';
 const ACTION_ADD = 'add';
 const ACTION_EDIT = 'edit';
 
@@ -29,12 +29,15 @@ class App extends React.Component{
 
         let props = this.props;
 
-        let isAdd = true;
+        let isAdd = false;
 
         let historyCon = null;
 
         let title = '';
-        if( props.action === ACTION_ADD ){
+        if( props.action === ACTION_VIEW ){
+
+            title = '查看文章';
+        }else if( props.action === ACTION_ADD ){
             isAdd = true;
             title = '新增文章';
         }else if( props.action === ACTION_EDIT ){

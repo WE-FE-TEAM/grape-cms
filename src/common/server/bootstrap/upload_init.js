@@ -21,6 +21,35 @@ const uploadPath = cmsConfig.uploadRootPath;
 try{
     fse.mkdirpSync( uploadPath );
 }catch(e){
-    grape.log.error(`创建文件上传根目录异常!!`);
+    grape.log.error(`创建[文件上传]根目录异常!!`);
 }
+
+//文章预览根目录创建
+try{
+    fse.mkdirpSync( cmsConfig.articlePreviewRootPath );
+}catch(e){
+    grape.log.error(`创建[文章预览]根目录异常!!`);
+}
+
+//文章发布根目录创建
+try{
+    fse.mkdirpSync( cmsConfig.articlePublishRootPath );
+}catch(e){
+    grape.log.error(`创建[文章发布]根目录异常!!`);
+}
+
+//数据预览根目录创建
+try{
+    fse.mkdirpSync( cmsConfig.dataPreviewRootPath );
+}catch(e){
+    grape.log.error(`创建[数据预览]根目录异常!!`);
+}
+
+//文章发布根目录创建
+try{
+    fse.mkdirpSync( cmsConfig.dataPublishRootPath );
+}catch(e){
+    grape.log.error(`创建[数据发布]根目录异常!!`);
+}
+
 

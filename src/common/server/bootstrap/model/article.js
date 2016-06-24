@@ -37,6 +37,11 @@ let articleSchema = new mongoose.Schema(
             type : String,
             required : true
         },
+        //文章发布上线之后, 访问的URL
+        // onlineUrl : {
+        //     type : String,
+        //     default : ''
+        // },
         data : {
             type : mongoose.Schema.Types.Mixed
         },
@@ -218,6 +223,27 @@ articleSchema.statics.getEditHistory = async function( articleId ){
     }  ) );
 
     return out;
+};
+
+/**
+ * 获取某篇文章最新的内容
+ * @param channelId {string} 该文章所属的栏目ID
+ * @param articleId {string} 该文章的惟一ID
+ * @returns {object} 文章数据
+ */
+articleSchema.statics.getLatestArticle = async function( channelId, articleId ){
+
+    const Article = mongoose.model('Article');
+
+    let article = await Article.find({ channelId : channelId, articleId : articleId })
+        .sort({ createdAt : -1})
+        .limit(1)
+        .lean(true);
+
+    article = article[0];
+
+    return article;
+
 };
 
 ///////////////////// 文章实例  上的方法  ///////////////////////

@@ -101,8 +101,20 @@ class ArticleController extends ControllerBase {
 
     }
 
-    viewAction(){
-        this.http.res.end('查看文章页面');
+    //同步接口: 查看文章
+    async viewAction(){
+        const Channel = this.model('Channel');
+
+        let http = this.http;
+
+        let channelId = http.getChannelId();
+
+        let channel = await Channel.findOne({ _id : channelId}).lean(true);
+
+        http.assign('channel', channel);
+        http.assign('action', 'view');
+
+        http.render('dash/page/article/edit-article/edit-article.tpl');
     }
 
     //异步接口: 获取所有 [ start, start + num ) 区间内的文章列表, 按照创建时间升序排序
@@ -189,11 +201,7 @@ class ArticleController extends ControllerBase {
 
             if( ! recordId ){
                 //未指定某次历史ID, 取最新的数据
-                article = await Article.find({ channelId : channelId, articleId : articleId })
-                    .sort({ createdAt : -1})
-                    .limit(1)
-                    .lean(true);
-                article = article[0];
+                article = await Article.getLatestArticle( channelId, articleId );
             }else{
                 article = await Article.findOne({ channelId : channelId, _id : recordId }).lean(true);
             }
@@ -382,6 +390,85 @@ class ArticleController extends ControllerBase {
             data : result
         });
 
+    }
+
+    //异步接口: 发布文章到线上, 用户可以发布文章的某一次编辑内容
+    //每次发布, 都会插入一条新的历史记录
+    async doPublishAction(){
+
+        const Channel = this.model('Channel');
+        const Article = this.model('Article');
+
+        let http = this.http;
+
+        let user = http.getUser();
+
+        let query = http.req.body;
+
+        let channelId = http.getChannelId();
+        let articleId = ( query.articleId || '' ).trim();
+        let recordId = ( query.recordId || '' ).trim();
+        let releaseType = ( query.releaseType || '').trim();
+
+        if( ! articleId || ! recordId || ! releaseType  ){
+            return http.error(`文章ID( articleId, recordId ),发布类型(releaseType)必须指定!!`);
+        }
+
+        //判断目标栏目是否存在
+        let channel = await Channel.findOne({ _id : channelId}).exec();
+
+        if( ! channel ){
+            return http.error(`指定的栏目不存在! 栏目ID: ${channelId}`);
+        }
+
+        let article = null;
+
+        try{
+
+            article = await Article.findOne({ channelId : channelId, _id : recordId }).lean(true);
+
+        }catch(e){
+            grape.log.warn( e );
+            return http.error( `获取指定的文章详情出错!`, e);
+        }
+        
+        if( ! article ){
+            return http.error(`找不到文章ID[${articleId}][${recordId}]对应的文章`);
+        }
+
+        try{
+            let result = await cmsUtils.releaseArticle( article, releaseType );
+        }catch(e){
+            grape.log.warn( e );
+            return http.error(`发布文章异常`, e);
+        }
+
+        let data = null;
+
+        //如果是正式发布, 需要插入一条新的记录
+        if( releaseType === 'publish' ){
+            let record = new Article({
+                channelId : article.channelId,
+                articleId : article.articleId,
+                articleName : article.articleName,
+                editUserId : article.editUserId,
+                publishUserId : user._id,
+                publishedAt : new Date()
+            });
+            try{
+                data = await record.save();
+            }catch(e){
+                return http.error(`保存发布记录失败`, e);
+            }
+        }
+
+        this.json({
+            status : 0,
+            message : 'ok',
+            data : data
+        });
+
+        // let onlineUrl =
     }
 }
 

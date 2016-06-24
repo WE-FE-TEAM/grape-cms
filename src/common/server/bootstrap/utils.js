@@ -226,6 +226,43 @@ utils.isArticleTemplateValid = function( templateStr ){
     return out;
 };
 
+/**
+ * 根据文章以及发布类型, 返回文章应该发布到的文件绝对路径
+ * @param article {object} 文章数据
+ * @param releaseType {string} 发布类型, 可能是  publish, preview
+ * @returns {string} 文章发布到磁盘上文件的绝对路径
+ */
+utils.getArticleReleaseFileName = function( article, releaseType ){
+    let path = '';
+    if( releaseType === 'publish' ){
+        //获取正式发布的路径
+        path = cmsConfig.articlePublishRootPath;
+    }else{
+        //默认返回 预览 的路径
+        path = cmsConfig.articlePreviewRootPath;
+    }
+    path += sep;
+    
+    return `${path}${article.articleId}${cmsConfig.articleReleaseFileSuffix}`;
+};
+
+/**
+ * 发布文章到磁盘上的具体文件
+ * @param article {object} 文章数据对象
+ * @param releaseType {string} 发布类型
+ * @returns {*}
+ */
+utils.releaseArticle = async function( article, releaseType ){
+    if( ! article || ! article.articleId ){
+        return Promise.reject( new Error(`要发布的文章数据异常, 为 null 或 缺少 articleId`));
+    }
+    let filePath = utils.getArticleReleaseFileName( article, releaseType );
+
+    let data = JSON.stringify( article.data );
+    let result = await utils.writeFile( filePath, data);
+    
+    return Promise.resolve( result );
+};
 
 ////////////  文件/目录 相关操作   //////////////////////
 
@@ -327,6 +364,12 @@ utils.move = function( src, dest, options){
     } );
 };
 
+/**
+ * 读取某个目录下的内容, 只返回 文件和子目录
+ * @param absolutePath {string} 某目录的绝对路径
+ * @param prefix {string} 给文件或子目录要添加的路径前缀
+ * @returns {Promise}
+ */
 utils.readDir = function( absolutePath, prefix ){
     return new Promise( function(resolve, reject){
         fs.readdir( absolutePath, function(err, files){
@@ -362,3 +405,23 @@ utils.readDir = function( absolutePath, prefix ){
         } );
     } );
 };
+
+/**
+ * 写字符串到某个文件
+ * 会覆盖原文件的内容
+ * @param filePath {string} 文件的绝对路径
+ * @param data {string} 要写入的内容
+ * @returns {Promise}
+ */
+utils.writeFile = function (filePath, data){
+    return new Promise( function(resolve, reject){
+        fse.outputFile( filePath, data, function( err ){
+            if( err ){
+                return reject( err );
+            }
+            return resolve( true );
+        });
+    } );
+};
+
+

@@ -185,8 +185,15 @@ module.exports = {
 
     urlPrefix : URL_PREFIX,
 
+    //文章发布之后的文件后缀
+    articleReleaseFileSuffix : '.txt',
+
+    //文章的预览 根目录
+    articlePreviewRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_publish/article_preview`,
     //文章的发布根目录
     articlePublishRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_publish/article`,
+    //数据的预览 根目录
+    dataPreviewRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_publish/data_preview`,
     //数据的发布根目录
     dataPublishRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_publish/data`,
 

@@ -31,8 +31,14 @@ let channelSchema = new mongoose.Schema(
             type : String  ,
             required : true
         },
+        //文章栏目, 具有此字段, 用来生成文章编辑时需要填写的内容
         articleTemplate : {
             type : mongoose.Schema.Types.Mixed
+        },
+        //文章发布上线之后, 访问的URL
+        onlineUrl : {
+            type : String,
+            default : ''
         },
         parentId : {
             type : mongoose.Schema.Types.ObjectId
