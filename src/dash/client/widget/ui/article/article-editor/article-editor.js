@@ -44,7 +44,7 @@ class ArticleEditor extends React.Component {
         let state = this.state;
         let props = this.props;
 
-        if( state.isLoading ){
+        if( state.isLoading || props.isView ){
             return;
         }
 
@@ -94,9 +94,10 @@ class ArticleEditor extends React.Component {
                     let searchConf = utils.getSearchConf();
 
                     searchConf.articleId = out.data.articleId;
+                    delete searchConf.recordId;
                     // searchConf.recordId = out.data._id;
 
-                    location.href = '/cms/dash/article/edit?' + utils.json2query( searchConf );
+                    location.href = '/cms/dash/article/view?' + utils.json2query( searchConf );
 
                     return;
                 }
@@ -197,6 +198,17 @@ class ArticleEditor extends React.Component {
             articleName = article.articleName || '';
         }
 
+        let saveBtn = null;
+        if( props.isAdd || props.isEdit ){
+            saveBtn = (
+                <div className="form-group">
+                    <div className="col-sm-offset-2 col-sm-10">
+                        <button type="submit" className="btn btn-default">保存</button>
+                    </div>
+                </div>
+            );
+        }
+
         return (
             <div className="article-editor">
                 <RForm action="/cms/dash/article/doAdd" method="POST" className="form-horizontal" onSubmit={ this.submit }>
@@ -209,11 +221,7 @@ class ArticleEditor extends React.Component {
                     </div>
                     <div className="text-center split-line">==============以下是文章被普通用户能看到的属性===============</div>
                     { fields }
-                    <div className="form-group">
-                        <div className="col-sm-offset-2 col-sm-10">
-                            <button type="submit" className="btn btn-default">保存</button>
-                        </div>
-                    </div>
+                    { saveBtn }
                     { error }
                 </RForm>
                 { indicator }

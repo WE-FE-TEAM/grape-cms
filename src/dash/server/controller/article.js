@@ -9,6 +9,10 @@
 
 const ControllerBase = grape.get('controller_base');
 
+const cms = global.cms;
+
+const cmsUtils = cms.utils;
+
 
 class ArticleController extends ControllerBase {
 
@@ -209,6 +213,10 @@ class ArticleController extends ControllerBase {
         }catch(e){
             grape.log.warn( e );
             return http.error( `获取指定的文章详情出错!`, e);
+        }
+
+        if( article ){
+            article.recordId = article._id;
         }
 
         this.json({
@@ -452,6 +460,7 @@ class ArticleController extends ControllerBase {
                 articleId : article.articleId,
                 articleName : article.articleName,
                 editUserId : article.editUserId,
+                data : article.data,
                 publishUserId : user._id,
                 publishedAt : new Date()
             });
@@ -464,7 +473,7 @@ class ArticleController extends ControllerBase {
 
         this.json({
             status : 0,
-            message : 'ok',
+            message : '发布文章成功',
             data : data
         });
 

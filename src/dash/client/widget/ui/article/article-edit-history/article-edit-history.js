@@ -92,6 +92,7 @@ class ArticleEditHistory extends React.Component{
                 <th className="text-center">本次编辑的用户</th>
                 <th className="text-center">编辑时间</th>
                 <th className="text-center">发布时间</th>
+                <th className="text-center">发布人</th>
             </tr>
         );
     }
@@ -107,8 +108,10 @@ class ArticleEditHistory extends React.Component{
         let editTime = new Date(rowData.createdAt).toLocaleString();
 
         let publishTime = '未发布';
+        let publishUserName = '--';
         if( rowData.publishedAt ){
-            publishTime = rowData.publishedAt;
+            publishTime = new Date( rowData.publishedAt ).toLocaleString();
+            publishUserName = rowData.publishUserName;
         }
 
         let data = {
@@ -117,7 +120,7 @@ class ArticleEditHistory extends React.Component{
             recordId : rowData._id
         };
 
-        let editUrl = '/cms/dash/article/edit?' + utils.json2query( data );
+        let editUrl = '/cms/dash/article/view?' + utils.json2query( data );
 
         return (
             <tr key={ index } className={ rowClass }>
@@ -128,6 +131,7 @@ class ArticleEditHistory extends React.Component{
                 <td className="text-center">{ userName }</td>
                 <td className="text-center">{ editTime }</td>
                 <td className="text-center">{ publishTime }</td>
+                <td className="text-center">{ publishUserName }</td>
             </tr>
         );
     }

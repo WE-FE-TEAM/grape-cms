@@ -122,15 +122,31 @@ class RoleList extends React.Component {
 
         let rowClass = '';
 
+        let viewUrl = '';
+
+        let viewBtn = (
+            <a title="点击查看文章" className="" target="_self" onClick={ this.onArticleView.bind( this, rowData) }>{ rowData.articleName }</a>
+        );
+
         return (
             <tr key={ index } className={ rowClass }>
                 <td className="text-center">{ rowData._id }</td>
-                <td className="text-center">{ rowData.articleName }</td>
+                <td className="text-center">{ viewBtn }</td>
                 <td className="text-center"><button onClick={ this.onArticleEdit.bind( this, rowData) } className="btn btn-warning">编辑</button></td>
                 <td className="text-center"><button onClick={ this.onArticleDelete.bind( this, rowData) } className="btn btn-danger">删除</button></td>
                 <td className="text-center"><button onClick={ this.onArticlePublish.bind( this, rowData) } className="btn btn-info">发布</button></td>
             </tr>
         );
+    }
+
+    onArticleView( rowData ){
+        console.log( 'view article: ', rowData );
+        let data = {
+            channelId : rowData.channelId,
+            articleId : rowData.articleId
+        };
+        let viewUrl = '/cms/dash/article/view?' + utils.json2query( data );
+        location.href = viewUrl;
     }
 
     onArticleEdit( rowData ){

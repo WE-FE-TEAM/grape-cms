@@ -58,6 +58,13 @@ const apiConf = {
         url: URL_PREFIX + '/dash/article/getEditHistory',
         method: 'GET',
         dataType: 'json'
+    },
+
+    /* 修改某个文章的数据 */
+    publishArticle: {
+        url: URL_PREFIX + '/dash/article/doPublish',
+        method: 'POST',
+        dataType: 'json'
     }
 
 };

@@ -212,12 +212,34 @@ articleSchema.statics.getEditHistory = async function( articleId ){
     let arr = await Article.find({ articleId : articleId }).sort( { createdAt : -1 } ).lean( true );
 
     out = await Promise.all( arr.map( function( article, index ){
-        return User.findOne({ _id : article.editUserId }).then( function( user ){
+
+        //查找编辑的用户和发布的用户
+        let arr = [];
+
+        arr.push( User.findOne({ _id : article.editUserId }).then( function( user ){
             if( user ){
                 article.userName = user.userName;
             }else{
                 article.userName = '未找到对应用户,可能已被系统删除';
             }
+            article.editUser = user;
+            return article;
+        } ) );
+
+        if( article.publishUserId ){
+            //该修改记录被发布过, 查找发布的用户名
+            arr.push( User.findOne({ _id : article.publishUserId }).then( function( user ){
+                if( user ){
+                    article.publishUserName = user.userName;
+                }else{
+                    article.publishUserName = '未找到对应用户,可能已被系统删除';
+                }
+                article.publishUser = user;
+                return article;
+            } ) );
+        }
+
+        return Promise.all( arr ).then( function( data ){
             return article;
         } );
     }  ) );
