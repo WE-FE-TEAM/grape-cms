@@ -115,7 +115,8 @@ articleSchema.statics.getArticleNumberOfChannel = async function( channelId ){
     let out = await Article.aggregate( [
         {
             $match : {
-                channelId : channelId
+                channelId : channelId,
+                publishUserId : null
             }
         },
         {
@@ -160,7 +161,8 @@ articleSchema.statics.getArticleList = async function( channelId, start, num ){
     out = await Article.aggregate( [
         {
             $match : {
-                channelId : channelId
+                channelId : channelId,
+                publishUserId : null
             }
         },
         {
