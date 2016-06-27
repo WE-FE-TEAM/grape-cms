@@ -52,7 +52,8 @@ let articleSchema = new mongoose.Schema(
         },
         //最后发布文章的用户ID
         publishUserId : {
-            type : String
+            type : String,
+            default : null
         },
         //最后发布日期
         publishedAt : {
@@ -257,8 +258,8 @@ articleSchema.statics.getLatestArticle = async function( channelId, articleId ){
 
     const Article = mongoose.model('Article');
 
-    let article = await Article.find({ channelId : channelId, articleId : articleId })
-        .sort({ createdAt : -1})
+    let article = await Article.find({ channelId : channelId, articleId : articleId, publishUserId : null })
+        .sort({ updatedAt : -1})
         .limit(1)
         .lean(true);
 

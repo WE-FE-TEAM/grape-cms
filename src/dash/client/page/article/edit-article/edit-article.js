@@ -106,6 +106,8 @@ class App extends React.Component{
                         //打开预览URL
                         this.openOnlinePage( PUBLISH_TYPE_PREVIEW);
 
+                        location.reload();
+
                         return;
                     }
                     return Promise.reject( new Error( out.message ) );
@@ -156,6 +158,8 @@ class App extends React.Component{
 
                         //打开线上访问的URL
                         this.openOnlinePage( PUBLISH_TYPE_ONLINE );
+
+                        location.reload();
 
                         return;
                     }

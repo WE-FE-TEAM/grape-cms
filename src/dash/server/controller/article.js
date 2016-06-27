@@ -300,18 +300,22 @@ class ArticleController extends ControllerBase {
             }
         }
 
-        let articleNew = new Article({
-            channelId : channelId,
-            articleId : articleId,
-            articleName : articleName,
-            editUserId : user._id.toString(),
-            data : data
-        });
+        // let articleNew = new Article({
+        //     channelId : channelId,
+        //     articleId : articleId,
+        //     articleName : articleName,
+        //     editUserId : user._id.toString(),
+        //     data : data
+        // });
+
+        article.set('articleName', articleName);
+        article.set('editUserId', user._id.toString() );
+        article.set('data', data);
 
         let result = null;
 
         try{
-            result = await articleNew.save();
+            result = await article.save();
 
         }catch(e){
             return http.error( `保存文章异常`, e);
