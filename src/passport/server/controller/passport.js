@@ -82,10 +82,67 @@ class PassportController extends ControllerBase{
 
     }
 
+    //渲染 修改登录密码 的页面
+    modifyPasswordAction(){
+        this.http.render('passport/page/modify-password/modify-password.tpl');
+    }
+    
+    //异步接口: 修改用户登录密码
+    async doModifyPasswordAction(){
+
+        const User = this.model('User');
+
+        let http = this.http;
+
+        let user = http.getUser();
+
+        let body = this.http.req.body;
+
+        let oldPassword = ( body.oldPassword || '').trim();
+        let newPassword = ( body.newPassword || '' ).trim();
+
+        if( ! newPassword ){
+            return http.error( '新密码不能为空');
+        }
+
+        if( oldPassword === newPassword ){
+            return http.error('新密码不能和原密码一样!!');
+        }
+
+        //原始密码加密
+        oldPassword = User.hashPassword( oldPassword );
+
+        if( oldPassword !== user.password ){
+            //用户输入的老密码错误
+            return http.error('原密码输入错误!!');
+        }
+
+        newPassword = User.hashPassword( newPassword );
+
+        let result = null;
+
+        try{
+            result = await user.update({ password : newPassword }).exec();
+        }catch(e){
+            return http.error('保存新密码失败', e);
+        }
+
+        //清除当前session, 用户要重新登录
+        http.req.session.userId = null;
+
+        this.json({
+            status : 0,
+            message : '修改密码成功',
+            data : result
+        });
+        
+        
+    }
+
     //同步接口, 退出登陆状态
     logoutAction(){
 
-        this.http.req.session.userName = null;
+        this.http.req.session.userId = null;
         //跳转到登陆页
         this.http.redirect( this.urls.logInPage );
     }

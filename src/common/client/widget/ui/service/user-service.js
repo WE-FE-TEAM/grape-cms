@@ -52,6 +52,13 @@ const apiConf = {
         url: URL_PREFIX + '/dash/user/list',
         method: 'GET',
         dataType: 'json'
+    },
+
+    /*  修改用户登录密码 */
+    modifyPassword : {
+        url: URL_PREFIX + '/passport/passport/doModifyPassword',
+        method: 'POST',
+        dataType: 'json'
     }
 
 

@@ -11,6 +11,9 @@
                 <a href="##">帮助文档</a>
             </li>
             <li>
+                <a target="_blank" href="/cms/passport/passport/modifyPassword">修改登录密码</a>
+            </li>
+            <li>
                 <a href="/cms/passport/passport/logout">退出</a>
             </li>
         </ul>

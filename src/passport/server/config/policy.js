@@ -8,5 +8,14 @@
 
 module.exports = {
 
-    '*' : [ 'session_user' ]
+    '*' : [ 'session_user' ],
+
+    passport : {
+
+        '*' : [ 'session_user' ],
+
+        modifyPassword : [ 'session_user', 'login_filter' ],
+
+        doModifyPassword : [ 'session_user', 'login_filter' ]
+    }
 };
