@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# 上线时, 打包API工程的入口脚本
+# 上线时, 打包CMS工程的入口脚本
 # 从GIT拉取代码, 执行 代码 中的编译脚本
 
 
@@ -82,7 +82,7 @@ fi
 echo "============ git clone 拉取最新代码OK ============"
 
 
-#拉取代码OK,进入源码根目录,执行 build.sh ,生成 nui.tag.gz
+#拉取代码OK,进入源码根目录,执行 build.sh ,生成 .tag.gz
 
 cd ${code_dir_name}
 
