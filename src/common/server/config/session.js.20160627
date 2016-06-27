@@ -17,7 +17,7 @@ const redisConf = {
     prefix : 'cmssess:'
 };
 
-let sessionConf = {
+module.exports = {
 
     name : 'gcmssid',
     proxy : undefined,
@@ -33,32 +33,6 @@ let sessionConf = {
     },
 
     store : new RedisStore( redisConf )
-
-};
-
-
-
-
-module.exports = {
-
-
-    log : {
-        name : 'grape-cms',
-        streams : [
-            {
-                level : 'error'
-            },
-            {
-                level : 'fatal'
-            },
-            {
-                level : 'trace',
-                stream :  process.stdout
-            }
-        ]
-    },
-    
-    session : sessionConf
 
 };
 

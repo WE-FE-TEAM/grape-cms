@@ -111,7 +111,7 @@ class RoleList extends React.Component {
                 <th className="text-center">文章名</th>
                 <th className="text-center">编辑文章</th>
                 <th className="text-center">删除文章</th>
-                <th className="text-center">发布文章</th>
+
             </tr>
         );
     }
@@ -128,13 +128,14 @@ class RoleList extends React.Component {
             <a title="点击查看文章" className="" target="_self" onClick={ this.onArticleView.bind( this, rowData) }>{ rowData.articleName }</a>
         );
 
+        // <td className="text-center"><button onClick={ this.onArticlePublish.bind( this, rowData) } className="btn btn-info">发布</button></td>
+
         return (
             <tr key={ index } className={ rowClass }>
                 <td className="text-center">{ rowData._id }</td>
                 <td className="text-center">{ viewBtn }</td>
                 <td className="text-center"><button onClick={ this.onArticleEdit.bind( this, rowData) } className="btn btn-warning">编辑</button></td>
                 <td className="text-center"><button onClick={ this.onArticleDelete.bind( this, rowData) } className="btn btn-danger">删除</button></td>
-                <td className="text-center"><button onClick={ this.onArticlePublish.bind( this, rowData) } className="btn btn-info">发布</button></td>
             </tr>
         );
     }

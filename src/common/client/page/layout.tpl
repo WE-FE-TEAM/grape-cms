@@ -17,7 +17,7 @@
         {% block block_head_content %}
         <meta name="keywords" content="">
         <meta name="description" content="">
-        <title>人人贷WE理财(Wealth Evolution)官网</title>
+        <title>Grape CMS</title>
         {% endblock %}
 
         <link rel="shortcut icon" type="image/x-icon" href="/client/static/img/favicon.ico" />

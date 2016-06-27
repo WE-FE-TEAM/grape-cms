@@ -1,9 +1,11 @@
 /**
- * Created by jess on 16/6/4.
+ * 线上环境
+ * Created by jess on 16/6/27.
  */
 
 
 'use strict';
+
 
 
 const session = require('express-session');
@@ -17,7 +19,7 @@ const redisConf = {
     prefix : 'cmssess:'
 };
 
-module.exports = {
+let sessionConf = {
 
     name : 'gcmssid',
     proxy : undefined,
@@ -35,3 +37,26 @@ module.exports = {
     store : new RedisStore( redisConf )
 
 };
+
+
+
+
+module.exports = {
+
+
+    log : {
+        name : 'grape-cms',
+        streams : [
+            {
+                level : 'error'
+            },
+            {
+                level : 'fatal'
+            }
+        ]
+    },
+
+    session : sessionConf
+
+};
+
