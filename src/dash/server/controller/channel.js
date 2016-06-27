@@ -72,6 +72,8 @@ class ChannelController extends ControllerBase {
         let parentId = body.channelId;
         let channelName = ( body.channelName || '' ).trim();
         let channelType = body.channelType;
+        //如果是文章栏目, 可以配置线上访问某个文章的URL
+        let onlineUrl = ( body.onlineUrl || '' ).trim();
 
         if( ! channelName ){
             return this.json({
@@ -144,6 +146,7 @@ class ChannelController extends ControllerBase {
             parentId : parentId,
             isSystem : false,
             url : channelUrl,
+            onlineUrl : onlineUrl,
             articleTemplate : articleTemplate
         });
 
@@ -211,6 +214,7 @@ class ChannelController extends ControllerBase {
 
         let channelId = body.channelId;
         let channelName = ( body.channelName || '' ).trim();
+        let onlineUrl = ( body.onlineUrl || '' ).trim();
 
         if( ! channelName ){
             return this.json({
@@ -283,7 +287,7 @@ class ChannelController extends ControllerBase {
 
         }
 
-        let result = await channel.update({ channelName : channelName, articleTemplate : articleTemplate }).exec();
+        let result = await channel.update({ channelName : channelName, articleTemplate : articleTemplate, onlineUrl : onlineUrl }).exec();
 
         grape.log.info( result );
 

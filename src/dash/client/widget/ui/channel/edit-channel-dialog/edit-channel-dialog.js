@@ -61,6 +61,8 @@ class EditChannelDialog extends React.Component{
             }
         }
 
+        let onlineUrl = ( this.refs.onlineUrl.getValue() || '' ).trim();
+
         //发送字符串, 避免 boolean 类型丢失
         articleTemplate = JSON.stringify( articleTemplate );
 
@@ -68,6 +70,7 @@ class EditChannelDialog extends React.Component{
         let data = {
             channelId : channel._id,
             channelName : this.refs.channelName.getValue(),
+            onlineUrl : onlineUrl,
             articleTemplate : articleTemplate
         };
 
@@ -143,6 +146,12 @@ class EditChannelDialog extends React.Component{
                         <label for="channel-type" className="col-sm-2 control-label">栏目类型</label>
                         <div className="col-sm-10">
                             { channelUtil.getChannelTypeText( channel.channelType ) }
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <label for="online-url-input" className="col-sm-2 control-label">文章访问URL</label>
+                        <div className="col-sm-10">
+                            <TextInput ref="onlineUrl" id="online-url-input" name="onlineUrl" type="text" placeholder="线上的文章访问URL" value={ channel.onlineUrl } />
                         </div>
                     </div>
                     <div className="form-group">
