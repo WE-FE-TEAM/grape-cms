@@ -463,4 +463,18 @@ utils.writeFile = function (filePath, data){
     } );
 };
 
-
+/**
+ * 读取文件内容
+ * @param filePath {string} 文件所处的绝对路径
+ * @returns {Promise}
+ */
+utils.readFile = function( filePath ){
+    return new Promise( function(resolve, reject){
+        fs.readFile( filePath, function(err, data){ 
+            if( err ){
+                return reject( err );
+            }
+            resolve( data );
+        });
+    } );
+};

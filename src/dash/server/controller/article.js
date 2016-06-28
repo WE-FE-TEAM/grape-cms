@@ -483,6 +483,54 @@ class ArticleController extends ControllerBase {
 
         // let onlineUrl =
     }
+    
+    //获取某个文章当前发布在硬盘上的数据内容
+    async currentReleaseAction(){
+
+        const Article = this.model('Article');
+
+        let http = this.http;
+        
+        let res = http.res;
+
+        let query = http.req.query;
+        
+        let articleId = ( query.articleId || '' ).trim();
+        let releaseType = ( query.releaseType || 'publish' ).trim();
+        
+        let article = null;
+        
+        try{
+            article = await Article.findOne({ articleId : articleId, publishUserId : null }).lean(true);
+        }catch(e){
+            grape.log.warn( e );
+            return res.end(e.stack);
+        }
+        
+        if( ! article ){
+            return res.end(`未找到articleId=${articleId}的文章数据`);
+        }
+
+        let filePath = cmsUtils.getArticleReleaseFileName( article, releaseType );
+
+        let content = '';
+        let status = 0;
+        let message = '';
+
+        try{
+            content = await cmsUtils.readFile( filePath );
+        }catch(e){
+            if( e.code === 'ENOENT' ){
+                status = 1;
+                content = '文章未发布';
+            }else{
+                grape.log.warn(e);
+                return res.end(e);
+            }
+        }
+
+        res.end( content );
+    }
 }
 
 
