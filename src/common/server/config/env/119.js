@@ -49,19 +49,19 @@ let sessionConf = {
 let cms119 = Object.assign( {}, cmsConf, {
 
     //文章发布之后的文件后缀
-    articleReleaseFileSuffix : '.txt',
+    articleReleaseFileSuffix : '.json',
 
     //文章的预览 根目录
-    articlePreviewRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_publish/article_preview`,
+    articlePreviewRootPath : `/cms/article_preview`,
     //文章的发布根目录
-    articlePublishRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_publish/article`,
+    articlePublishRootPath : `/cms/article`,
     //数据的预览 根目录
-    dataPreviewRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_publish/data_preview`,
+    dataPreviewRootPath : `/cms/data_preview`,
     //数据的发布根目录
-    dataPublishRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_publish/data`,
+    dataPublishRootPath : `/cms/data`,
 
     //CMS文件上传的根目录
-    uploadRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_upload`,
+    uploadRootPath : `/cms/static`,
     //文件上传之后,访问文件时,要添加的URL前缀
     uploadUrlPrefix : 'http://172.16.3.119/cms_upload'
 
