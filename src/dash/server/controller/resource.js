@@ -251,7 +251,13 @@ class ResourceController extends ControllerBase {
         try{
             files = await cmsUtils.readDir( finalPath, `${prefix}`);
         }catch(e){
-            return http.error('读取文件列表异常', e);
+            if( e.code === 'ENOENT' ){
+                files = [];
+            }else{
+                grape.log.warn( e );
+                return http.error('读取文件列表异常', e);
+            }
+
         }
 
         files.forEach( ( obj ) => {

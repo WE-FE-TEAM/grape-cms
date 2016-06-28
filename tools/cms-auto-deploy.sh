@@ -82,7 +82,7 @@ cd ${deploy_target_temp_dir}
 echo "准备解压上线包, 当前目录:"
 pwd
 
-sh cms-deploy.sh "${deploy_target_temp_dir}/${tar_name}"
+sh cms-deploy.sh "${deploy_target_temp_dir}/${tar_name}" ${deploy_target_name}
 
 ENDSSH
 
