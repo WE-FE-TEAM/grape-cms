@@ -1,0 +1,42 @@
+{
+  "apps" : [
+    {
+      "name"        : "grape-cms-v1",
+      "script"      : "index.js",
+      "args"        : [],
+      "node_args"   : "--harmony",
+      "merge_logs"  : true,
+      "error_file" : "./log/pm2log/pm2.error.log",
+      "out_file" : "./log/pm2log/pm2.out.log",
+      "log_date_format" : "YYYY-MM-DD HH:mm Z",
+      "instances" : 5,
+      "exec_mode" : "cluster",
+      "cwd"         : ".",
+      "max_memory_restart" : "500M",
+      "env": {
+        "NODE_ENV": "production",
+        "AWESOME_SERVICE_API_TOKEN": "xxx"
+      },
+      "env_development": {
+        "NODE_ENV": "development",
+        "AWESOME_SERVICE_API_TOKEN": "xxx"
+      },
+      "env_production" : {
+        "NODE_ENV": "production"
+      },
+      "env_119" : {
+        "NODE_ENV": "119"
+      },
+      "env_qa" : {
+        "NODE_ENV": "qa"
+      },
+      "env_106" : {
+        "NODE_ENV": "106"
+      },
+      "env_staging" : {
+        "NODE_ENV" : "staging",
+        "TEST"     : true
+      }
+    }
+  ]
+}

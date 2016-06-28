@@ -186,7 +186,7 @@ module.exports = {
     urlPrefix : URL_PREFIX,
 
     //文章发布之后的文件后缀
-    articleReleaseFileSuffix : '.txt',
+    articleReleaseFileSuffix : '.json',
 
     //文章的预览 根目录
     articlePreviewRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_publish/article_preview`,

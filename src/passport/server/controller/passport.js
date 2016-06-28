@@ -101,8 +101,8 @@ class PassportController extends ControllerBase{
         let oldPassword = ( body.oldPassword || '').trim();
         let newPassword = ( body.newPassword || '' ).trim();
 
-        if( ! newPassword ){
-            return http.error( '新密码不能为空');
+        if( ! newPassword || newPassword.length < 6 ){
+            return http.error( '新密码长度不能少于 6 位!!');
         }
 
         if( oldPassword === newPassword ){

@@ -264,6 +264,45 @@ utils.releaseArticle = async function( article, releaseType ){
     return Promise.resolve( result );
 };
 
+/**
+ * 根据JSON数据以及发布类型, 返回JSON数据应该发布到的文件绝对路径
+ * @param data {object} JSON数据
+ * @param releaseType {string} 发布类型, 可能是  publish, preview
+ * @returns {string} JSON发布到磁盘上文件的绝对路径
+ */
+utils.getDataReleaseFileName = function( data, releaseType ){
+    let path = '';
+    if( releaseType === 'publish' ){
+        //获取正式发布的路径
+        path = cmsConfig.dataPublishRootPath;
+    }else{
+        //默认返回 预览 的路径
+        path = cmsConfig.dataPreviewRootPath;
+    }
+    path += sep;
+
+    return `${path}${data.dataId}${cmsConfig.articleReleaseFileSuffix}`;
+};
+
+/**
+ * 发布数据JSON到磁盘上的具体文件
+ * @param data {object} 数据JSON数据对象
+ * @param releaseType {string} 发布类型
+ * @returns {*}
+ */
+utils.releaseData = async function( data, releaseType ){
+    if( ! data || ! data.dataId ){
+        return Promise.reject( new Error(`要发布的数据异常, 为 null 或 缺少 dataId`));
+    }
+    let filePath = utils.getDataReleaseFileName( data, releaseType );
+
+    let content = JSON.stringify( data.data );
+    let result = await utils.writeFile( filePath, content);
+
+    return Promise.resolve( result );
+};
+
+
 ////////////  文件/目录 相关操作   //////////////////////
 
 /**
@@ -424,4 +463,18 @@ utils.writeFile = function (filePath, data){
     } );
 };
 
-
+/**
+ * 读取文件内容
+ * @param filePath {string} 文件所处的绝对路径
+ * @returns {Promise}
+ */
+utils.readFile = function( filePath ){
+    return new Promise( function(resolve, reject){
+        fs.readFile( filePath, function(err, data){ 
+            if( err ){
+                return reject( err );
+            }
+            resolve( data );
+        });
+    } );
+};

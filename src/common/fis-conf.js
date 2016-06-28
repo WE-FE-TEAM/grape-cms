@@ -41,6 +41,9 @@ fis.media('prod')
         useHash : true,
         packTo : '/${static}/pkg/${namespace}_nm.js'
     })
+    .match("/client/static/**.{js,jsx,ts,css,scss,png,jpg,gif,svg}", {
+        useHash : false
+    })
     .match("/client/widget/**.{js,jsx,ts}", {
         useHash : false,
         packTo : '/${static}/pkg/${namespace}_wdg.js'
