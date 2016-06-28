@@ -92,13 +92,10 @@ class ArticleEditor extends React.Component {
                     alert('保存文章成功');
 
                     let searchConf = utils.getSearchConf();
-
                     searchConf.articleId = out.data.articleId;
                     delete searchConf.recordId;
                     // searchConf.recordId = out.data._id;
-
                     location.href = '/cms/dash/article/view?' + utils.json2query( searchConf );
-
                     return;
                 }
                 return Promise.reject( new Error(out.message) );

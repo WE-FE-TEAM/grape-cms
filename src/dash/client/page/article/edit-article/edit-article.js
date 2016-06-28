@@ -284,6 +284,7 @@ let singleton = {
                     if( req.requestStatus === articleService.STATUS.SUCCESS ){
                         let out = req.data;
                         if( out.status === 0 ){
+                            console.log(JSON.stringify(out.data)+"article");
                             singleton.render( channel, action, out.data );
                             return;
                         }

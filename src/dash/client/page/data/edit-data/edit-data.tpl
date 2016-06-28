@@ -3,10 +3,8 @@
 
 {% block dash_block_main %}
 <div id="app">
-add json page
 </div>
 {% endblock %}
-
 
 {% block block_body_js %}
 <script>

@@ -31,6 +31,7 @@ class Textarea extends React.Component{
     }
 
     onChange(){
+       
         this.setState({
             value : this.refs.input.value
         });

@@ -12,8 +12,6 @@ const ServiceBase = require('./service-base');
 
 const adapters = {};
 
-
-
 const URL_PREFIX = '/cms';
 
 const apiConf = {
@@ -49,8 +47,20 @@ const apiConf = {
         url: URL_PREFIX + '/dash/data/doDelete',
         method: 'POST',
         dataType: 'json'
-    }
+    },
+    /* 获取某个json的所有编辑历史 */
+    getDataEditHistory : {
+        url: URL_PREFIX + '/dash/data/getEditHistory',
+        method: 'GET',
+        dataType: 'json'
+    },
 
+    /* 修改某个json的数据 */
+    publishData: {
+        url: URL_PREFIX + '/dash/data/doPublish',
+        method: 'POST',
+        dataType: 'json'
+    }
 
 
 };

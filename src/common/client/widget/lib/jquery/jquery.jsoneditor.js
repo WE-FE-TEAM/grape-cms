@@ -97,14 +97,11 @@
         var appender = $('<div>', { 'class': 'item appender' }),
             btn      = $('<button></button>', { 'class': 'property' });
 
-        btn.text('Add New Value');
-
-
+        btn.text('添加数据');
+        
         appender.append(btn);
         item.append(appender);
-
         btn.click(handler);
-
         return appender;
     }
 
@@ -131,20 +128,15 @@
 
     function construct(opt, json, root, path) {
         path = path || '';
-
         root.children('.item').remove();
-
         for (var key in json) {
             if (!json.hasOwnProperty(key)) continue;
-
             var item     = $('<div>',   { 'class': 'item', 'data-path': path }),
                 property =   $(opt.propertyElement || '<input>', { 'class': 'property' }),
                 value    =   $(opt.valueElement || '<input>', { 'class': 'value'    });
-
             if (isObject(json[key]) || isArray(json[key])) {
                 addExpander(item);
             }
-
             item.append(property).append(value);
             root.append(item);
 
@@ -187,7 +179,6 @@
             var key = $(this).attr('title');
 
             var safePath = path ? path.split('.').concat([key]).join('\'][\'') : key;
-
             opt.onpropertyclick('[\'' + safePath + '\']');
         };
     }

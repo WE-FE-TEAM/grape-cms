@@ -391,7 +391,7 @@ class ArticleController extends ControllerBase {
         }
 
         let result = await Article.getEditHistory( articleId );
-
+        
         this.json({
             status : 0,
             message : 'ok',

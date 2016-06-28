@@ -1,6 +1,6 @@
 /**
- * 删除 某篇文章 弹窗
- * Created by jess on 16/6/14.
+ * 删除  弹窗
+ * Created on 16/6/28.
  */
 
 
@@ -19,11 +19,11 @@ const RForm = require('common:widget/react-ui/RForm/RForm.js');
 
 const TextInput = RForm.TextInput;
 
-const articleService = service.getService('article');
+const dataService = service.getService('data');
 
 
 
-class DeleteArticleDialog extends React.Component {
+class DeleteDataDialog extends React.Component {
 
     constructor( props ){
 
@@ -42,19 +42,19 @@ class DeleteArticleDialog extends React.Component {
             return;
         }
 
-        let article = this.props.article;
+        let mjsondata = this.props.jsondata;
 
         let searchConf = utils.getSearchConf();
 
 
         let data = {
             channelId : searchConf.channelId,
-            articleId : article.articleId
+            dataId : mjsondata.dataId
         };
-        console.log(data.channelId+"articleId"+article.articleId);
-        articleService.deleteArticle( data )
+        console.log(data.channelId+"articleId"+data.dataId);
+        dataService.deleteData( data )
             .then( ( req ) => {
-                if( req.requestStatus === articleService.STATUS.SUCCESS ){
+                if( req.requestStatus === dataService.STATUS.SUCCESS ){
                     let out = req.data;
                     if( out.status === 0 ){
                         alert('删除文章成功');
@@ -84,17 +84,17 @@ class DeleteArticleDialog extends React.Component {
 
         let props = this.props;
         let state = this.state;
-        
-        let article = props.article;
+
+        let mjsondata = props.jsondata;
 
 
         let dialogProps = {
             showing : true,
             isAutoCenter : true,
-            title : '删除文章',
+            title : '删除数据',
             onRequestClose : props.onRequestClose,
             dialog : {
-                className : 'delete-article-dialog',
+                className : 'delete-data-dialog',
                 style : {
                     width : 700
                 }
@@ -114,9 +114,9 @@ class DeleteArticleDialog extends React.Component {
             <RDialog { ...dialogProps }>
                 <RForm action="/cms/dash/article/doDelete" method="POST" className="form-horizontal" onSubmit={ this.submit }>
                     <div className="form-group">
-                        <label for="name-input" className="col-sm-2 control-label">文章名</label>
+                        <label for="name-input" className="col-sm-2 control-label">数据名</label>
                         <div className="col-sm-10">
-                            { article.articleName }
+                            { mjsondata.dataName }
                         </div>
                     </div>
                     <div className="form-group">
@@ -138,4 +138,4 @@ class DeleteArticleDialog extends React.Component {
 
 
 
-module.exports = DeleteArticleDialog;
+module.exports = DeleteDataDialog;

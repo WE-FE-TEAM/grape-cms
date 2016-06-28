@@ -15,62 +15,61 @@ const ArticleList = require('dash:widget/ui/article/article-list/article-list.js
 const DeleteArticleDialog = require('dash:widget/ui/article/delete-article-dialog/delete-article-dialog.js');
 
 
+class App extends React.Component {
 
-class App extends React.Component{
-
-    constructor(props){
+    constructor(props) {
         super(props);
 
         let searchConf = utils.getSearchConf();
 
         this.state = {
-            channelId : searchConf.channelId,
-            isShowDelete : null
+            channelId: searchConf.channelId,
+            isShowDelete: null
         };
 
-        this.onArticleEdit = this.onArticleEdit.bind( this );
-        this.onArticleDelete = this.onArticleDelete.bind( this );
-        this.onArticlePublish = this.onArticlePublish.bind( this );
+        this.onArticleEdit = this.onArticleEdit.bind(this);
+        this.onArticleDelete = this.onArticleDelete.bind(this);
+        this.onArticlePublish = this.onArticlePublish.bind(this);
 
     }
 
-    onArticleEdit( article ){
+    onArticleEdit(article) {
         //跳转到文章编辑页面
         let data = {
-            channelId : this.state.channelId,
-            articleId : article.articleId
+            channelId: this.state.channelId,
+            articleId: article.articleId
         };
-        location.href = '/cms/dash/article/edit?' + utils.json2query( data );
+        location.href = '/cms/dash/article/edit?' + utils.json2query(data);
     }
 
-    onArticleDelete( article ){
+    onArticleDelete(article) {
         this.setState({
-            isShowDelete : article
+            isShowDelete: article
         });
     }
 
-    onArticlePublish( article ){
+    onArticlePublish(article) {
 
     }
 
-    closeDialog(type){
+    closeDialog(type) {
         let state = this.state;
         state[type] = null;
-        this.setState( state );
+        this.setState(state);
     }
 
-    render(){
+    render() {
 
         let props = this.props;
         let state = this.state;
 
-        let addURL = '/cms/dash/article/add?channelId=' + encodeURIComponent( state.channelId );
+        let addURL = '/cms/dash/article/add?channelId=' + encodeURIComponent(state.channelId);
 
         let deleteDialog = null;
-        if( state.isShowDelete ){
+        if (state.isShowDelete) {
             deleteDialog = <DeleteArticleDialog
                 onRequestClose={ this.closeDialog.bind( this, 'isShowDelete') }
-                article={ state.isShowDelete } />;
+                article={ state.isShowDelete }/>;
         }
 
         return (
@@ -92,16 +91,13 @@ class App extends React.Component{
 }
 
 
-
-
 let singleton = {
 
-    init : function(){
+    init: function () {
 
-        ReactDOM.render( <App />, document.getElementById('app') );
+        ReactDOM.render(<App />, document.getElementById('app'));
     }
 };
-
 
 
 module.exports = singleton;
