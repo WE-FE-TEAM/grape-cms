@@ -42,6 +42,7 @@ class App extends React.Component{
 
         this.onArticlePublishPreview = this.onArticlePublishPreview.bind( this );
         this.onArticlePublish = this.onArticlePublish.bind( this );
+        this.onCancelEdit = this.onCancelEdit.bind( this );
     }
 
     openOnlinePage( type ){
@@ -138,6 +139,10 @@ class App extends React.Component{
             return;
         }
 
+        if( ! window.confirm('=====再次确认发布=====\n\n正式发布会影响线上效果, 请 **务必** 慎重!!\n\n 确认发布么??? ') ){
+            return;
+        }
+
         let article = this.props.article;
         let data = {
             channelId : article.channelId,
@@ -182,6 +187,21 @@ class App extends React.Component{
 
     }
 
+    //取消编辑, 跳转到查看页面
+    onCancelEdit(){
+
+        let article = this.props.article;
+
+        let data = {
+            channelId : article.channelId,
+            articleId : article.articleId
+        };
+
+        let viewUrl = '/cms/dash/article/view?' + utils.json2query( data );
+
+        location.href = viewUrl;
+    }
+
     render(){
 
         let props = this.props;
@@ -195,6 +215,7 @@ class App extends React.Component{
         let publishPreviewBtn = null;
         let publishBtn = null;
         let historyCon = null;
+        let cancelEditBtn = null;
 
         let title = '';
         if( props.action === ACTION_VIEW ){
@@ -238,6 +259,10 @@ class App extends React.Component{
             isEdit = true;
             title = '编辑文章';
 
+            cancelEditBtn = (
+                <span className="btn btn-info" onClick={ this.onCancelEdit }>退出编辑</span>
+            );
+
             historyCon = <ArticleEditHistory channelId={ props.channel._id } articleId={ props.article.articleId } />;
 
         }else{
@@ -251,6 +276,7 @@ class App extends React.Component{
                     { publishPreviewBtn }
                     { editBtn }
                     { publishBtn }
+                    { cancelEditBtn }
                 </div>
                 <ArticleEditor channel={ props.channel } isView={ isView } isAdd={ isAdd } isEdit={ isEdit } article={ props.article } />
                 { historyCon }
