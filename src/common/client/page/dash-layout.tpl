@@ -8,6 +8,7 @@
 {% block block_head_js %}
 <script src="/client/static/ueditor/ueditor.config.js"></script>
 <script src="/client/static/ueditor/ueditor.all.js"></script>
+<script src="/client/static/ueditor-plugins/paragraph-bg-color/paragraph-bg-color.js"></script>
 <script src="/client/static/ueditor-plugins/we-product-sug/we-product-sug.js"></script>
 {% endblock %}
 

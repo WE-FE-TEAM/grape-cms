@@ -25626,7 +25626,7 @@ UE.ui = baidu.editor.ui = {};
             if( value[0] !== '#' ){
                 value = '#' + value;
             }
- 
+
             this.fireEvent('pickcolor', value);
         }
     };
