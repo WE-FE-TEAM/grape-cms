@@ -144,9 +144,9 @@ class RoleList extends React.Component {
         console.log( 'view article: ', rowData );
         let data = {
             channelId : rowData.channelId,
-            dataId : rowData.dataId
+            articleId : rowData.articleId
         };
-        let viewUrl = '/cms/dash/data/view?' + utils.json2query( data );
+        let viewUrl = '/cms/dash/article/view?' + utils.json2query( data );
         location.href = viewUrl;
     }
 

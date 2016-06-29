@@ -58,17 +58,17 @@ let dataSchema = new mongoose.Schema(
 
 /**
  * 判断某个文章名称, 在某栏目下, 是否已经存在
- * @param articleName {string}
+ * @param dataName {string}
  * @param channelId {string}
  * @returns {boolean}
  */
-dataSchema.statics.isNameExist = async function (articleName, channelId) {
+dataSchema.statics.isNameExist = async function (dataName, channelId) {
 
-    articleName = ( articleName || '' ).trim();
+    dataName = ( dataName || '' ).trim();
 
     const Data = mongoose.model('Data');
 
-    let obj = await Data.findOne({channelId: channelId, articleName: articleName}).exec();
+    let obj = await Data.findOne({channelId: channelId, dataName: dataName}).exec();
 
     return !!obj;
 
@@ -140,7 +140,7 @@ dataSchema.statics.getDataNumberOfChannel = async function (channelId) {
 };
 /**
  * 获取某个栏目下, [start, start+num) 区间内的json数据
- * 只返回每个文章最近一次修改的 _id, channelId, articleId, articleName 字段
+ * 只返回每个文章最近一次修改的 _id, channelId, dataId, dataName 字段
  * @param channelId {string} 栏目ID
  * @param start {int} 起始位置
  * @param num {int} 返回个数
@@ -195,7 +195,7 @@ dataSchema.statics.getDataList = async function (channelId, start, num) {
 
 /**
  * 获取某个文章的所有历史修改记录
- * @param articleId {string}
+ * @param dataId {string}
  * @returns {Array} 历史修改记录, 按时间倒序
  */
 dataSchema.statics.getEditHistory = async function (dataId) {
@@ -245,7 +245,7 @@ dataSchema.statics.getEditHistory = async function (dataId) {
 /**
  * 获取某篇文章最新的内容
  * @param channelId {string} 该文章所属的栏目ID
- * @param articleId {string} 该文章的惟一ID
+ * @param dataId {string} 该文章的惟一ID
  * @returns {object} 文章数据
  */
 dataSchema.statics.getLatestData = async function (channelId, dataId) {

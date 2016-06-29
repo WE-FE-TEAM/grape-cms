@@ -26,61 +26,61 @@ const PUBLISH_TYPE_PREVIEW = 'preview';
 
 const articleService = service.getService('article');
 
-class App extends React.Component{
+class App extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
 
             //是否正在发布预览中
-            isPreviewing : false,
+            isPreviewing: false,
             //是否处于  正式发布中
-            isPublishing : false
+            isPublishing: false
 
         };
 
-        this.onArticlePublishPreview = this.onArticlePublishPreview.bind( this );
-        this.onArticlePublish = this.onArticlePublish.bind( this );
-        this.onCancelEdit = this.onCancelEdit.bind( this );
+        this.onArticlePublishPreview = this.onArticlePublishPreview.bind(this);
+        this.onArticlePublish = this.onArticlePublish.bind(this);
+        this.onCancelEdit = this.onCancelEdit.bind(this);
     }
 
-    openOnlinePage( type ){
+    openOnlinePage(type) {
 
         let channel = this.props.channel;
         let article = this.props.article;
 
-        if( ! article ){
+        if (!article) {
             return;
         }
 
         let url = channel.onlineUrl;
-        if( ! url ){
+        if (!url) {
             alert('该栏目未配置线上的访问URL, 不能自动打开线上页面');
             return;
         }
 
         url = url.replace(/\{\{articleId\}\}/g, article.articleId);
 
-        if( type === PUBLISH_TYPE_PREVIEW ){
+        if (type === PUBLISH_TYPE_PREVIEW) {
             //预览
-            if( url.indexOf('?') < 0 ){
+            if (url.indexOf('?') < 0) {
                 url += '?';
             }
 
             url += '&cmsPreview=1';
         }
 
-        window.open( url );
+        window.open(url);
 
     }
 
     //异步发布预览文章
-    onArticlePublishPreview(){
+    onArticlePublishPreview() {
 
         let state = this.state;
 
-        if( state.isPreviewing ){
+        if (state.isPreviewing) {
             return;
         }
 
@@ -88,121 +88,121 @@ class App extends React.Component{
 
         let article = this.props.article;
         let data = {
-            channelId : article.channelId,
-            articleId : article.articleId,
-            recordId : article.recordId,
-            releaseType : 'preview'
+            channelId: article.channelId,
+            articleId: article.articleId,
+            recordId: article.recordId,
+            releaseType: 'preview'
         };
 
-        articleService.publishArticle( data )
-            .then( (req) => {
-                if( req.requestStatus === articleService.STATUS.SUCCESS ){
+        articleService.publishArticle(data)
+            .then((req) => {
+                if (req.requestStatus === articleService.STATUS.SUCCESS) {
                     let out = req.data;
-                    if( out.status === 0 ){
-                        alert( '发布到预览环境成功' );
+                    if (out.status === 0) {
+                        alert('发布到预览环境成功');
                         this.setState({
-                            isPreviewing : false
+                            isPreviewing: false
                         });
 
                         //打开预览URL
-                        this.openOnlinePage( PUBLISH_TYPE_PREVIEW);
+                        this.openOnlinePage(PUBLISH_TYPE_PREVIEW);
 
                         location.reload();
 
                         return;
                     }
-                    return Promise.reject( new Error( out.message ) );
+                    return Promise.reject(new Error(out.message));
                 }
-                return Promise.reject( new Error('预览文章请求失败') );
+                return Promise.reject(new Error('预览文章请求失败'));
             })
-            .catch( ( e) => {
-                alert( e.message );
+            .catch((e) => {
+                alert(e.message);
                 this.setState({
-                    isPreviewing : false
+                    isPreviewing: false
                 });
             });
 
         state.isPreviewing = true;
 
         this.setState({
-            isPreviewing : true
+            isPreviewing: true
         });
 
     }
 
     //异步发布文章
-    onArticlePublish(){
+    onArticlePublish() {
 
         let state = this.state;
 
-        if( state.isPublishing ){
+        if (state.isPublishing) {
             return;
         }
 
-        if( ! window.confirm('=====再次确认发布=====\n\n正式发布会影响线上效果, 请 **务必** 慎重!!\n\n 确认发布么??? ') ){
+        if (!window.confirm('=====再次确认发布=====\n\n正式发布会影响线上效果, 请 **务必** 慎重!!\n\n 确认发布么??? ')) {
             return;
         }
 
         let article = this.props.article;
         let data = {
-            channelId : article.channelId,
-            articleId : article.articleId,
-            recordId : article.recordId,
-            releaseType : 'publish'
+            channelId: article.channelId,
+            articleId: article.articleId,
+            recordId: article.recordId,
+            releaseType: 'publish'
         };
 
-        articleService.publishArticle( data )
-            .then( (req) => {
-                if( req.requestStatus === articleService.STATUS.SUCCESS ){
+        articleService.publishArticle(data)
+            .then((req) => {
+                if (req.requestStatus === articleService.STATUS.SUCCESS) {
                     let out = req.data;
-                    if( out.status === 0 ){
-                        alert( '发布到正式环境成功' );
+                    if (out.status === 0) {
+                        alert('发布到正式环境成功');
                         this.setState({
-                            isPublishing : false
+                            isPublishing: false
                         });
 
                         //打开线上访问的URL
-                        this.openOnlinePage( PUBLISH_TYPE_ONLINE );
+                        this.openOnlinePage(PUBLISH_TYPE_ONLINE);
 
                         location.reload();
 
                         return;
                     }
-                    return Promise.reject( new Error( out.message ) );
+                    return Promise.reject(new Error(out.message));
                 }
-                return Promise.reject( new Error('发布文章请求失败') );
+                return Promise.reject(new Error('发布文章请求失败'));
             })
-            .catch( ( e) => {
-                alert( e.message );
+            .catch((e) => {
+                alert(e.message);
                 this.setState({
-                    isPublishing : false
+                    isPublishing: false
                 });
             });
 
         state.isPublishing = true;
 
         this.setState({
-            isPublishing : true
+            isPublishing: true
         });
 
     }
 
     //取消编辑, 跳转到查看页面
-    onCancelEdit(){
+    onCancelEdit() {
 
         let article = this.props.article;
 
         let data = {
-            channelId : article.channelId,
-            articleId : article.articleId
+            channelId: article.channelId,
+            articleId: article.articleId
         };
 
-        let viewUrl = '/cms/dash/article/view?' + utils.json2query( data );
+        let viewUrl = '/cms/dash/article/view?' + utils.json2query(data);
 
         location.href = viewUrl;
     }
 
-    render(){
+    render() {
 
         let props = this.props;
         let state = this.state;
@@ -218,26 +218,26 @@ class App extends React.Component{
         let cancelEditBtn = null;
 
         let title = '';
-        if( props.action === ACTION_VIEW ){
+        if (props.action === ACTION_VIEW) {
             isView = true;
             title = '查看文章';
             let data = {
-                channelId : props.channel._id,
-                articleId : props.article.articleId,
-                recordId : props.article._id
+                channelId: props.channel._id,
+                articleId: props.article.articleId,
+                recordId: props.article._id
             };
-            let editUrl = '/cms/dash/article/edit?' + utils.json2query( data );
+            let editUrl = '/cms/dash/article/edit?' + utils.json2query(data);
             editBtn = (
                 <a className="btn btn-warning" target="_self" href={ editUrl }>编辑文章</a>
             );
 
             let previewText = '预览';
-            if( state.isPreviewing ){
+            if (state.isPreviewing) {
                 previewText = '正在启动预览...';
             }
 
             let publishText = '发布';
-            if( state.isPublishing ){
+            if (state.isPublishing) {
                 publishText = '正在发布中...';
             }
 
@@ -249,13 +249,13 @@ class App extends React.Component{
                 <span className="btn btn-danger" onClick={ this.onArticlePublish }>{ publishText }</span>
             );
 
-            historyCon = <ArticleEditHistory channelId={ props.channel._id } articleId={ props.article.articleId } />;
+            historyCon = <ArticleEditHistory channelId={ props.channel._id } articleId={ props.article.articleId }/>;
 
-        }else if( props.action === ACTION_ADD ){
+        } else if (props.action === ACTION_ADD) {
             isAdd = true;
             title = '新增文章';
-        }else if( props.action === ACTION_EDIT ){
-            
+        } else if (props.action === ACTION_EDIT) {
+
             isEdit = true;
             title = '编辑文章';
 
@@ -263,9 +263,9 @@ class App extends React.Component{
                 <span className="btn btn-info" onClick={ this.onCancelEdit }>退出编辑</span>
             );
 
-            historyCon = <ArticleEditHistory channelId={ props.channel._id } articleId={ props.article.articleId } />;
+            historyCon = <ArticleEditHistory channelId={ props.channel._id } articleId={ props.article.articleId }/>;
 
-        }else{
+        } else {
             return null;
         }
 
@@ -278,7 +278,8 @@ class App extends React.Component{
                     { publishBtn }
                     { cancelEditBtn }
                 </div>
-                <ArticleEditor channel={ props.channel } isView={ isView } isAdd={ isAdd } isEdit={ isEdit } article={ props.article } />
+                <ArticleEditor channel={ props.channel } isView={ isView } isAdd={ isAdd } isEdit={ isEdit }
+                               article={ props.article }/>
                 { historyCon }
             </div>
         );
@@ -288,51 +289,55 @@ class App extends React.Component{
 
 let singleton = {
 
-    init : function( args ){
+    init: function (args) {
 
         let action = args.action;
         let channel = args.channel;
 
-        channel = utils.parseJSON( channel );
+        channel = utils.parseJSON(channel);
 
-        if( ! channel ){
+        if (!channel) {
             alert('栏目数据异常!!');
             return;
         }
-        
+
         let article = null;
-        
-        if( action === ACTION_ADD ){
+
+        if (action === ACTION_ADD) {
             //新创建文章
-            singleton.render( channel, action, article );
-        }else if( action === ACTION_EDIT || action === ACTION_VIEW ){
+            singleton.render(channel, action, article);
+        } else if (action === ACTION_EDIT || action === ACTION_VIEW) {
             //异步请求文章数据, 再渲染
             let searchConf = utils.getSearchConf();
 
-            articleService.getArticle( { channelId : searchConf.channelId, articleId : searchConf.articleId, recordId : searchConf.recordId } )
-                .then( ( req ) => {
-                    if( req.requestStatus === articleService.STATUS.SUCCESS ){
+            articleService.getArticle({
+                channelId: searchConf.channelId,
+                articleId: searchConf.articleId,
+                recordId: searchConf.recordId
+            })
+                .then((req) => {
+                    if (req.requestStatus === articleService.STATUS.SUCCESS) {
                         let out = req.data;
-                        if( out.status === 0 ){
-                            console.log(JSON.stringify(out.data)+"article");
-                            singleton.render( channel, action, out.data );
+                        if (out.status === 0) {
+                            console.log(JSON.stringify(out.data) + "article");
+                            singleton.render(channel, action, out.data);
                             return;
                         }
-                        return Promise.reject( new Error(out.message) );
+                        return Promise.reject(new Error(out.message));
                     }
-                    return Promise.reject( new Error('请求该文章详情出错!') );
+                    return Promise.reject(new Error('请求该文章详情出错!'));
                 })
-                .catch( (e) => {
-                    alert( e.message );
+                .catch((e) => {
+                    alert(e.message);
                 });
         }
     },
-    
-    render( channel, action, article ){
-        ReactDOM.render( <App channel={ channel } action={ action } article={ article } />, document.getElementById('app') );
+
+    render(channel, action, article){
+        ReactDOM.render(<App channel={ channel } action={ action }
+                             article={ article }/>, document.getElementById('app'));
     }
 };
-
 
 
 module.exports = singleton;

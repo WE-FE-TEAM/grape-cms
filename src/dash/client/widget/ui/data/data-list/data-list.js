@@ -122,8 +122,8 @@ class DataList extends React.Component {
 
         let rowClass = '';
         let viewBtn = (
-            <a title="点击查看文章" className="" target="_self"
-               onClick={ this.onArticleView.bind( this, rowData) }>{ rowData.dataName }</a>
+            <a title="点击查看数据" className="" target="_self"
+               onClick={ this.onDataView.bind( this, rowData) }>{ rowData.dataName }</a>
         );
 
         return (
@@ -136,11 +136,11 @@ class DataList extends React.Component {
         );
     }
 
-    onArticleView(rowData) {
-        console.log('view article: ', rowData);
+    onDataView(rowData) {
+        console.log('view data: ', rowData);
         let data = {
             channelId: rowData.channelId,
-            articleId: rowData.articleId
+            dataId: rowData.dataId
         };
         let viewUrl = '/cms/dash/data/view?' + utils.json2query(data);
         location.href = viewUrl;
