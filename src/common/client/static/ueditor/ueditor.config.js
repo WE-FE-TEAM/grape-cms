@@ -61,7 +61,7 @@
         //,theme:'default'
         //,themePath:URL +"themes/"
 
-        ,zIndex : 90     //编辑器层级的基数,默认是900
+        ,zIndex : 30     //编辑器层级的基数,默认是900
 
         //针对getAllHtml方法，会在对应的head标签中增加该编码设置。
         //,charset:"utf-8"
@@ -287,14 +287,14 @@
 
         //autoFloatEnabled
         //是否保持toolbar的位置不动,默认true
-        ,autoFloatEnabled:false
+        ,autoFloatEnabled:true
         //浮动时工具栏距离浏览器顶部的高度，用于某些具有固定头部的页面
-        //,topOffset:30
+        ,topOffset:51
         //编辑器底部距离工具栏高度(如果参数大于等于编辑器高度，则设置无效)
         //,toolbarTopOffset:400
 
         //设置远程图片是否抓取到本地保存
-        //,catchRemoteImageEnable: true //设置是否抓取远程图片
+        ,catchRemoteImageEnable: false //设置是否抓取远程图片
 
         //pageBreakTag
         //分页标识符,默认是_ueditor_page_break_tag_
