@@ -82,6 +82,7 @@
 
         //如果自定义，最好给p标签如下的行高，要不输入中文时，会有跳动感
         //,initialStyle:'p{line-height:1em}'//编辑器层级的基数,可以用来改变字体等
+		,initialStyle : 'p[data-tag]{height: 40px; line-height: 40px; border: 1px dashed pink; padding-left: 20px; font-size: 20px; color: blue; font-weight: bold;}'
 
         ,iframeCssUrl: __uri('/client/static/ueditor/themes/iframe.css') //给编辑区域的iframe引入一个css文件
 
@@ -406,7 +407,7 @@
 			mark:   [],
 			nav:    [],
 			ol:     ['class', 'style'],
-			p:      ['class', 'style'],
+			p:      ['class', 'style', 'title', 'data-tag'],
 			pre:    ['class', 'style'],
 			s:      [],
 			section:[],
@@ -425,7 +426,8 @@
 			tt:     [],
 			u:      [],
 			ul:     ['class', 'style'],
-			video:  ['autoplay', 'controls', 'loop', 'preload', 'src', 'height', 'width', 'class', 'style']
+			video:  ['autoplay', 'controls', 'loop', 'preload', 'src', 'height', 'width', 'class', 'style'],
+			'we-product-sug' : []
 		}
     };
 
