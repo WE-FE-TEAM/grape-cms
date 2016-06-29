@@ -25328,6 +25328,7 @@ UE.ui = baidu.editor.ui = {};
         domUtils = baidu.editor.dom.domUtils,
         UIBase = baidu.editor.ui.UIBase,
         Popup = baidu.editor.ui.Popup = function (options){
+            options.isDisableClick = options.isDisableClick !== false;
             this.initOptions(options);
             this.initPopup();
         };
@@ -25364,7 +25365,7 @@ UE.ui = baidu.editor.ui = {};
             allPopups.push( this );
         },
         getHtmlTpl: function (){
-            return '<div id="##" class="edui-popup %%" onmousedown="return false;">' +
+            return '<div id="##" class="edui-popup %%" ' + ( this.isDisableClick ? 'onmousedown="return false;" ' : '') + '>' +
                 ' <div id="##_body" class="edui-popup-body">' +
                 ' <iframe style="position:absolute;z-index:-1;left:0;top:0;background-color: transparent;" frameborder="0" width="100%" height="100%" src="about:blank"></iframe>' +
                 ' <div class="edui-shadow"></div>' +
@@ -25614,6 +25615,19 @@ UE.ui = baidu.editor.ui = {};
         },
         _onPickNoColor: function (){
             this.fireEvent('picknocolor');
+        },
+        _onUserDefineClick : function(){
+            var value = ( this.getDom('color-input').value || '' ).trim();
+            if( ! value || ! /^#?[0-9a-f]{6}$/.test(value) ){
+                alert('自定义颜色格式错误!! 必须使用 #rrggbb 格式的颜色值!');
+                return;
+            }
+
+            if( value[0] !== '#' ){
+                value = '#' + value;
+            }
+ 
+            this.fireEvent('pickcolor', value);
         }
     };
     utils.inherits(ColorPicker, UIBase);
@@ -25650,7 +25664,13 @@ UE.ui = baidu.editor.ui = {};
                 '"' +
                 '></a></td>':'';
         }
-        html += '</tr></table></div>';
+        html += '</tr></table>';
+
+        //添加自定义输入颜色
+        html += '<div><input id="##_color-input" type="text" placeholder="自定义颜色值" style="width: 95px; margin-right: 10px;" /><span id="##_submit" onclick="return $$._onUserDefineClick(event, this);"  style="padding: 4px 10px; border: 1px solid #000;" >确认</span></div>';
+
+        html += '</div>';
+
         return html;
     }
 })();
@@ -26035,6 +26055,7 @@ UE.ui = baidu.editor.ui = {};
         initColorButton: function (){
             var me = this;
             this.popup = new Popup({
+                isDisableClick : false,
                 content: new ColorPicker({
                     noColorText: me.editor.getLang("clearColor"),
                     editor:me.editor,
