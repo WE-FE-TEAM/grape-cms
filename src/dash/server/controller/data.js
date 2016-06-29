@@ -1,7 +1,8 @@
 /**
- * 文章 相关的action
- * Created  on 16/6/23.
+ * json数据相关的action
+ * Created on 16/6/23.
  */
+
 
 'use strict';
 
@@ -11,6 +12,7 @@ const ControllerBase = grape.get('controller_base');
 const cms = global.cms;
 
 const cmsUtils = cms.utils;
+
 
 class DataController extends ControllerBase {
 
@@ -32,9 +34,9 @@ class DataController extends ControllerBase {
 
     }
 
-    //异步接口: 添加文章
+    //异步接口: 添加数据
     async doAddAction() {
-
+        console.log("do add action");
         const Channel = this.model('Channel');
         const Data = this.model('Data');
 
@@ -47,14 +49,14 @@ class DataController extends ControllerBase {
         let channelId = http.getChannelId();
         let dataName = ( body.dataName || '').trim();
         let data = ( body.data || '').trim();
-        console.log("doadd action>>>>" + data);
+
         if (!dataName) {
-            return http.error(`JSON数据后台显示标题 必填!! articleName`);
+            return http.error(`JSON数据后台显示标题 必填!! dataName`);
         }
 
         try {
             data = JSON.parse(data);
-            console.log("doadd action>>>>jsonparse~!!!!!!!" + data);
+
         } catch (e) {
             return http.error(`数据内容格式非法, 只能是JSON!!`, e);
         }
@@ -66,13 +68,15 @@ class DataController extends ControllerBase {
             return http.error(`指定的栏目不存在! 栏目ID: ${channelId}`);
         }
 
-        //判断该栏目下, 是否存在同名的 文章
+        //判断该栏目下, 是否存在同名的json数据
         let out = await Data.isNameExist(dataName, channelId);
 
         if (out) {
             return http.error(`该栏目下已经存在同名的文章: ${dataName}`);
         }
+        //生成一个新的dataID
         let dataId = await Data.generateDataId();
+
 
         let jsonData = new Data({
             channelId: channelId,
@@ -88,6 +92,7 @@ class DataController extends ControllerBase {
             result = await jsonData.save();
 
         } catch (e) {
+            grape.log.warn(e);
             return http.error(`保存文章异常`, e);
         }
 
@@ -100,11 +105,23 @@ class DataController extends ControllerBase {
 
     }
 
-    viewAction() {
-        this.http.res.end('查看文章页面');
+    //同步接口 查看数据
+    async viewAction() {
+        const Channel = this.model('Channel');
+
+        let http = this.http;
+
+        let channelId = http.getChannelId();
+
+        let channel = await Channel.findOne({_id: channelId}).lean(true);
+
+        http.assign('channel', channel);
+        http.assign('action', 'view');
+
+        http.render('dash/page/data/edit-data/edit-data.tpl');
     }
 
-    //异步接口: 获取所有 [ start, start + num ) 区间内的文章列表, 按照创建时间升序排序
+    //异步接口: 获取所有 [ start, start + num ) 区间内的数据列表, 按照创建时间升序排序
     async listAction() {
 
         let http = this.http;
@@ -117,7 +134,7 @@ class DataController extends ControllerBase {
 
         let start = parseInt(query.start, 10);
         let num = parseInt(query.num, 10);
-        console.log("list action in data.js" + channelId + num + start);
+
         if (isNaN(start)
             || start < 0
             || isNaN(num)
@@ -146,7 +163,7 @@ class DataController extends ControllerBase {
 
         } catch (e) {
             grape.log.warn(e);
-            return http.error(`获取文章列表异常`, e);
+            return http.error(`获取数据列表异常`, e);
         }
 
         let data = {
@@ -164,7 +181,7 @@ class DataController extends ControllerBase {
 
     }
 
-    //异步接口: 获取某个指定文章的详情数据
+    //异步接口: 获取某个指定数据的详情
     async detailAction() {
         console.log("detail action in controller");
         let http = this.http;
@@ -178,7 +195,7 @@ class DataController extends ControllerBase {
 
         console.log("dataid" + dataId + "channeldId");
         if (!dataId) {
-            return http.error(`文章ID(articleId)必须指定!!`);
+            return http.error(`json数据ID(dataId)必须指定!!`);
         }
         let jsonData = null;
 
@@ -188,15 +205,18 @@ class DataController extends ControllerBase {
                 //未指定某次历史ID, 取最新的数据
                 jsonData = await Data.getLatestData(channelId, dataId);
             } else {
-                jsonData = await Data.findOne({channelId: channelId, dataId: dataId}).lean(true);
+                jsonData = await Data.findOne({channelId: channelId, _id: recordId}).lean(true);
             }
-            console.log("jsondata" + jsonData);
+
         } catch (e) {
             grape.log.warn(e);
-            return http.error(`获取指定的文章详情出错!`, e);
+            return http.error(`获取指定的数据详情出错!`, e);
+        }
+        if( jsonData ){
+            jsonData.recordId = jsonData._id;
         }
 
-        console.log("jsondata" + jsonData);
+
         this.json({
             status: 0,
             message: 'ok',
@@ -205,7 +225,7 @@ class DataController extends ControllerBase {
 
     }
 
-    //同步接口: 渲染编辑文章页面
+    //同步接口: 渲染编辑页面
     async editAction() {
 
         const Channel = this.model('Channel');
@@ -223,7 +243,7 @@ class DataController extends ControllerBase {
 
     }
 
-    //异步接口: 更新文章内容
+    //异步接口: 更新json数据内容
     async doUpdateAction() {
         console.log("doupdate");
         const Channel = this.model('Channel');
@@ -241,11 +261,11 @@ class DataController extends ControllerBase {
         let data = ( body.data || '').trim();
 
         if (!dataName) {
-            return http.error(`文章后台显示标题 必填!! articleName`);
+            return http.error(`数据后台显示标题 必填!! dataName`);
         }
 
         if (!dataId) {
-            return http.error(`要编辑的文章ID, 不能为空!!!`);
+            return http.error(`要编辑的数据ID, 不能为空!!!`);
         }
 
         try {
@@ -268,7 +288,7 @@ class DataController extends ControllerBase {
             mjsondata = await Data.findOne({channelId: channelId, dataId: dataId}).exec();
         } catch (e) {
             grape.log.warn(e);
-            return http.error(`查找指定的文章异常`, e);
+            return http.error(`查找指定的json数据异常`, e);
         }
 
         if (dataName !== mjsondata.dataName) {
@@ -276,37 +296,40 @@ class DataController extends ControllerBase {
             let out = await Data.isNameExist(dataName, channelId);
 
             if (out) {
-                return http.error(`该栏目下已经存在同名的文章: ${dataName}`);
+                return http.error(`该栏目下已经存在同名的数据: ${dataName}`);
             }
         }
 
-        let DataNew = new Data({
-            channelId: channelId,
-            dataId: dataId,
-            dataName: dataName,
-            editUserId: user._id.toString(),
-            data: data
-        });
+        // let DataNew = new Data({
+        //     channelId: channelId,
+        //     dataId: dataId,
+        //     dataName: dataName,
+        //     editUserId: user._id.toString(),
+        //     data: data
+        // });
+        mjsondata.set('dataName', dataName);
+        mjsondata.set('editUserId', user._id.toString());
+        mjsondata.set('data', data);
 
         let result = null;
 
         try {
-            result = await DataNew.save();
+            result = await mjsondata.save();
 
         } catch (e) {
-            return http.error(`保存文章异常`, e);
+            return http.error(`保存json数据异常`, e);
         }
 
         return http.json({
             status: 0,
-            message: '更新文章成功',
+            message: '更新数据成功',
             data: result
         });
 
 
     }
 
-    //异步接口: 删除文章
+    //异步接口: 删除数据
     async doDeleteAction() {
         const Channel = this.model('Channel');
         const Data = this.model('Data');
@@ -318,7 +341,6 @@ class DataController extends ControllerBase {
         let user = http.getUser();
 
         let channelId = http.getChannelId();
-
         let dataId = ( body.dataId || '' ).trim();
 
         if (!dataId) {
@@ -329,12 +351,12 @@ class DataController extends ControllerBase {
             let result = await Data.remove({channelId: channelId, dataId: dataId}).exec();
             this.json({
                 status: 0,
-                message: '成功删除文章, 以及该文章所有的历史记录',
+                message: '成功删除数据, 以及该json数据所有的历史记录',
                 data: result
             });
         } catch (e) {
             grape.log.warn(e);
-            http.error('删除文章失败', e);
+            http.error('删除数据失败', e);
         }
 
     }
@@ -351,13 +373,13 @@ class DataController extends ControllerBase {
         let user = http.getUser();
 
         let dataId = ( body.dataId || '' ).trim();
-        console.log("getedit history  action dataid====="+dataId);
+
         if (!dataId) {
             return http.error(`数据ID( dataId ), 不能为空!!!`);
         }
 
         let result = await Data.getEditHistory(dataId);
-         console.log("result result  result"+JSON.stringify(result));
+
         this.json({
             status: 0,
             message: 'ok',
@@ -365,7 +387,91 @@ class DataController extends ControllerBase {
         });
     }
 
+    //异步接口: 发布数据到线上, 用户可以发布json数据的某一次编辑内容
+    //每次发布, 都会插入一条新的历史记录
     async doPublishAction() {
+        const Channel = this.model('Channel');
+        const Data = this.model('Data');
+
+        let http = this.http;
+
+        let user = http.getUser();
+
+        let query = http.req.body;
+         console.log(JSON.stringify(query)+"query http http");
+        let channelId = http.getChannelId();
+        let dataId = ( query.dataId || '' ).trim();
+        let recordId = ( query.recordId || '' ).trim();
+        let releaseType = ( query.releaseType || '').trim();
+
+        console.log(dataId+"dataid"+recordId+"recordid"+releaseType+"releasetype"+"chnannelid"+channelId);
+
+
+        if (!dataId || !recordId || !releaseType) {
+            return http.error(`数据ID( dataId, recordId ),发布类型(releaseType)必须指定!!`);
+        }
+
+        //判断目标栏目是否存在
+        let channel = await Channel.findOne({_id: channelId}).exec();
+
+        if (!channel) {
+            return http.error(`指定的栏目不存在! 栏目ID: ${channelId}`);
+        }
+
+        let jsondata = null;
+
+        try {
+
+            jsondata = await Data.findOne({channelId: channelId, _id: recordId}).lean(true);
+
+        } catch (e) {
+            grape.log.warn(e);
+            return http.error(`获取指定的数据详情出错!`, e);
+        }
+
+        if (!jsondata) {
+            return http.error(`找不到数据ID[${dataId}][${recordId}]对应的数据`);
+        }
+
+        try {
+            let result = await cmsUtils.releaseData(jsondata, releaseType);
+        } catch (e) {
+            grape.log.warn(e);
+            return http.error(`发布文章异常`, e);
+        }
+
+        let data = null;
+
+        //如果是正式发布, 需要插入一条新的记录
+        if (releaseType === 'publish') {
+            let record = new Data({
+                channelId: jsondata.channelId,
+                dataId: jsondata.dataId,
+                dataName: jsondata.dataName,
+                editUserId: jsondata.editUserId,
+                data: jsondata.data,
+                publishUserId: user._id,
+                publishedAt: new Date()
+            });
+            try {
+                data = await record.save();
+            } catch (e) {
+                return http.error(`保存发布记录失败`, e);
+            }
+        }
+
+        this.json({
+            status: 0,
+            message: '发布文章成功',
+            data: data
+        });
+
+
+    }
+
+    //获取某个数据当前发布在硬盘上的数据内容
+    async currentReleaseAction() {
+
     }
 }
 

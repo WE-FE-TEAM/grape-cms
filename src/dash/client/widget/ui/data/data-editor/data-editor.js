@@ -5,7 +5,7 @@ const utils = require('common:widget/ui/utils/utils.js');
 const RLoadingIndicator = require('common:widget/react-ui/RLoadIndicator/RLoadIndicator.js');
 const RForm = require('common:widget/react-ui/RForm/RForm.js');
 const Textarea = require('./Textarea.js');
- require('common:widget/lib/jquery/jquery.jsoneditor.js');
+require('common:widget/lib/jquery/jquery.jsoneditor.js');
 
 const TextInput = RForm.TextInput;
 
@@ -15,13 +15,13 @@ class DataEditor extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: '',
+            value: ( props.jsondata ||'' ).data,
             isLoading: false,
             errorMsg: ''
         };
         this.submit = this.submit.bind(this);
-        this.updateJSON=this.updateJSON.bind(this);
-        this.clickeditor=this.clickeditor.bind(this);
+        this.updateJSON = this.updateJSON.bind(this);
+
     }
 
     submit() {
@@ -37,22 +37,23 @@ class DataEditor extends React.Component {
         let dataName = this.refs.dataName.getValue();
         let data = this.state.value;
 
-
         let allData = {
             channelId: channel._id,
             dataName: dataName,
             data: JSON.stringify(data)
         };
-
+        console.log("when submit");
         let promise;
 
         if (isAdd) {
             //新增
+            console.log("when submit add");
             promise = dataService.addData(allData);
         } else {
+            console.log("when submit edit");
             allData.dataId = mjsondata.dataId;
             //编辑
-            console.log(mjsondata.dataId+"alldata now edit");
+            console.log(mjsondata.dataId + "alldata now edit");
             promise = dataService.updateData(allData);
         }
 
@@ -60,14 +61,13 @@ class DataEditor extends React.Component {
             if (req.requestStatus === dataService.STATUS.SUCCESS) {
                 let out = req.data;
                 if (out.status === 0) {
-                    alert('保存文章成功');
+                    alert('保存数据成功');
 
                     let searchConf = utils.getSearchConf();
 
                     searchConf.dataId = out.data.dataId;
                     delete searchConf.recordId;
                     // searchConf.recordId = out.data._id;
-
                     location.href = '/cms/dash/data/view?' + utils.json2query(searchConf);
 
                     return;
@@ -93,26 +93,39 @@ class DataEditor extends React.Component {
     }
 
     updateJSON(data) {
-        let json =JSON.stringify(data);
-         $('#json').val(json);
-        let state=this.state;
-        console.log(">"+json+">>>>>>>>>>"+state.value);
-        state.value =json;
-        console.log(">"+json+">>>>>>>>>>"+state.value);
+        let json = data;
+        if( typeof data !== 'string' ){
+            json = JSON.stringify(data);
+        }
+
+        let obj = JSON.parse( json );
+
+        $('#editor').jsonEditor(obj, {change: this.updateJSON});
+
+        this.setState({
+            value : json
+        });
+
     }
+
+
 
     componentDidMount() {
         let props = this.props;
-        let mjsondata = props.jsondata;
+        let state = this.state;
+
+        let mjsondata = state.value;
         let json = '';
         if (mjsondata) {
-            json = JSON.parse(mjsondata.data);
-            console.log(mjsondata.data + "commponent");
+            json = JSON.parse(mjsondata);
         }
         else {
-            json  = {"string":"hello!","number":"0"};
+            json = {"string": "hello!", "number": "0"};
         }
-        $('#editor').jsonEditor(json, {change: this.updateJSON });
+        this.setState({
+            value :JSON.stringify(json)
+        });
+        $('#editor').jsonEditor(json, {change: this.updateJSON});
         $('#expander').click(function () {
             var editor = $('#editor');
             editor.toggleClass('expanded');
@@ -120,22 +133,12 @@ class DataEditor extends React.Component {
         });
     }
 
-   clickeditor(){
 
-   }
+
     render() {
         let props = this.props;
-        let mjsondata = props.jsondata;
         let state = this.state;
-        let dataName = '';
 
-        if (mjsondata) {
-            dataName = mjsondata.dataName || '';
-            state.value = mjsondata.data || '';
-        }
-        else {
-            state.value  = '{"string":"hello!","number":"0"}';
-        }
         let indicator = null;
         if (state.isLoading) {
             indicator = <RLoadingIndicator />;
@@ -149,14 +152,32 @@ class DataEditor extends React.Component {
             </div>;
         }
 
+        let dataName = '';
+        if (props.jsondata) {
+            dataName = props.jsondata.dataName || '';
+        }
+
+        let saveBtn = null;
+
+        if (props.isAdd || props.isEdit) {
+            saveBtn = (
+                <div className="form-group">
+                    <div className="col-sm-offset-2 col-sm-10">
+                        <button type="submit" className="btn btn-default">保存</button>
+                    </div>
+                </div>
+            );
+        }
+
+
         return (
             <div className="data-editor">
-                <div class="col-sm-10 col-lg-10" onClick={this.clickeditor}>
-                    <div id="editor" class="json-editor" ></div>
+                <div class="col-sm-10 col-lg-10">
+                    <div id="editor" class="json-editor"></div>
                 </div>
                 <RForm action="" method="POST" className="form-horizontal" onSubmit={ this.submit }>
                     <div className="form-group">
-                        <label htmlFor="articleName" className="col-sm-2 control-label">JSON数据标题（非重复）</label>
+                        <label htmlFor="dataName" className="col-sm-2 control-label">JSON数据标题（非重复）</label>
                         <div className="col-sm-9">
                             <TextInput value={ dataName  } ref="dataName" id="dataName" name="dataName"
                                        type="text" placeholder="这里输入JSON数据条标题"/>
@@ -165,14 +186,10 @@ class DataEditor extends React.Component {
                     <div className="form-group">
                         <label htmlFor="jsonData" className="col-sm-2 control-label">JSON数据直接输入框</label>
                         <div className="col-sm-9">
-                            <Textarea value={state.value} id="json" ref="input" />
+                            <Textarea value={state.value} id="json" ref="input" onChange={ this.updateJSON } />
                         </div>
                     </div>
-                    <div className="form-group">
-                        <div className="col-sm-offset-2 col-sm-10">
-                            <button type="submit" className="btn btn-default">保存</button>
-                        </div>
-                    </div>
+                    {saveBtn}
                     { error }
                 </RForm>
                 { indicator }
@@ -184,10 +201,10 @@ DataEditor.defaultProps = {
 
     //当前栏目数据
     channel: null,
-    //是否新增文章
+    //是否新增数据
     isAdd: true,
-    //如果是编辑文章, 传入文章数据
-    article: null
+    //如果是编辑数据, 传入json数据
+    jsondata: null
 
 };
 

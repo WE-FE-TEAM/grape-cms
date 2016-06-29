@@ -19,22 +19,26 @@ class Textarea extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            value: props.value || ''
-        };
-
+        // this.state = {
+        //     value: props.value || ''
+        // };
+        //
         this.onChange = this.onChange.bind(this);
         // this.onBlur = this.onBlur.bind(this);
     }
 
     onChange(e) {
-        this.setState({
-            value: this.refs.input.value
-        });
-        let valu = this.refs.input.value.trim();
-        console.log("value json"+valu);
-        let json = JSON.parse(valu);
-        $('#editor').jsonEditor(json, {change: this.updateJSON});
+
+        this.props.onChange( this.refs.input.value );
+
+        // this.setState({
+        //     value: this.refs.input.value
+        // });
+        // let valu = this.refs.input.value.trim();
+        // // this.refs.input.getDOMNode().value=valu;
+        // console.log("value json in json textarea "+valu);
+        // let json = JSON.parse(valu);
+        // $('#editor').jsonEditor(json, {change: this.updateJSON});
     }
 
 
@@ -55,7 +59,7 @@ class Textarea extends React.Component {
         let inputProps = {
             ref: 'input',
             name: props.name,
-            value: state.value,
+            value: props.value,
             placeholder: "请直接输入JSON数据",
             id: props.id,
             onChange: this.onChange,

@@ -51,12 +51,12 @@ class DataEditHistory extends React.Component{
             channelId : state.channelId,
             dataId : state.dataId
         };
-        console.log("data-edit-history in getdataedit history");
+
         dataService.getDataEditHistory( data )
             .then( ( req ) => {
                 if( req.requestStatus === dataService.STATUS.SUCCESS ){
                     let out = req.data;
-                    console.log("out in getdataedit history" +JSON.stringify(out.data));
+                  console.log("data history "+JSON.stringify(out.data));
                     if( out.status === 0 ){
                         this.setState({
                             isLoading : false,
@@ -85,11 +85,10 @@ class DataEditHistory extends React.Component{
     }
 
     tableHeaderRenderer(){
-
         return (
             <tr>
-                <th className="text-center">文章ID</th>
-                <th className="text-center">文章名</th>
+                <th className="text-center">数据ID</th>
+                <th className="text-center">数据名</th>
                 <th className="text-center">本次编辑的用户</th>
                 <th className="text-center">编辑时间</th>
                 <th className="text-center">发布时间</th>
@@ -101,9 +100,7 @@ class DataEditHistory extends React.Component{
     tableRowRenderer(rowData, index){
 
         let props = this.props;
-
         let rowClass = '';
-
         let userName = rowData.userName;
 
         let editTime = new Date(rowData.createdAt).toLocaleString();

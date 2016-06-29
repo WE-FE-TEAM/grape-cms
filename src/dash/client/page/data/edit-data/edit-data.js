@@ -18,29 +18,178 @@ const DataEditHistory = require('dash:widget/ui/data/data-edit-history/data-edit
 const ACTION_VIEW = 'view';
 const ACTION_ADD = 'add';
 const ACTION_EDIT = 'edit';
-
+const PUBLISH_TYPE_ONLINE = 'publish';
+const PUBLISH_TYPE_PREVIEW = 'preview';
 
 const dataService = service.getService('data');
 
 class AppData extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
 
             //是否正在发布预览中
-            isPreviewing : false,
+            isPreviewing: false,
             //是否处于  正式发布中
-            isPublishing : false
+            isPublishing: false
 
         };
 
-        this.onDataPublishPreview = this.onDataPublishPreview.bind( this );
-        this.onDataPublish = this.onDataPublish.bind( this );
+        this.onDataPublishPreview = this.onDataPublishPreview.bind(this);
+        this.onDataPublish = this.onDataPublish.bind(this);
+        this.onCancelEdit = this.onCancelEdit.bind(this);
     }
 
+    openOnlinePage(type) {
 
-    onDataPublishPreview(){}
-    onDataPublish(){}
+        let channel = this.props.channel;
+        let mjsondata = this.props.jsondata;
+
+        if (!mjsondata) {
+            return;
+        }
+
+        let url = channel.onlineUrl;
+        if (!url) {
+            alert('该栏目未配置线上的访问URL, 不能自动打开线上页面');
+            return;
+        }
+
+        url = url.replace(/\{\{dataId\}\}/g, mjsondata.dataId);
+
+        if (type === PUBLISH_TYPE_PREVIEW) {
+            //预览
+            if (url.indexOf('?') < 0) {
+                url += '?';
+            }
+
+            url += '&cmsPreview=1';
+        }
+        window.open(url);
+    }
+
+    onDataPublishPreview() {
+        let state = this.state;
+
+        if (state.isPreviewing) {
+            return;
+        }
+
+        let channel = this.props.channel;
+
+        let mjsondata = this.props.jsondata;
+        let data = {
+            channelId: mjsondata.channelId,
+            dataId: mjsondata.dataId,
+            recordId: mjsondata.recordId,
+            releaseType: 'preview'
+        };
+        console.log(data.channelId + "chnann=" + data.recordId + "====dataid + datareleasetyoe" + data.releaseType);
+        dataService.publishData(data)
+            .then((req) => {
+                if (req.requestStatus === dataService.STATUS.SUCCESS) {
+                    let out = req.data;
+                    if (out.status === 0) {
+                        alert('发布到预览环境成功');
+                        this.setState({
+                            isPreviewing: false
+                        });
+
+                        //打开预览URL
+                        this.openOnlinePage(PUBLISH_TYPE_PREVIEW);
+
+                        location.reload();
+
+                        return;
+                    }
+                    return Promise.reject(new Error(out.message));
+                }
+                return Promise.reject(new Error('预览文章请求失败'));
+            })
+            .catch((e) => {
+                alert(e.message);
+                this.setState({
+                    isPreviewing: false
+                });
+            });
+
+        state.isPreviewing = true;
+
+        this.setState({
+            isPreviewing: true
+        });
+
+    }
+
+    onDataPublish() {
+        let state = this.state;
+
+        if (state.isPublishing) {
+            return;
+        }
+
+        if (!window.confirm('=====再次确认发布=====\n\n正式发布会影响线上效果, 请 **务必** 慎重!!\n\n 确认发布么??? ')) {
+            return;
+        }
+
+        let json_data = this.props.jsondata;
+        let data = {
+            channelId: json_data.channelId,
+            dataId: json_data.dataId,
+            recordId: json_data.recordId,
+            releaseType: 'publish'
+        };
+        console.log("datapublish"+data.channelId + "chnann=" + data.recordId + "====dataid + datareleasetyoe" + data.releaseType);
+        dataService.publishData(data)
+            .then((req) => {
+                if (req.requestStatus === dataService.STATUS.SUCCESS) {
+                    let out = req.data;
+                    if (out.status === 0) {
+                        alert('发布到正式环境成功');
+                        this.setState({
+                            isPublishing: false
+                        });
+
+                        //打开线上访问的URL
+                        this.openOnlinePage(PUBLISH_TYPE_ONLINE);
+
+                        location.reload();
+
+                        return;
+                    }
+                    return Promise.reject(new Error(out.message));
+                }
+                return Promise.reject(new Error('发布数据请求失败'));
+            })
+            .catch((e) => {
+                alert(e.message);
+                this.setState({
+                    isPublishing: false
+                });
+            });
+
+        state.isPublishing = true;
+
+        this.setState({
+            isPublishing: true
+        });
+
+    }
+
+    onCancelEdit() {
+
+        let mjsondata = this.props.jsondata;
+
+        let data = {
+            channelId: mjsondata.channelId,
+            dataId: mjsondata.dataId
+        };
+
+        let viewUrl = '/cms/dash/data/view?' + utils.json2query(data);
+
+        location.href = viewUrl;
+    }
+
     render() {
 
         let props = this.props;
@@ -53,28 +202,29 @@ class AppData extends React.Component {
         let publishPreviewBtn = null;
         let publishBtn = null;
         let historyCon = null;
+        let cancelEditBtn = null;
 
         let title = '';
-        if( props.action === ACTION_VIEW ){
+        if (props.action === ACTION_VIEW) {
             isView = true;
             title = '查看文章';
             let data = {
-                channelId : props.channel._id,
-                articleId : props.article.articleId,
-                recordId : props.article._id
+                channelId: props.channel._id,
+                dataId: props.jsondata.dataId,
+                recordId: props.jsondata._id
             };
-            let editUrl = '/cms/dash/article/edit?' + utils.json2query( data );
+            let editUrl = '/cms/dash/data/edit?' + utils.json2query(data);
             editBtn = (
-                <a className="btn btn-warning" target="_self" href={ editUrl }>编辑文章</a>
+                <a className="btn btn-warning" target="_self" href={ editUrl }>编辑数据</a>
             );
 
             let previewText = '预览';
-            if( state.isPreviewing ){
+            if (state.isPreviewing) {
                 previewText = '正在启动预览...';
             }
 
             let publishText = '发布';
-            if( state.isPublishing ){
+            if (state.isPublishing) {
                 publishText = '正在发布中...';
             }
 
@@ -85,18 +235,22 @@ class AppData extends React.Component {
             publishBtn = (
                 <span className="btn btn-danger" onClick={ this.onDataPublish }>{ publishText }</span>
             );
-            historyCon = <DataEditHistory channelId={ props.channel._id } dataId={ props.jsondata.dataId } />;
+            historyCon = <DataEditHistory channelId={ props.channel._id } dataId={ props.jsondata.dataId }/>;
         }
-       else if (props.action === ACTION_ADD) {
+        else if (props.action === ACTION_ADD) {
             isAdd = true;
             title = '新增json数据';
-            console.log(title);
-        } else if (props.action === ACTION_EDIT) {
-            isAdd = false;
-            title = '编辑json数据';
-            console.log(title+"props.jsondat.dataid"+props.jsondata.dataId);
 
-            historyCon = <DataEditHistory channelId={ props.channel._id } dataId={ props.jsondata.dataId } />;
+        } else if (props.action === ACTION_EDIT) {
+
+            isEdit = true;
+            title = '编辑json数据';
+            console.log(title + "props.jsondat.dataid" + props.jsondata.dataId);
+            cancelEditBtn = (
+                <span className="btn btn-info" onClick={ this.onCancelEdit }>退出编辑</span>
+            );
+            historyCon = <DataEditHistory channelId={ props.channel._id } dataId={ props.jsondata.dataId }/>;
+
         } else {
             return null;
         }
@@ -108,8 +262,10 @@ class AppData extends React.Component {
                     { publishPreviewBtn }
                     { editBtn }
                     { publishBtn }
+                    { cancelEditBtn }
                 </div>
-                <DataEditor channel={ props.channel }  isView={ isView } isAdd={ isAdd } isEdit={ isEdit }  jsondata={ props.jsondata }/>
+                <DataEditor channel={ props.channel } isView={ isView } isAdd={ isAdd } isEdit={ isEdit }
+                            jsondata={ props.jsondata }/>
                 { historyCon }
             </div>
         );
@@ -134,18 +290,21 @@ let singleton = {
 
         if (action === ACTION_ADD) {
             //新创建文章
-            console.log("xin jian new add ");
+
             singleton.render(channel, action, jsondata);
-        } else if (action === ACTION_EDIT|| action === ACTION_VIEW ) {
+        } else if (action === ACTION_EDIT || action === ACTION_VIEW) {
             //异步请求文章数据, 再渲染
             let searchConf = utils.getSearchConf();
-            console.log("edit edit");
-            dataService.getData({channelId: searchConf.channelId, dataId: searchConf.dataId,recordId : searchConf.recordId })
+            dataService.getData({
+                channelId: searchConf.channelId,
+                dataId: searchConf.dataId,
+                recordId: searchConf.recordId
+            })
                 .then((req) => {
                     if (req.requestStatus === dataService.STATUS.SUCCESS) {
                         let out = req.data;
                         if (out.status === 0) {
-                            console.log(JSON.stringify(out.data) + action + "data eidit-data");
+                            console.log(JSON.stringify(out.data) + action + "data eidit-data  ");
                             singleton.render(channel, action, out.data);
                             return;
                         }

@@ -20,7 +20,7 @@ class ArticleController extends ControllerBase {
     async addAction(){
 
         const Channel = this.model('Channel');
-        
+
         let http = this.http;
 
         let channelId = http.getChannelId();
@@ -31,7 +31,7 @@ class ArticleController extends ControllerBase {
         http.assign('action', 'add');
 
         http.render('dash/page/article/edit-article/edit-article.tpl');
-        
+
     }
 
     //异步接口: 添加文章
@@ -39,7 +39,7 @@ class ArticleController extends ControllerBase {
 
         const Channel = this.model('Channel');
         const Article = this.model('Article');
-        
+
         let http = this.http;
 
         let body = http.req.body;
@@ -49,24 +49,24 @@ class ArticleController extends ControllerBase {
         let channelId = http.getChannelId();
         let articleName = ( body.articleName || '').trim();
         let data = ( body.data || '').trim();
-        
+
         if( ! articleName ){
             return http.error(`文章后台显示标题 必填!! articleName`);
         }
-        
+
         try{
             data = JSON.parse( data );
         }catch(e){
             return http.error( `文章内容格式非法, 只能是JSON!!`, e);
         }
-        
+
         //判断目标栏目是否存在
         let channel = await Channel.findOne({ _id : channelId}).exec();
-        
+
         if( ! channel ){
             return http.error(`指定的栏目不存在! 栏目ID: ${channelId}`);
         }
-        
+
         //判断该栏目下, 是否存在同名的 文章
         let out = await Article.isNameExist( articleName, channelId );
 
@@ -77,7 +77,7 @@ class ArticleController extends ControllerBase {
         //生成一个新的文章ID
         let articleId = await Article.generateArticleId();
 
-        
+
         let article = new Article({
             channelId : channelId,
             articleId : articleId,
@@ -395,7 +395,7 @@ class ArticleController extends ControllerBase {
         }
 
         let result = await Article.getEditHistory( articleId );
-        
+
         this.json({
             status : 0,
             message : 'ok',
@@ -443,7 +443,7 @@ class ArticleController extends ControllerBase {
             grape.log.warn( e );
             return http.error( `获取指定的文章详情出错!`, e);
         }
-        
+
         if( ! article ){
             return http.error(`找不到文章ID[${articleId}][${recordId}]对应的文章`);
         }
@@ -483,30 +483,30 @@ class ArticleController extends ControllerBase {
 
         // let onlineUrl =
     }
-    
+
     //获取某个文章当前发布在硬盘上的数据内容
     async currentReleaseAction(){
 
         const Article = this.model('Article');
 
         let http = this.http;
-        
+
         let res = http.res;
 
         let query = http.req.query;
-        
+
         let articleId = ( query.articleId || '' ).trim();
         let releaseType = ( query.releaseType || 'publish' ).trim();
-        
+
         let article = null;
-        
+
         try{
             article = await Article.findOne({ articleId : articleId, publishUserId : null }).lean(true);
         }catch(e){
             grape.log.warn( e );
             return res.end(e.stack);
         }
-        
+
         if( ! article ){
             return res.end(`未找到articleId=${articleId}的文章数据`);
         }
