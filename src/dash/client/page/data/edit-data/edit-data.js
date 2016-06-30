@@ -179,7 +179,6 @@ class AppData extends React.Component {
     onCancelEdit() {
 
         let mjsondata = this.props.jsondata;
-
         let data = {
             channelId: mjsondata.channelId,
             dataId: mjsondata.dataId

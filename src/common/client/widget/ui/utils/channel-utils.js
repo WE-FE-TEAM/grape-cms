@@ -66,7 +66,14 @@ utils.canAddChild = function( channel ){
 utils.isArticleChannel = function( channelType ){
     return channelType === channelTypes.article;
 };
-
+/**
+ * 判断栏目类型是否为  数据栏目
+ * @param channelType {string}
+ * @returns {boolean}
+ */
+utils.isDataChannel = function( channelType ){
+    return channelType === channelTypes.data;
+};
 /**
  * 根据 channelType, 返回对应的中文的 栏目类型
  * @param channelType {string}

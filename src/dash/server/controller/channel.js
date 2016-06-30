@@ -15,35 +15,35 @@ const cmsUtils = global.cms.utils;
 class ChannelController extends ControllerBase {
 
     //异步接口: 返回所有的栏目数据
-    async getAllTreeAction(){
+    async getAllTreeAction() {
 
         let Channel = this.model('Channel');
 
-        let result = await Channel.getChannelTree( this.cmsConfig.rootChannelId );
+        let result = await Channel.getChannelTree(this.cmsConfig.rootChannelId);
 
-        this.json( {
-            status : 0,
-            data : result
-        } );
+        this.json({
+            status: 0,
+            data: result
+        });
     }
-    
+
     //异步接口: 返回当前用户有权限的整个 频道树 的数据
-    async userChannelsDataAction(){
+    async userChannelsDataAction() {
         let http = this.http;
         let user = http.getUser();
         let Channel = this.model('Channel');
 
-        let wholeTree = await cmsUtils.getUserAvailableChannelTree( user, this.cmsConfig.rootChannelId );
+        let wholeTree = await cmsUtils.getUserAvailableChannelTree(user, this.cmsConfig.rootChannelId);
 
-        this.json( {
-            status : 0,
-            data : wholeTree
-        } );
+        this.json({
+            status: 0,
+            data: wholeTree
+        });
 
     }
 
     //异步方法: 根据channelId, 获取该channel对一个的所有祖先id数组路径
-    async channelPathAction(){
+    async channelPathAction() {
 
         let http = this.http;
 
@@ -51,17 +51,17 @@ class ChannelController extends ControllerBase {
 
         let Channel = this.model('Channel');
 
-        let arr = await Channel.getChannelPath( channelId );
+        let arr = await Channel.getChannelPath(channelId);
 
-        this.json( {
-            status : 0,
+        this.json({
+            status: 0,
             //因为 model 获取的是 从叶子节点开始
-            data : arr
-        } );
+            data: arr
+        });
     }
-    
+
     //实际执行 添加栏目动作
-    async doAddAction(){
+    async doAddAction() {
 
         let http = this.http;
 
@@ -75,101 +75,157 @@ class ChannelController extends ControllerBase {
         //如果是文章栏目, 可以配置线上访问某个文章的URL
         let onlineUrl = ( body.onlineUrl || '' ).trim();
 
-        if( ! channelName ){
+        if (!channelName) {
             return this.json({
-                status : -1,
-                message : `栏目名 不能为空!!`
+                status: -1,
+                message: `栏目名 不能为空!!`
             });
         }
-        
-        let isTypeValid = Channel.isChannelTypeValida( channelType );
 
-        let channelUrl = Channel.getChannelUrlByType( channelType );
-        
-        if( ! isTypeValid || ! channelUrl ){
+        let isTypeValid = Channel.isChannelTypeValida(channelType);
+
+        let channelUrl = Channel.getChannelUrlByType(channelType);
+
+        if (!isTypeValid || !channelUrl) {
             return this.json({
-                status : -1,
-                message : `栏目类型[${channelType}]非法!! 只能添加 普通栏目`
+                status: -1,
+                message: `栏目类型[${channelType}]非法!! 只能添加 普通栏目`
             });
         }
 
         let articleTemplate = null;
-        if( Channel.isArticleChannel( channelType ) ){
+
+        if (Channel.isArticleChannel(channelType)) {
 
             articleTemplate = body.articleTemplate;
 
             // console.log( articleTemplate );
 
-            try{
+            try {
 
-                if( ! articleTemplate ){
+                if (!articleTemplate) {
                     throw new Error('articleTemplate must not be empty for article channel!');
                 }
 
-                articleTemplate = JSON.parse( articleTemplate );
+                articleTemplate = JSON.parse(articleTemplate);
 
-                let out = cmsUtils.isArticleTemplateValid( articleTemplate );
+                let out = cmsUtils.isArticleTemplateValid(articleTemplate);
 
-                if( out ){
+                if (out) {
                     return this.json({
-                        status : -1,
-                        message : out
+                        status: -1,
+                        message: out
                     });
                 }
-                
 
-            }catch(e){
-                grape.log.warn( e );
+
+            } catch (e) {
+                grape.log.warn(e);
                 return this.json({
-                    status : -1,
-                    message : '文章模板 必须是 JSON !!'
+                    status: -1,
+                    message: '文章模板 必须是 JSON !!'
+                });
+            }
+            let temp = await Channel.isNameExist(parentId, channelName);
+
+            if (temp) {
+                //已经存在同名的栏目
+                return this.json({
+                    status: -1,
+                    message: `父栏目下已经存在同名的栏目!`
+                });
+            }
+            let channel = new Channel({
+                channelName: channelName,
+                channelType: channelType,
+                parentId: parentId,
+                isSystem: false,
+                url: channelUrl,
+                onlineUrl: onlineUrl,
+                articleTemplate: articleTemplate
+            });
+            try {
+                let out = await channel.save();
+                this.json({
+                    status: 0,
+                    message: '添加栏目成功',
+                    data: out
+                });
+            } catch (e) {
+                grape.log.warn(e);
+                this.json({
+                    status: -1,
+                    message: '添加栏目失败',
+                    debugInfo: e.message
+                });
+            }
+        } else if (Channel.isDataChannel(channelType)) {
+            articleTemplate = body.articleTemplate;
+            try {
+
+                if (!articleTemplate) {
+                    throw new Error('dataTemplate must not be empty for data channel!');
+                }
+                articleTemplate = JSON.parse(articleTemplate);
+                let out = cmsUtils.isDataTemplateValid(articleTemplate);
+
+                if (out) {
+                    return this.json({
+                        status: -1,
+                        message: out
+                    });
+                }
+
+
+            } catch (e) {
+                grape.log.warn(e);
+                return this.json({
+                    status: -1,
+                    message: '数据模板 必须是 JSON !!'
                 });
             }
 
+            let temp = await Channel.isNameExist(parentId, channelName);
+            console.log("action add in channle data data");
+
+            if (temp) {
+                //已经存在同名的栏目
+                return this.json({
+                    status: -1,
+                    message: `父栏目下已经存在同名的栏目!`
+                });
+            }
+            let channel = new Channel({
+                channelName: channelName,
+                channelType: channelType,
+                parentId: parentId,
+                isSystem: false,
+                url: channelUrl,
+                onlineUrl: onlineUrl,
+                dataTemplate: articleTemplate
+            });
+            try {
+                let out = await channel.save();
+                this.json({
+                    status: 0,
+                    message: '添加栏目成功',
+                    data: out
+                });
+            } catch (e) {
+                grape.log.warn(e);
+                this.json({
+                    status: -1,
+                    message: '添加栏目失败',
+                    debugInfo: e.message
+                });
+            }
         }
 
-
-        
-        let temp = await Channel.isNameExist( parentId, channelName );
-        
-        if( temp ){
-            //已经存在同名的栏目
-            return this.json({
-                status : -1,
-                message : `父栏目下已经存在同名的栏目!`
-            });
-        }
-
-        let channel = new Channel({
-            channelName : channelName,
-            channelType : channelType,
-            parentId : parentId,
-            isSystem : false,
-            url : channelUrl,
-            onlineUrl : onlineUrl,
-            articleTemplate : articleTemplate
-        });
-
-        try{
-            let out = await channel.save();
-            this.json({
-                status : 0,
-                message : '添加栏目成功',
-                data : out
-            });
-        }catch(e){
-            grape.log.warn( e );
-            this.json({
-                status : -1,
-                message : '添加栏目失败',
-                debugInfo : e.message
-            });
-        }
 
     }
 
     //查看某个栏目
-    async viewAction(){
+    async viewAction() {
 
         const Channel = this.model('Channel');
 
@@ -177,18 +233,18 @@ class ChannelController extends ControllerBase {
         let req = http.req;
         let channelId = http.getChannelId();
 
-        let channel = await Channel.findOne({ _id : channelId });
-        
-        if( ! channel ){
+        let channel = await Channel.findOne({_id: channelId});
+
+        if (!channel) {
             grape.log.info(`找不到channelId[${channelId}]对应的栏目`);
             return http.e404();
         }
 
         http.assign('channel', channel);
-        
+
         let channelType = channel.channelType;
-        
-        switch( channelType ){
+
+        switch (channelType) {
             case 'container' :
                 return http.render('dash/page/channel/channel-container/channel-container.tpl');
             case 'article' :
@@ -204,7 +260,7 @@ class ChannelController extends ControllerBase {
     }
 
     //异步接口: 修改栏目属性
-    async doUpdateAction(){
+    async doUpdateAction() {
 
         let http = this.http;
 
@@ -216,40 +272,40 @@ class ChannelController extends ControllerBase {
         let channelName = ( body.channelName || '' ).trim();
         let onlineUrl = ( body.onlineUrl || '' ).trim();
 
-        if( ! channelName ){
+        if (!channelName) {
             return this.json({
-                status : -1,
-                message : `栏目名 不能为空!!`
+                status: -1,
+                message: `栏目名 不能为空!!`
             });
         }
 
         let channel = null;
-        try{
-            channel = await Channel.findOne({ _id : channelId }).exec();
-        }catch(e){
-            grape.log.warn( e );
+        try {
+            channel = await Channel.findOne({_id: channelId}).exec();
+        } catch (e) {
+            grape.log.warn(e);
             return this.json({
-                status : -1,
-                message : '服务异常',
-                debugInfo : e.message
+                status: -1,
+                message: '服务异常',
+                debugInfo: e.message
             });
         }
 
-        if( ! channel ){
+        if (!channel) {
             return this.json({
-                status : -1,
-                message : '未找到该 channelId 对应的栏目数据!'
+                status: -1,
+                message: '未找到该 channelId 对应的栏目数据!'
             });
         }
 
-        if( channelName !== channel.channelName ){
+        if (channelName !== channel.channelName) {
             //检查新的栏目名, 是否在同一级已经存在
-            let temp = await Channel.isNameExist( channel.parentId, channelName );
-            if( temp ){
+            let temp = await Channel.isNameExist(channel.parentId, channelName);
+            if (temp) {
                 //已经存在同名的栏目
                 return this.json({
-                    status : -1,
-                    message : `父栏目下已经存在同名的栏目!`
+                    status: -1,
+                    message: `父栏目下已经存在同名的栏目!`
                 });
             }
         }
@@ -257,48 +313,73 @@ class ChannelController extends ControllerBase {
         //文章栏目, 用户可以修改文章模板
         let articleTemplate = null;
 
-        if( Channel.isArticleChannel( channel.channelType ) ){
-
+        if (Channel.isArticleChannel(channel.channelType)) {
             articleTemplate = body.articleTemplate;
 
             // console.log( articleTemplate );
-
-            try{
+            try {
 
                 // articleTemplate = JSON.stringify( articleTemplate );
-                articleTemplate = JSON.parse( articleTemplate );
+                articleTemplate = JSON.parse(articleTemplate);
 
-                let out = cmsUtils.isArticleTemplateValid( articleTemplate );
+                let out = cmsUtils.isArticleTemplateValid(articleTemplate);
 
-                if( out ){
+                if (out) {
                     return this.json({
-                        status : -1,
-                        message : out
+                        status: -1,
+                        message: out
                     });
                 }
 
-            }catch(e){
-                grape.log.warn( e );
+            } catch (e) {
+                grape.log.warn(e);
                 return this.json({
-                    status : -1,
-                    message : '文章模板 必须是 JSON !!'
+                    status: -1,
+                    message: '文章模板 必须是 JSON !!'
                 });
             }
 
+        } else if (Channel.isDataChannel(channel.channelType)) {
+            articleTemplate = body.articleTemplate;
+            try {
+
+                // articleTemplate = JSON.stringify( articleTemplate );
+                articleTemplate = JSON.parse(articleTemplate);
+
+                let out = cmsUtils.isDataTemplateValid(articleTemplate);
+
+                if (out) {
+                    return this.json({
+                        status: -1,
+                        message: out
+                    });
+                }
+
+            } catch (e) {
+                grape.log.warn(e);
+                return this.json({
+                    status: -1,
+                    message: '数据模板 必须是 JSON !!'
+                });
+            }
         }
 
-        let result = await channel.update({ channelName : channelName, articleTemplate : articleTemplate, onlineUrl : onlineUrl }).exec();
+        let result = await channel.update({
+            channelName: channelName,
+            articleTemplate: articleTemplate,
+            onlineUrl: onlineUrl
+        }).exec();
 
-        grape.log.info( result );
+        grape.log.info(result);
 
         this.json({
-            status : 0,
-            message : '更新栏目成功'
+            status: 0,
+            message: '更新栏目成功'
         });
     }
-    
+
     //删除栏目
-    async doDeleteAction(){
+    async doDeleteAction() {
 
         let http = this.http;
 
@@ -309,54 +390,52 @@ class ChannelController extends ControllerBase {
         let channelId = body.channelId;
 
         let channel = null;
-        try{
-            channel = await Channel.findOne({ _id : channelId }).lean( true );
-        }catch(e){
-            grape.log.warn( e );
+        try {
+            channel = await Channel.findOne({_id: channelId}).lean(true);
+        } catch (e) {
+            grape.log.warn(e);
             return this.json({
-                status : -1,
-                message : '服务异常',
-                debugInfo : e.message
+                status: -1,
+                message: '服务异常',
+                debugInfo: e.message
             });
         }
 
-        if( ! channel ){
+        if (!channel) {
             return this.json({
-                status : -1,
-                message : '找不到该栏目!!'
+                status: -1,
+                message: '找不到该栏目!!'
             });
         }
 
-        if( channel.isSystem ){
+        if (channel.isSystem) {
             //系统级栏目, 不允许删除
             return this.json({
-                status : -1,
-                message : '系统级栏目, 不允许删除!!'
+                status: -1,
+                message: '系统级栏目, 不允许删除!!'
             });
         }
 
         //删除
-        try{
-            let result = await Channel.deleteChannelById( channelId );
+        try {
+            let result = await Channel.deleteChannelById(channelId);
             this.json({
-                status : 0,
-                message : '删除栏目成功'
+                status: 0,
+                message: '删除栏目成功'
             });
-        }catch(e){
-            grape.log.error( e );
+        } catch (e) {
+            grape.log.error(e);
             return this.json({
-                status : -1,
-                message : '执行删除异常',
-                debugInfo : e.message
+                status: -1,
+                message: '执行删除异常',
+                debugInfo: e.message
             });
         }
 
     }
-    
 
 
 }
-
 
 
 module.exports = ChannelController;

@@ -7,7 +7,8 @@
 'use strict';
 
 
-const $ = require('common:widget/lib/jquery/jquery.js');;
+const $ = require('common:widget/lib/jquery/jquery.js');
+;
 const React = require('react');
 const ReactDOM = require('react-dom');
 const utils = require('common:widget/ui/utils/utils.js');
@@ -26,22 +27,22 @@ const channelService = service.getService('channel');
 const channelUtil = utils.channelUtil;
 
 
-class AddChannelDialog extends React.Component{
+class AddChannelDialog extends React.Component {
 
-    constructor( props ){
+    constructor(props) {
         super(props);
 
         this.state = {
-            isLoading : false,
-            errorMsg : ''
+            isLoading: false,
+            errorMsg: ''
         };
 
-        this.submit = this.submit.bind( this );
+        this.submit = this.submit.bind(this);
     }
 
-    submit( e ){
+    submit(e) {
 
-        if( this.state.isLoading ){
+        if (this.state.isLoading) {
             return;
         }
 
@@ -52,13 +53,24 @@ class AddChannelDialog extends React.Component{
 
         let articleTemplate = null;
 
-        if( channelUtil.isArticleChannel( type ) ){
+        if (channelUtil.isArticleChannel(type)) {
             articleTemplate = this.refs.articleTemplate.value;
-            try{
-                articleTemplate = JSON.parse( articleTemplate );
-            }catch(e){
+            try {
+                articleTemplate = JSON.parse(articleTemplate);
+            } catch (e) {
                 this.setState({
-                    errorMsg : '文章模板必须是 JSON 格式!'
+                    errorMsg: '文章模板必须是 JSON 格式!'
+                });
+                return;
+            }
+        } else if (channelUtil.isDataChannel(type)) {
+            articleTemplate = this.refs.articleTemplate.value;
+
+            try {
+                articleTemplate = JSON.parse(articleTemplate);
+            } catch (e) {
+                this.setState({
+                    errorMsg: '数据模板必须是 JSON 格式!'
                 });
                 return;
             }
@@ -67,50 +79,50 @@ class AddChannelDialog extends React.Component{
         let onlineUrl = ( this.refs.onlineUrl.getValue() || '' ).trim();
 
         //发送字符串, 避免 boolean 类型丢失
-        articleTemplate = JSON.stringify( articleTemplate );
+        articleTemplate = JSON.stringify(articleTemplate);
 
         let data = {
-            channelId : channel._id,
-            channelName : this.refs.channelName.getValue(),
-            channelType : type,
-            onlineUrl : onlineUrl,
-            articleTemplate : articleTemplate
+            channelId: channel._id,
+            channelName: this.refs.channelName.getValue(),
+            channelType: type,
+            onlineUrl: onlineUrl,
+            articleTemplate: articleTemplate
         };
 
-
-        channelService.addChannel( data )
-            .then( ( req ) => {
-                if( req.requestStatus === channelService.STATUS.SUCCESS ){
+        console.log("data data!!!!!"+articleTemplate);
+        channelService.addChannel(data)
+            .then((req) => {
+                if (req.requestStatus === channelService.STATUS.SUCCESS) {
                     let data = req.data;
-                    if( data.status === 0 ){
+                    if (data.status === 0) {
                         //成功
                         alert('新增栏目成功');
                         location.reload();
                         return;
-                    }else{
-                        return Promise.reject( new Error( data.message ) );
+                    } else {
+                        return Promise.reject(new Error(data.message));
                     }
 
                 }
-                return Promise.reject( new Error('系统返回异常') );
+                return Promise.reject(new Error('系统返回异常'));
             })
-            .catch( ( e ) => {
-                
+            .catch((e) => {
+
                 this.setState({
-                    isLoading : false,
-                    errorMsg : e.message || '保存栏目失败'
+                    isLoading: false,
+                    errorMsg: e.message || '保存栏目失败'
                 });
             });
 
         this.state.isLoading = true;
 
         this.setState({
-            isLoading : true,
-            errorMsg : ''
+            isLoading: true,
+            errorMsg: ''
         });
     }
 
-    render(){
+    render() {
 
         let props = this.props;
         let state = this.state;
@@ -118,19 +130,19 @@ class AddChannelDialog extends React.Component{
         let channel = props.channel;
 
         let dialogProps = {
-            showing : true,
-            title : '新增栏目',
-            onRequestClose : props.onRequestClose,
-            dialog : {
-                className : 'add-channel-dialog',
-                style : {
-                    width : 700
+            showing: true,
+            title: '新增栏目',
+            onRequestClose: props.onRequestClose,
+            dialog: {
+                className: 'add-channel-dialog',
+                style: {
+                    width: 700
                 }
             }
         };
 
         let error = null;
-        if( state.errorMsg ){
+        if (state.errorMsg) {
             error = <div className="form-group">
                 <div className="col-sm-offset-2 col-sm-10">
                     <div className="error-info">{ state.errorMsg }</div>
@@ -140,12 +152,14 @@ class AddChannelDialog extends React.Component{
 
         return (
             <RDialog { ...dialogProps }>
-                <RForm action="/cms/dash/channel/doAdd" method="POST" className="form-horizontal" onSubmit={ this.submit }>
-                    <input type="hidden" name="channelId" value={ channel._id } />
+                <RForm action="/cms/dash/channel/doAdd" method="POST" className="form-horizontal"
+                       onSubmit={ this.submit }>
+                    <input type="hidden" name="channelId" value={ channel._id }/>
                     <div className="form-group">
                         <label for="name-input" className="col-sm-2 control-label">栏目名</label>
                         <div className="col-sm-10">
-                            <TextInput ref="channelName" id="name-input" name="channelName" type="text" placeholder="输入栏目名称" />
+                            <TextInput ref="channelName" id="name-input" name="channelName" type="text"
+                                       placeholder="输入栏目名称"/>
                         </div>
                     </div>
                     <div className="form-group">
@@ -157,13 +171,15 @@ class AddChannelDialog extends React.Component{
                     <div className="form-group">
                         <label for="online-url-input" className="col-sm-2 control-label">文章访问URL</label>
                         <div className="col-sm-10">
-                            <TextInput ref="onlineUrl" id="online-url-input" name="onlineUrl" type="text" placeholder="线上的文章访问URL" />
+                            <TextInput ref="onlineUrl" id="online-url-input" name="onlineUrl" type="text"
+                                       placeholder="线上的文章访问URL"/>
                         </div>
                     </div>
                     <div className="form-group">
                         <label for="article-template" className="col-sm-2 control-label">文章栏目模板</label>
                         <div className="col-sm-10">
-                            <textarea ref="articleTemplate" id="article-template" name="articleTemplate" className="form-control" rows="4" placeholder="输入文章模板"></textarea>
+                            <textarea ref="articleTemplate" id="article-template" name="articleTemplate"
+                                      className="form-control" rows="4" placeholder="输入文章模板"></textarea>
                         </div>
                     </div>
                     <div className="form-group">
@@ -177,8 +193,6 @@ class AddChannelDialog extends React.Component{
         );
     }
 }
-
-
 
 
 module.exports = AddChannelDialog;

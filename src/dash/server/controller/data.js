@@ -36,7 +36,7 @@ class DataController extends ControllerBase {
 
     //异步接口: 添加数据
     async doAddAction() {
-        console.log("do add action");
+       
         const Channel = this.model('Channel');
         const Data = this.model('Data');
 
@@ -183,7 +183,7 @@ class DataController extends ControllerBase {
 
     //异步接口: 获取某个指定数据的详情
     async detailAction() {
-        console.log("detail action in controller");
+
         let http = this.http;
         const Data = this.model('Data');
         let query = http.req.query;
@@ -193,7 +193,7 @@ class DataController extends ControllerBase {
         let dataId = ( query.dataId || '' ).trim();
         let recordId = ( query.recordId || '' ).trim();
 
-        console.log("dataid" + dataId + "channeldId");
+
         if (!dataId) {
             return http.error(`json数据ID(dataId)必须指定!!`);
         }
@@ -245,7 +245,7 @@ class DataController extends ControllerBase {
 
     //异步接口: 更新json数据内容
     async doUpdateAction() {
-        console.log("doupdate");
+
         const Channel = this.model('Channel');
         const Data = this.model('Data');
 
@@ -270,7 +270,7 @@ class DataController extends ControllerBase {
 
         try {
             data = JSON.parse(data);
-            console.log(data + "update action");
+
         } catch (e) {
             return http.error(`文章内容格式非法, 只能是JSON!!`, e);
         }
@@ -404,7 +404,6 @@ class DataController extends ControllerBase {
         let recordId = ( query.recordId || '' ).trim();
         let releaseType = ( query.releaseType || '').trim();
 
-        console.log(dataId+"dataid"+recordId+"recordid"+releaseType+"releasetype"+"chnannelid"+channelId);
 
 
         if (!dataId || !recordId || !releaseType) {
