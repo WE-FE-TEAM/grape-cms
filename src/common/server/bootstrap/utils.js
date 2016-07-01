@@ -169,7 +169,7 @@ utils.isDataTemplateValid = function (templateStr) {
     let template = templateStr;
     
     return out;
-}
+};
 /**
  * 判断输入的文章模板, 是否合法
  * @param templateStr {string} 文章模板字符串

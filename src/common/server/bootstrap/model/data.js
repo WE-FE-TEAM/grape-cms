@@ -37,7 +37,8 @@ let dataSchema = new mongoose.Schema(
         },
         //最后发布文章的用户ID
         publishUserId: {
-            type: String
+            type: String,
+            default : null
         },
         //最后发布日期
         publishedAt: {
@@ -252,7 +253,7 @@ dataSchema.statics.getLatestData = async function (channelId, dataId) {
 
     const Data = mongoose.model('Data');
 
-    let mjsondata = await Data.find({channelId: channelId, dataId: dataId})
+    let mjsondata = await Data.find({channelId: channelId, dataId: dataId, publishUserId : null})
         .sort({createdAt: -1})
         .limit(1)
         .lean(true);

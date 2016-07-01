@@ -285,7 +285,7 @@ class DataController extends ControllerBase {
         let mjsondata = null;
 
         try {
-            mjsondata = await Data.findOne({channelId: channelId, dataId: dataId}).exec();
+            mjsondata = await Data.findOne({channelId: channelId, dataId: dataId, publishUserId : null}).exec();
         } catch (e) {
             grape.log.warn(e);
             return http.error(`查找指定的json数据异常`, e);

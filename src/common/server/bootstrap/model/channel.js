@@ -213,6 +213,15 @@ channelSchema.statics.isArticleChannel = function( channelType ){
     return channelType === 'article';
 };
 
+/**
+ * 判断栏目类型是否为  数据栏目
+ * @param channelType {string}
+ * @returns {boolean}
+ */
+channelSchema.statics.isDataChannel = function( channelType ){
+    return channelType === 'data';
+};
+
 
 /**
  * 从频道树的JSON中, 遍历取出所有的ID数组

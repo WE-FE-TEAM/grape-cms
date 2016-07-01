@@ -126,39 +126,7 @@ class ChannelController extends ControllerBase {
                     message: '文章模板 必须是 JSON !!'
                 });
             }
-            let temp = await Channel.isNameExist(parentId, channelName);
 
-            if (temp) {
-                //已经存在同名的栏目
-                return this.json({
-                    status: -1,
-                    message: `父栏目下已经存在同名的栏目!`
-                });
-            }
-            let channel = new Channel({
-                channelName: channelName,
-                channelType: channelType,
-                parentId: parentId,
-                isSystem: false,
-                url: channelUrl,
-                onlineUrl: onlineUrl,
-                articleTemplate: articleTemplate
-            });
-            try {
-                let out = await channel.save();
-                this.json({
-                    status: 0,
-                    message: '添加栏目成功',
-                    data: out
-                });
-            } catch (e) {
-                grape.log.warn(e);
-                this.json({
-                    status: -1,
-                    message: '添加栏目失败',
-                    debugInfo: e.message
-                });
-            }
         } else if (Channel.isDataChannel(channelType)) {
             articleTemplate = body.articleTemplate;
             try {
@@ -185,40 +153,41 @@ class ChannelController extends ControllerBase {
                 });
             }
 
-            let temp = await Channel.isNameExist(parentId, channelName);
-            console.log("action add in channle data data");
+        }
 
-            if (temp) {
-                //已经存在同名的栏目
-                return this.json({
-                    status: -1,
-                    message: `父栏目下已经存在同名的栏目!`
-                });
-            }
-            let channel = new Channel({
-                channelName: channelName,
-                channelType: channelType,
-                parentId: parentId,
-                isSystem: false,
-                url: channelUrl,
-                onlineUrl: onlineUrl,
-                dataTemplate: articleTemplate
+        let temp = await Channel.isNameExist(parentId, channelName);
+        console.log("action add in channle data data");
+
+        if (temp) {
+            //已经存在同名的栏目
+            return this.json({
+                status: -1,
+                message: `父栏目下已经存在同名的栏目!`
             });
-            try {
-                let out = await channel.save();
-                this.json({
-                    status: 0,
-                    message: '添加栏目成功',
-                    data: out
-                });
-            } catch (e) {
-                grape.log.warn(e);
-                this.json({
-                    status: -1,
-                    message: '添加栏目失败',
-                    debugInfo: e.message
-                });
-            }
+        }
+        let channel = new Channel({
+            channelName: channelName,
+            channelType: channelType,
+            parentId: parentId,
+            isSystem: false,
+            url: channelUrl,
+            onlineUrl: onlineUrl,
+            dataTemplate: articleTemplate
+        });
+        try {
+            let out = await channel.save();
+            this.json({
+                status: 0,
+                message: '添加栏目成功',
+                data: out
+            });
+        } catch (e) {
+            grape.log.warn(e);
+            this.json({
+                status: -1,
+                message: '添加栏目失败',
+                debugInfo: e.message
+            });
         }
 
 
@@ -374,7 +343,8 @@ class ChannelController extends ControllerBase {
 
         this.json({
             status: 0,
-            message: '更新栏目成功'
+            message: '更新栏目成功',
+            data : result
         });
     }
 

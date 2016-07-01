@@ -285,7 +285,7 @@ class ArticleController extends ControllerBase {
         let article = null;
 
         try{
-            article = await Article.findOne({ channelId : channelId, articleId : articleId }).exec();
+            article = await Article.findOne({ channelId : channelId, articleId : articleId, publishUserId : null }).exec();
         }catch(e){
             grape.log.warn( e );
             return http.error( `查找指定的文章异常`, e);
