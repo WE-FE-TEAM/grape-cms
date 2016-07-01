@@ -471,6 +471,50 @@ class DataController extends ControllerBase {
     //获取某个数据当前发布在硬盘上的数据内容
     async currentReleaseAction() {
 
+        const Data = this.model('Data');
+
+        let http = this.http;
+
+        let res = http.res;
+
+        let query = http.req.query;
+
+        let dataId = ( query.dataId || '' ).trim();
+        let releaseType = ( query.releaseType || 'publish' ).trim();
+
+        let jsonObj = null;
+
+        try{
+            jsonObj = await Data.findOne({ dataId : dataId, publishUserId : null }).lean(true);
+        }catch(e){
+            grape.log.warn( e );
+            return res.end(e.stack);
+        }
+
+        if( ! jsonObj ){
+            return res.end(`未找到dataId=${dataId}的JSON数据`);
+        }
+
+        let filePath = cmsUtils.getDataReleaseFileName( jsonObj, releaseType );
+
+        let content = '';
+        let status = 0;
+        let message = '';
+
+        try{
+            content = await cmsUtils.readFile( filePath );
+        }catch(e){
+            if( e.code === 'ENOENT' ){
+                status = 1;
+                content = 'JSON数据未发布';
+            }else{
+                grape.log.warn(e);
+                return res.end(e);
+            }
+        }
+
+        res.end( content );
+        
     }
 }
 

@@ -203,6 +203,22 @@ class AppData extends React.Component {
         let historyCon = null;
         let cancelEditBtn = null;
 
+        let currentReleaseBtn = null;
+
+        if( props.jsondata ){
+
+            let data = {
+                channelId: props.channel._id,
+                dataId: props.jsondata.dataId
+            };
+
+            let currentReleaseURL = '/cms/dash/data/currentRelease?' + utils.json2query(data);
+            currentReleaseBtn = (
+                <a className="btn btn-primary" target="_blank" href={ currentReleaseURL }>查看当前发布的数据</a>
+            );
+
+        }
+
         let title = '';
         if (props.action === ACTION_VIEW) {
             isView = true;
@@ -255,9 +271,10 @@ class AppData extends React.Component {
         }
 
         return (
-            <div>
+            <div className="data-edit-page">
                 <h1>{ title }</h1>
                 <div className="operation-bar">
+                    { currentReleaseBtn }
                     { publishPreviewBtn }
                     { editBtn }
                     { publishBtn }
