@@ -207,6 +207,8 @@ class App extends React.Component {
         let props = this.props;
         let state = this.state;
 
+        let article = props.article;
+
         let isView = false;
         let isAdd = false;
         let isEdit = false;
@@ -216,6 +218,22 @@ class App extends React.Component {
         let publishBtn = null;
         let historyCon = null;
         let cancelEditBtn = null;
+
+        let currentReleaseBtn = null;
+
+        if( article ){
+
+            let data = {
+                channelId: props.channel._id,
+                articleId: props.article.articleId
+            };
+
+            let currentReleaseURL = '/cms/dash/article/currentRelease?' + utils.json2query(data);
+            currentReleaseBtn = (
+                <a className="btn btn-primary" target="_blank" href={ currentReleaseURL }>查看当前发布的数据</a>
+            );
+
+        }
 
         let title = '';
         if (props.action === ACTION_VIEW) {
@@ -273,6 +291,7 @@ class App extends React.Component {
             <div className="article-edit-page">
                 <h1>{ title }</h1>
                 <div className="operation-bar">
+                    { currentReleaseBtn }
                     { publishPreviewBtn }
                     { editBtn }
                     { publishBtn }
