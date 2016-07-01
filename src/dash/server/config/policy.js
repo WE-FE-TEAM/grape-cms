@@ -51,6 +51,13 @@ module.exports = {
         'view' : loginFilter
     },
 
+    data : {
+
+        '*' : accessFilter,
+
+        'view' : loginFilter
+    },
+
     resource : {
         '*' : accessFilter
     }

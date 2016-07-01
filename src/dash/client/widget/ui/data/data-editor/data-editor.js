@@ -14,8 +14,15 @@ const dataService = service.getService('data');
 class DataEditor extends React.Component {
     constructor(props) {
         super(props);
+
+        let data = ( ( props.jsondata ||'' ).data ) || {};
+
+        if( typeof data !== 'string' ){
+            data = JSON.stringify( data );
+        }
+
         this.state = {
-            value: ( props.jsondata ||'' ).data,
+            value: data,
             isLoading: false,
             errorMsg: ''
         };
@@ -40,7 +47,7 @@ class DataEditor extends React.Component {
         let allData = {
             channelId: channel._id,
             dataName: dataName,
-            data: JSON.stringify(data)
+            data: data
         };
         console.log("when submit");
         let promise;

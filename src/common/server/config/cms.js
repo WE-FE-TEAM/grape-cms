@@ -90,6 +90,9 @@ let urlOperationGroupMap = {
     'dash/channel/data' : 'channel.view',
     //查看数据
     'dash/data/view' : 'data.view',
+    'dash/data/list' : 'data.view',
+    'dash/data/detail' : 'data.view',
+    'dash/data/getEditHistory' : 'data.view',
     //新增数据
     'dash/data/add' : 'data.add',
     'dash/data/doAdd' : 'data.add',
