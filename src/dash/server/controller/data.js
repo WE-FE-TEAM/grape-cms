@@ -290,11 +290,14 @@ class DataController extends ControllerBase {
         }
         let jsonSchema = channel.articleTemplate;
 
-        let validate = cmsUtils.validateJSON(data, jsonSchema);
-        console.log("do uppdateAction jsonschema" + "data" + JSON.stringify(data) + "validate" + validate);
-        if (!validate) {
-            return http.error(`JSON数据格式有误，请检查后提交`);
+        if( jsonSchema ){
+            let validate = cmsUtils.validateJSON(data, jsonSchema);
+            console.log("do uppdateAction jsonschema" + "data" + JSON.stringify(data) + "validate" + validate);
+            if (!validate) {
+                return http.error(`JSON数据格式有误，请检查后提交`);
+            }
         }
+
 
         let mjsondata = null;
 

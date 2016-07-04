@@ -31,7 +31,6 @@
     "fs-extra": "^0.30.0",
     "grapejs": "^1.1.2",
     "mongoose": "^4.4.19",
-    "url": "^0.11.0",
     "validate.js": "^0.10.0"
   },
   "devDependencies": {
