@@ -17,6 +17,8 @@ const fse = require('fs-extra');
 
 const formidable = require('formidable');
 
+const Ajv = require('ajv');
+
 const sep = path.sep;
 
 const cms = global.cms;
@@ -163,11 +165,15 @@ function filterChannelTree(channel, channelIdList) {
 
     return result;
 }
-
+/**
+ * 判断输入的文章模板, 是否合法
+ * @param templateStr {string} 文章模板字符串
+ * @returns {string}
+ */
 utils.isDataTemplateValid = function (templateStr) {
     let out = '';
     let template = templateStr;
-    
+
     return out;
 };
 /**
@@ -483,4 +489,18 @@ utils.readFile = function (filePath) {
             resolve(data);
         });
     });
+};
+/**
+ * 从jsonschema读取JSON默认值
+ * @param filePath {string} 文件所处的绝对路径
+ * @returns {jsonDefault}
+ */
+
+utils.validateJSON = function (jsonData, jsonSchema) {
+    let validate =false;
+    let ajv = new Ajv({useDefaults: true });
+     validate = ajv.validate(jsonSchema, jsonData);
+    return validate;
+
+
 };

@@ -81,7 +81,7 @@ class ChannelController extends ControllerBase {
                 message: `栏目名 不能为空!!`
             });
         }
-
+        console.log("action add in channle data data");
         let isTypeValid = Channel.isChannelTypeValida(channelType);
 
         let channelUrl = Channel.getChannelUrlByType(channelType);
@@ -156,7 +156,7 @@ class ChannelController extends ControllerBase {
         }
 
         let temp = await Channel.isNameExist(parentId, channelName);
-        console.log("action add in channle data data");
+
 
         if (temp) {
             //已经存在同名的栏目
@@ -172,8 +172,9 @@ class ChannelController extends ControllerBase {
             isSystem: false,
             url: channelUrl,
             onlineUrl: onlineUrl,
-            dataTemplate: articleTemplate
+            articleTemplate: articleTemplate
         });
+        console.log(channel+"==this is channel");
         try {
             let out = await channel.save();
             this.json({

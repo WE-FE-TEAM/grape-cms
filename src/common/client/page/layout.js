@@ -6,13 +6,11 @@
 
 'use strict';
 
-
 require('html5shiv');
 require('es5-shim');
 require('es5-shim/es5-sham');
 require('matchmedia-polyfill');
 const Promise = require('bluebird');
-
 //改写全局的Promise
 window.Promise = Promise;
 
@@ -20,5 +18,4 @@ require('common:widget/lib/jquery/jquery.js');
 
 //提前加载bootstrap的JS
 require('common:widget/lib/bootstrap/bootstrap.js');
-
-
+require('ajv');

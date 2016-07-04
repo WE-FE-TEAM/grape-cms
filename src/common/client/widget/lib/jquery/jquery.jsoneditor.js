@@ -66,7 +66,7 @@
         return o;
     }
 
-    function error(reason) { if (window.console) { console.error(reason); } }
+    function error(reason) { if (window.console) { console.error(reason); alert(reason);} }
 
     function parse(str) {
         var res;

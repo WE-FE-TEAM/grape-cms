@@ -15,10 +15,10 @@ class DataEditor extends React.Component {
     constructor(props) {
         super(props);
 
-        let data = ( ( props.jsondata ||'' ).data ) || {};
+        let data = ( ( props.jsondata || '' ).data ) || {};
 
-        if( typeof data !== 'string' ){
-            data = JSON.stringify( data );
+        if (typeof data !== 'string') {
+            data = JSON.stringify(data);
         }
 
         this.state = {
@@ -101,20 +101,19 @@ class DataEditor extends React.Component {
 
     updateJSON(data) {
         let json = data;
-        if( typeof data !== 'string' ){
+        if (typeof data !== 'string') {
             json = JSON.stringify(data);
         }
 
-        let obj = JSON.parse( json );
+        let obj = JSON.parse(json);
 
         $('#editor').jsonEditor(obj, {change: this.updateJSON});
 
         this.setState({
-            value : json
+            value: json
         });
 
     }
-
 
 
     componentDidMount() {
@@ -122,15 +121,16 @@ class DataEditor extends React.Component {
         let state = this.state;
 
         let mjsondata = state.value;
-        let json = '';
+
+
         if (mjsondata) {
             json = JSON.parse(mjsondata);
+            console.log("if mjsondata");
         }
-        else {
-            json = {"string": "hello!", "number": "0"};
-        }
+        console.log(json);
+
         this.setState({
-            value :JSON.stringify(json)
+            value: JSON.stringify(json)
         });
         $('#editor').jsonEditor(json, {change: this.updateJSON});
         $('#expander').click(function () {
@@ -139,7 +139,6 @@ class DataEditor extends React.Component {
             $(this).text(editor.hasClass('expanded') ? 'Collapse' : 'Expand all');
         });
     }
-
 
 
     render() {
@@ -193,7 +192,7 @@ class DataEditor extends React.Component {
                     <div className="form-group">
                         <label htmlFor="jsonData" className="col-sm-2 control-label">JSON数据直接输入框</label>
                         <div className="col-sm-9">
-                            <Textarea value={state.value} id="json" ref="input" onChange={ this.updateJSON } />
+                            <Textarea value={state.value} id="json" ref="input" onChange={ this.updateJSON }/>
                         </div>
                     </div>
                     {saveBtn}

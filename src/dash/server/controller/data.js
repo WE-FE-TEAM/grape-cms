@@ -26,17 +26,18 @@ class DataController extends ControllerBase {
         let channelId = http.getChannelId();
 
         let channel = await Channel.findOne({_id: channelId}).lean(true);
+        // let json = await cmsUtils.getDefaultJSON();
+        // console.log("add action json" + json + "json" + JSON.stringify(json));
 
         http.assign('channel', channel);
         http.assign('action', 'add');
-
         http.render('dash/page/data/edit-data/edit-data.tpl');
 
     }
 
     //异步接口: 添加数据
     async doAddAction() {
-       
+
         const Channel = this.model('Channel');
         const Data = this.model('Data');
 
@@ -56,7 +57,6 @@ class DataController extends ControllerBase {
 
         try {
             data = JSON.parse(data);
-
         } catch (e) {
             return http.error(`数据内容格式非法, 只能是JSON!!`, e);
         }
@@ -74,6 +74,14 @@ class DataController extends ControllerBase {
         if (out) {
             return http.error(`该栏目下已经存在同名的文章: ${dataName}`);
         }
+        let jsonSchema = channel.articleTemplate;
+
+        let validate = cmsUtils.validateJSON(data, jsonSchema);
+        console.log("jsonschema" + "data" + JSON.stringify(data) + "validate" + validate);
+        if (!validate) {
+            return http.error(`JSON数据格式有误，请检查后提交`);
+        }
+
         //生成一个新的dataID
         let dataId = await Data.generateDataId();
 
@@ -212,10 +220,9 @@ class DataController extends ControllerBase {
             grape.log.warn(e);
             return http.error(`获取指定的数据详情出错!`, e);
         }
-        if( jsonData ){
+        if (jsonData) {
             jsonData.recordId = jsonData._id;
         }
-
 
         this.json({
             status: 0,
@@ -281,11 +288,18 @@ class DataController extends ControllerBase {
         if (!channel) {
             return http.error(`指定的栏目不存在! 栏目ID: ${channelId}`);
         }
+        let jsonSchema = channel.articleTemplate;
+
+        let validate = cmsUtils.validateJSON(data, jsonSchema);
+        console.log("do uppdateAction jsonschema" + "data" + JSON.stringify(data) + "validate" + validate);
+        if (!validate) {
+            return http.error(`JSON数据格式有误，请检查后提交`);
+        }
 
         let mjsondata = null;
 
         try {
-            mjsondata = await Data.findOne({channelId: channelId, dataId: dataId, publishUserId : null}).exec();
+            mjsondata = await Data.findOne({channelId: channelId, dataId: dataId, publishUserId: null}).exec();
         } catch (e) {
             grape.log.warn(e);
             return http.error(`查找指定的json数据异常`, e);
@@ -398,12 +412,11 @@ class DataController extends ControllerBase {
         let user = http.getUser();
 
         let query = http.req.body;
-         console.log(JSON.stringify(query)+"query http http");
+        console.log(JSON.stringify(query) + "query http http");
         let channelId = http.getChannelId();
         let dataId = ( query.dataId || '' ).trim();
         let recordId = ( query.recordId || '' ).trim();
         let releaseType = ( query.releaseType || '').trim();
-
 
 
         if (!dataId || !recordId || !releaseType) {
@@ -484,37 +497,37 @@ class DataController extends ControllerBase {
 
         let jsonObj = null;
 
-        try{
-            jsonObj = await Data.findOne({ dataId : dataId, publishUserId : null }).lean(true);
-        }catch(e){
-            grape.log.warn( e );
+        try {
+            jsonObj = await Data.findOne({dataId: dataId, publishUserId: null}).lean(true);
+        } catch (e) {
+            grape.log.warn(e);
             return res.end(e.stack);
         }
 
-        if( ! jsonObj ){
+        if (!jsonObj) {
             return res.end(`未找到dataId=${dataId}的JSON数据`);
         }
 
-        let filePath = cmsUtils.getDataReleaseFileName( jsonObj, releaseType );
+        let filePath = cmsUtils.getDataReleaseFileName(jsonObj, releaseType);
 
         let content = '';
         let status = 0;
         let message = '';
 
-        try{
-            content = await cmsUtils.readFile( filePath );
-        }catch(e){
-            if( e.code === 'ENOENT' ){
+        try {
+            content = await cmsUtils.readFile(filePath);
+        } catch (e) {
+            if (e.code === 'ENOENT') {
                 status = 1;
                 content = 'JSON数据未发布';
-            }else{
+            } else {
                 grape.log.warn(e);
                 return res.end(e);
             }
         }
 
-        res.end( content );
-        
+        res.end(content);
+
     }
 }
 
