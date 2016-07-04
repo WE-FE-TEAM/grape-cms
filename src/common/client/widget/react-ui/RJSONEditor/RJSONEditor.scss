@@ -1,0 +1,42 @@
+
+@import url('common:node_modules/jsoneditor/dist/jsoneditor.css?__inline');
+
+.r-json-editor{
+
+  height: 600px;
+
+  .split-con{
+    float: left;
+    width: 5%;
+    height: 100%;
+    margin: 0 2%;
+
+    .convert{
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      margin: 0 auto;
+      border:1px solid #000;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .convert-right, .convert-left{
+
+    }
+
+    .to-tree-btn{
+      margin: 40px 0 0;
+    }
+
+    .to-code-btn{
+      margin: 20px 0 0;
+    }
+  }
+
+  .json-editor{
+    float: left;
+    width: 40%;
+    height: 100%;
+  }
+}

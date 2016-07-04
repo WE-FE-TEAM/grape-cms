@@ -7,6 +7,8 @@ const RForm = require('common:widget/react-ui/RForm/RForm.js');
 const Textarea = require('./Textarea.js');
 require('common:widget/lib/jquery/jquery.jsoneditor.js');
 
+const RJSONEditor = require('common:widget/react-ui/RJSONEditor/RJSONEditor.js');
+
 const TextInput = RForm.TextInput;
 
 const dataService = service.getService('data');
@@ -27,7 +29,6 @@ class DataEditor extends React.Component {
             errorMsg: ''
         };
         this.submit = this.submit.bind(this);
-        this.updateJSON = this.updateJSON.bind(this);
 
     }
 
@@ -42,7 +43,9 @@ class DataEditor extends React.Component {
         let mjsondata = props.jsondata;
         let isAdd = !mjsondata;
         let dataName = this.refs.dataName.getValue();
-        let data = this.state.value;
+        let data = this.refs.jsonEditor.getValue();
+
+        data = JSON.stringify( data );
 
         let allData = {
             channelId: channel._id,
@@ -99,47 +102,6 @@ class DataEditor extends React.Component {
 
     }
 
-    updateJSON(data) {
-        let json = data;
-        if( typeof data !== 'string' ){
-            json = JSON.stringify(data);
-        }
-
-        let obj = JSON.parse( json );
-
-        $('#editor').jsonEditor(obj, {change: this.updateJSON});
-
-        this.setState({
-            value : json
-        });
-
-    }
-
-
-
-    componentDidMount() {
-        let props = this.props;
-        let state = this.state;
-
-        let mjsondata = state.value;
-        let json = '';
-        if (mjsondata) {
-            json = JSON.parse(mjsondata);
-        }
-        else {
-            json = {"string": "hello!", "number": "0"};
-        }
-        this.setState({
-            value :JSON.stringify(json)
-        });
-        $('#editor').jsonEditor(json, {change: this.updateJSON});
-        $('#expander').click(function () {
-            var editor = $('#editor');
-            editor.toggleClass('expanded');
-            $(this).text(editor.hasClass('expanded') ? 'Collapse' : 'Expand all');
-        });
-    }
-
 
 
     render() {
@@ -179,9 +141,6 @@ class DataEditor extends React.Component {
 
         return (
             <div className="data-editor">
-                <div class="col-sm-10 col-lg-10">
-                    <div id="editor" class="json-editor"></div>
-                </div>
                 <RForm action="" method="POST" className="form-horizontal" onSubmit={ this.submit }>
                     <div className="form-group">
                         <label htmlFor="dataName" className="col-sm-2 control-label">JSON数据标题（非重复）</label>
@@ -190,12 +149,7 @@ class DataEditor extends React.Component {
                                        type="text" placeholder="这里输入JSON数据条标题"/>
                         </div>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="jsonData" className="col-sm-2 control-label">JSON数据直接输入框</label>
-                        <div className="col-sm-9">
-                            <Textarea value={state.value} id="json" ref="input" onChange={ this.updateJSON } />
-                        </div>
-                    </div>
+                    <RJSONEditor ref="jsonEditor" data={ state.value } />
                     {saveBtn}
                     { error }
                 </RForm>
