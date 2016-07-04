@@ -35,9 +35,6 @@ let channelSchema = new mongoose.Schema(
         articleTemplate : {
             type : mongoose.Schema.Types.Mixed
         },
-        dataTemplate:{
-            type : mongoose.Schema.Types.Mixed
-        },
         //文章发布上线之后, 访问的URL
         onlineUrl : {
             type : String,

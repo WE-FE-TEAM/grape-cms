@@ -17,10 +17,10 @@ class DataEditor extends React.Component {
     constructor(props) {
         super(props);
 
-        let data = ( ( props.jsondata ||'' ).data ) || {};
+        let data = ( ( props.jsondata || '' ).data ) || {};
 
-        if( typeof data !== 'string' ){
-            data = JSON.stringify( data );
+        if (typeof data !== 'string') {
+            data = JSON.stringify(data);
         }
 
         this.state = {
@@ -101,8 +101,6 @@ class DataEditor extends React.Component {
         });
 
     }
-
-
 
     render() {
         let props = this.props;
