@@ -62,6 +62,11 @@ class App extends React.Component {
 
         url = url.replace(/\{\{articleId\}\}/g, article.articleId);
 
+        if( url[0] === '/' ){
+            //URL不包含域名部分, 使用和当前CMS部署相同的域名端口
+            url = location.protocol + '//' + location.host + url;
+        }
+
         if (type === PUBLISH_TYPE_PREVIEW) {
             //预览
             if (url.indexOf('?') < 0) {
