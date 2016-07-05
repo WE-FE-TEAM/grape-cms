@@ -19,5 +19,4 @@ require('common:widget/lib/jquery/jquery.js');
 //提前加载bootstrap的JS
 require('common:widget/lib/bootstrap/bootstrap.js');
 
-require('ajv');
 require('jsoneditor');

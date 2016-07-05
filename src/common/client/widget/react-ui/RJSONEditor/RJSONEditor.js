@@ -27,13 +27,16 @@ class RJSONEditor extends React.Component{
         }
 
         this.state = {
-            data : data
+            data : data,
+            editMode : ( props.readonly ? 'view' : 'code')
         };
 
         this.lastEditor = null;
 
         this.toCode = this.toCode.bind( this );
         this.toTree = this.toTree.bind( this );
+
+        this.toggleEditMode = this.toggleEditMode.bind( this );
 
     }
 
@@ -46,24 +49,36 @@ class RJSONEditor extends React.Component{
             }
         });
 
-        this.treeEditor = new JSONEditor( this.refs.treeEditor, {
-            mode : 'tree',
-            onChange : () => {
-                this.lastEditor = this.treeEditor;
-            }
-        } );
+        // this.treeEditor = new JSONEditor( this.refs.treeEditor, {
+        //     mode : 'tree',
+        //     onChange : () => {
+        //         this.lastEditor = this.treeEditor;
+        //     }
+        // } );
 
         this.lastEditor = this.codeEditor;
 
         this.codeEditor.set( this.state.data );
-        this.treeEditor.set( this.state.data );
+        // this.treeEditor.set( this.state.data );
 
+        this.updateMode( this.props.readonly === true );
+    }
+
+    componentDidUpdate(){
+        this.codeEditor.setMode( this.state.editMode );
     }
 
     onValueChange( value ){
         this.setState( {
             data : value
         });
+    }
+
+    updateMode( isReadOnly ){
+        let codeEditorMode = isReadOnly ? 'view' : 'code';
+        let treeEditorMode = isReadOnly ? 'view' : 'tree';
+        this.codeEditor.setMode( codeEditorMode );
+        // this.treeEditor.setMode( treeEditorMode );
     }
 
     toTree(){
@@ -78,6 +93,18 @@ class RJSONEditor extends React.Component{
         this.onValueChange( data );
     }
 
+    toggleEditMode(){
+
+        let newMode = 'view';
+
+        if( ! this.props.readonly ){
+            newMode = this.state.editMode === 'code' ? 'tree' : 'code';
+            this.setState({
+                editMode : newMode
+            });
+        }
+    }
+
     getValue(){
         return this.lastEditor.get();
     }
@@ -87,27 +114,48 @@ class RJSONEditor extends React.Component{
         let state = this.state;
         let props = this.props;
 
+        // <div className="split-con">
+        //     <div>
+        //         <div onClick={ this.toTree } ref="toTree" className="convert to-tree-btn" title="同步JSON到图形界面">
+        //             <div className="convert-right">&gt;</div>
+        //         </div>
+        //     </div>
+        //     <div>
+        //         <div onClick={ this.toCode } ref="toCode" className="convert to-code-btn" title="同步JSON到源码编辑界面">
+        //             <div className="convert-left">&lt;</div>
+        //         </div>
+        //     </div>
+        // </div>
+        // <div className="tree-editor json-editor" ref="treeEditor"></div>
+        
+        let toggleBtn = null;
+        if( ! props.readonly ){
+            let toggleText = '切换到图形界面编辑';
+            if( state.editMode === 'tree' ){
+                toggleText = '切换到源码编辑';
+            }
+            toggleBtn = (
+                <div className="op-btns">
+                    <span className="btn btn-primary" onClick={ this.toggleEditMode }>{ toggleText }</span>
+                </div>
+            );
+        }
+
         return (
             <div className="r-json-editor clearfix">
+                { toggleBtn }
                 <div className="code-editor json-editor" ref="codeEditor"></div>
-                <div className="split-con">
-                    <div>
-                        <div onClick={ this.toTree } ref="toTree" className="convert to-tree-btn" title="同步JSON到图形界面">
-                            <div className="convert-right">&gt;</div>
-                        </div>
-                    </div>
-                    <div>
-                        <div onClick={ this.toCode } ref="toCode" className="convert to-code-btn" title="同步JSON到源码编辑界面">
-                            <div className="convert-left">&lt;</div>
-                        </div>
-                    </div>
-                </div>
-                <div className="tree-editor json-editor" ref="treeEditor"></div>
             </div>
         );
     }
 }
 
+
+RJSONEditor.defaultProps = {
+
+    readonly : false
+
+};
 
 
 module.exports = RJSONEditor;

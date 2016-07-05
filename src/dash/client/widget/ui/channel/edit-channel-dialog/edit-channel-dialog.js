@@ -48,14 +48,14 @@ class EditChannelDialog extends React.Component{
 
         let articleTemplate = channel.articleTemplate;
 
-        if( channelUtil.isArticleChannel( channel.channelType ) ){
+        if( channelUtil.isArticleChannel( channel.channelType ) || channelUtil.isDataChannel( channel.channelType) ){
             articleTemplate = this.refs.articleTemplate.value;
 
             try{
                 articleTemplate = JSON.parse( articleTemplate );
             }catch(e){
                 this.setState({
-                    errorMsg : '文章模板必须是 JSON 格式!'
+                    errorMsg : '文章模板(JSON schema)必须是 JSON 格式!'
                 });
                 return;
             }

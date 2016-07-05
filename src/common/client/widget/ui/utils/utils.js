@@ -7,7 +7,7 @@
 
 
 const moment = require('moment');
-const Ajv = require('ajv');
+
 const timeUtil = require('./time-utils.js');
 const channelUtil = require('./channel-utils');
 
@@ -232,25 +232,5 @@ utils.formatDateHour = function (time) {
     }
 
     return out;
-
-};
-utils.getDefaultJSON = function (jsonSchema) {
-    // let schema = jsonSchema.properties;
-    // let jsonSchema = {
-    //     "type": "object",
-    //     "properties": {
-    //         "foo": {"type": "number", "default": 3},
-    //         "bar": {"type": "string", "default": "baz"}
-    //     },
-    //     "required": ["foo", "bar"]
-    // };
-
-    let ajv = new Ajv({useDefaults: true});
-    let ajv_data = {};
-    let validate = ajv.compile(jsonSchema);
-    let default_v = validate(ajv_data);
-    // if(default_v){
-    return ajv_data;
-    // }
 
 };

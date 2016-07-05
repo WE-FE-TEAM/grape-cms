@@ -498,9 +498,9 @@ utils.readFile = function (filePath) {
 
 utils.validateJSON = function (jsonData, jsonSchema) {
     let validate =false;
-    let ajv = new Ajv({useDefaults: true });
+    let ajv = new Ajv({  });
      validate = ajv.validate(jsonSchema, jsonData);
-    return validate;
+    return ajv.errors;
 
 
 };

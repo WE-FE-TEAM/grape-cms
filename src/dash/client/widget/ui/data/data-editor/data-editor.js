@@ -47,6 +47,27 @@ class DataEditor extends React.Component {
 
         data = JSON.stringify( data );
 
+        //需要先校验JSON格式是否满足该栏目下的 json schema
+        // let jsonSchema = channel.articleTemplate;
+        // if( jsonSchema ){
+        //     let obj = null;
+        //     try{
+        //         obj = JSON.parse( data );
+        //     }catch(e){
+        //         console.error( e );
+        //         this.setState({
+        //             errorMsg : 'JSON格式错误!!'
+        //         });
+        //         return;
+        //     }
+        //     let ajvObj = new ajv({useDefaults: true });
+        //     let validate = ajvObj.validate( jsonSchema, obj );
+        //     if( ! validate ){
+        //         console.log( ajvObj.errors );
+        //         return;
+        //     }
+        // }
+
         let allData = {
             channelId: channel._id,
             dataName: dataName,
@@ -136,6 +157,7 @@ class DataEditor extends React.Component {
             );
         }
 
+        let editorReadOnly = this.props.isView;
 
         return (
             <div className="data-editor">
@@ -147,7 +169,7 @@ class DataEditor extends React.Component {
                                        type="text" placeholder="这里输入JSON数据条标题"/>
                         </div>
                     </div>
-                    <RJSONEditor ref="jsonEditor" data={ state.value } />
+                    <RJSONEditor ref="jsonEditor" data={ state.value } readonly={ editorReadOnly } />
                     {saveBtn}
                     { error }
                 </RForm>
