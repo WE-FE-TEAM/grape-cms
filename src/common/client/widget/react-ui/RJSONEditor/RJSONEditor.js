@@ -64,8 +64,11 @@ class RJSONEditor extends React.Component{
         this.updateMode( this.props.readonly === true );
     }
 
-    componentDidUpdate(){
-        this.codeEditor.setMode( this.state.editMode );
+    componentDidUpdate(prevProps, prevState){
+        let state = this.state;
+        if( state.editMode !== prevState.editMode ){
+            this.codeEditor.setMode( this.state.editMode );
+        }
     }
 
     onValueChange( value ){

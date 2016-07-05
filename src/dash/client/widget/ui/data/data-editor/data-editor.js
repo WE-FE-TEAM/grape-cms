@@ -43,7 +43,16 @@ class DataEditor extends React.Component {
         let mjsondata = props.jsondata;
         let isAdd = !mjsondata;
         let dataName = this.refs.dataName.getValue();
-        let data = this.refs.jsonEditor.getValue();
+        let data = null;
+
+        try{
+            data = this.refs.jsonEditor.getValue();
+        }catch(e){
+            alert( '=======数据格式错误!!=======\n\n' + e.message );
+            return this.setState({
+                errorMsg : e.message
+            });
+        }
 
         data = JSON.stringify( data );
 
