@@ -5,7 +5,6 @@
 <div id="app"></div>
 {% endblock %}
 
-
 {% block block_body_js %}
 {% script %}
 require(["dash:page/home/channel-manage/channel-manage.js"] , function(app){

@@ -11,7 +11,17 @@
   .r-tree-has-sub{
 
     .channel-name{
+      color:#337ab7;
+      text-decoration:underline ;
+      font-weight:500;
+      font-size:1.2em;
       cursor: pointer;
+
+      &:hover{
+
+        color:#ff7800;
+      }
+
     }
   }
 }

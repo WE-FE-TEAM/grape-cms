@@ -234,3 +234,8 @@ utils.formatDateHour = function (time) {
     return out;
 
 };
+utils.getDefaultJSON = function(jsonSchema){
+
+    
+}
+

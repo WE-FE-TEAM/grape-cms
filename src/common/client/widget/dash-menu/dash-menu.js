@@ -25,16 +25,16 @@ function generateMenuList( arr ){
         let itemText = '';
         if( children.length > 0 ){
             itemClass += ' sub-menu-container';
-            itemText = item.channelName;
+            itemText = item.channelName+'<span class="glyphicon glyphicon-chevron-right"></span>';
             subMenus = generateMenuList( children );
         }else{
             itemText = '<a href="' + item.realUrl + '" target="_self">' + item.channelName + '</a>';
         }
-
         out += '<li data-id="' + item._id + '" class="' + itemClass + '">' +
-                '<div class="menu-item-text">' + itemText + '</div>' +
-                subMenus + 
+            '<div class="menu-item-text">' + itemText + '</div>' +
+            subMenus +
             '</li>';
+
     });
     out += '</ul>';
     return out;

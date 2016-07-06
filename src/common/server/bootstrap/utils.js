@@ -502,5 +502,4 @@ utils.validateJSON = function (jsonData, jsonSchema) {
      validate = ajv.validate(jsonSchema, jsonData);
     return ajv.errors;
 
-
 };
