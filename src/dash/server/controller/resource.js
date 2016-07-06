@@ -71,6 +71,21 @@ class ResourceController extends ControllerBase {
         return this.uploadUrlPrefix + '/' + relativeToUploadRoot.split('\\').join('/');
     }
 
+    //允许单个栏目配置各自的上传图片访问URL前缀
+    async updateUrlPrefix( channelId ){
+
+        const Channel = this.model('Channel');
+
+        let channel = await Channel.findOne({_id: channelId}).exec();
+
+        if( channel ){
+            this.uploadUrlPrefix = ( channel.onlineUrl || this.uploadUrlPrefix );
+            return;
+        }
+
+        throw new Error(`找不到[${channelId}]对应的栏目数据`);
+    }
+
     /**
      * 判断客户端提交的某个相对路径, 是否合法
      * @param channelId {string} 栏目ID
@@ -201,6 +216,8 @@ class ResourceController extends ControllerBase {
             }
         }
 
+        await this.updateUrlPrefix( channelId );
+
         let result = false;
 
         try{
@@ -238,6 +255,8 @@ class ResourceController extends ControllerBase {
         if( ! this.isPathLegal(channelId, path ) ){
             return http.error(`路径[${path}]非法!!`);
         }
+
+        await this.updateUrlPrefix( channelId );
 
         let finalPath = this.getFinalUploadDir( channelId, path );
 

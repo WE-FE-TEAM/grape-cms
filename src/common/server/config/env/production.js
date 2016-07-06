@@ -11,6 +11,7 @@
 const session = require('express-session');
 const RedisStore = require('connect-redis')( session );
 
+let cmsConf = require('../cms.js');
 
 const redisConf = {
     host : '127.0.0.1',
@@ -39,7 +40,23 @@ let sessionConf = {
 };
 
 
+const finalCmsConfig = Object.assign( {}, cmsConf, {
 
+    //文章的预览 根目录
+    articlePreviewRootPath : `/cms/article_preview`,
+    //文章的发布根目录
+    articlePublishRootPath : `/cms/article`,
+    //数据的预览 根目录
+    dataPreviewRootPath : `/cms/data_preview`,
+    //数据的发布根目录
+    dataPublishRootPath : `/cms/data`,
+
+    //CMS文件上传的根目录
+    uploadRootPath : `/cms/static`,
+    //文件上传之后,访问文件时,要添加的URL前缀
+    uploadUrlPrefix : 'http://www.we.com/cms'
+
+} );
 
 module.exports = {
 
@@ -56,7 +73,9 @@ module.exports = {
         ]
     },
 
-    session : sessionConf
+    session : sessionConf,
+
+    cms : finalCmsConfig
 
 };
 
