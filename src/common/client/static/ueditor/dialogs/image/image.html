@@ -20,9 +20,9 @@
     <div class="wrapper">
         <div id="tabhead" class="tabhead">
             <span class="tab" data-content-id="remote"><var id="lang_tab_remote"></var></span>
-            <span class="tab focus" data-content-id="upload"><var id="lang_tab_upload"></var></span>
-            <span class="tab" data-content-id="online"><var id="lang_tab_online"></var></span>
-            <span class="tab" data-content-id="search"><var id="lang_tab_search"></var></span>
+            <!--<span class="tab focus" data-content-id="upload"><var id="lang_tab_upload"></var></span>-->
+            <!--<span class="tab" data-content-id="online"><var id="lang_tab_online"></var></span>-->
+            <!--<span class="tab" data-content-id="search"><var id="lang_tab_search"></var></span>-->
         </div>
         <div class="alignBar">
             <label class="algnLabel"><var id="lang_input_align"></var></label>
@@ -45,6 +45,17 @@
                     </div>
                 </div>
                 <div class="left">
+                    <div class="row">
+                        <label>原始宽高</label>
+                        <span>原始宽度:<input class="text" type="text" id="natural-width"/>px </span>
+                        <span>原始高度:<input class="text" type="text" id="natural-height"/>px </span>
+                    </div>
+                    <div class="row">
+                        <label for="is-block-img">
+                            <input type="checkbox" id="is-block-img">
+                            图片是否占满屏幕宽度(手机端)
+                        </label>
+                    </div>
                     <div class="row">
                         <label><var id="lang_input_size"></var></label>
                         <span><var id="lang_input_width">&nbsp;&nbsp;</var><input class="text" type="text" id="width"/>px </span>

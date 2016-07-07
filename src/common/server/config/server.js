@@ -8,7 +8,7 @@
 
 module.exports = {
 
-    port : 10000,
+    port : 9202,
 
     'x-powered-by' : 'grape-cms-v1'
 };

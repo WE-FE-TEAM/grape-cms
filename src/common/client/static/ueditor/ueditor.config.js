@@ -401,7 +401,7 @@
 			header: [],
 			hr:     [],
 			i:      ['class', 'style'],
-			img:    ['src', 'alt', 'title', 'width', 'height', 'id', '_src', 'loadingclass', 'class'],
+			img:    ['src', 'alt', 'title', 'width', 'height', 'id', '_src', 'loadingclass', 'class', 'data-natural-width', 'data-natural-height', 'data-block-img'],
 			ins:    ['datetime'],
 			li:     ['class', 'style'],
 			mark:   [],

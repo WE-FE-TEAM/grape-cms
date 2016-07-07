@@ -116,7 +116,7 @@
     height:10px;
 }
 #remote .row{
-    margin-left: 20px;
+    margin-left: 5px;
     clear: both;
     height: 40px;
 }
@@ -136,7 +136,7 @@
 
 #remote input.text{
     width: 150px;
-    padding: 3px 6px;
+    padding: 3px 3px;
     font-size: 14px;
     line-height: 1.42857143;
     color: #555;
@@ -160,10 +160,16 @@
     margin-bottom: 2px;
 }
 #remote #width,
-#remote #height{
-    width: 20px;
+#remote #height,
+#remote #natural-width,
+#remote #natural-height
+{
+    width: 30px;
     margin-left: 2px;
     margin-right: 2px;
+}
+#remote label[for="is-block-img"]{
+    width: 220px;
 }
 #remote #border,
 #remote #vhSpace,

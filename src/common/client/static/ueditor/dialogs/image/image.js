@@ -16,6 +16,8 @@
         initTabs();
         initAlign();
         initButtons();
+
+        setTabFocus('remote');
     };
 
     /* 初始化tab标签 */
@@ -28,12 +30,12 @@
             });
         }
 
-        var img = editor.selection.getRange().getClosedNode();
-        if (img && img.tagName && img.tagName.toLowerCase() == 'img') {
-            setTabFocus('remote');
-        } else {
-            setTabFocus('upload');
-        }
+        // var img = editor.selection.getRange().getClosedNode();
+        // if (img && img.tagName && img.tagName.toLowerCase() == 'img') {
+        //     setTabFocus('remote');
+        // } else {
+        //     setTabFocus('upload');
+        // }
     }
 
     /* 初始化tabbody */
@@ -53,6 +55,7 @@
         switch (id) {
             case 'remote':
                 remoteImage = remoteImage || new RemoteImage();
+                window.remoteImage = remoteImage;
                 break;
             case 'upload':
                 setAlign(editor.getOpt('imageInsertAlign'));
@@ -151,10 +154,14 @@
         init: function () {
             this.initContainer();
             this.initEvents();
+
+            this.imgLoad = this.imgLoad.bind( this );
         },
         initContainer: function () {
             this.dom = {
                 'url': $G('url'),
+                'naturalWidth': $G('natural-width'),
+                'naturalHeight': $G('natural-height'),
                 'width': $G('width'),
                 'height': $G('height'),
                 'border': $G('border'),
@@ -228,11 +235,14 @@
             if (src !== $G("url").value) $G("url").value = src;
             if(src) {
                 /* 设置表单内容 */
+                $G('natural-width').value = img.naturalWidth || img.getAttribute('data-natural-width') || '';
+                $G('natural-height').value = img.naturalHeight || img.getAttribute('data-natural-height') || '';
                 $G("width").value = img.width || '';
                 $G("height").value = img.height || '';
                 $G("border").value = img.getAttribute("border") || '0';
                 $G("vhSpace").value = img.getAttribute("vspace") || '0';
                 $G("title").value = img.title || img.alt || '';
+                $G('is-block-img').checked = img.getAttribute('data-block-img') === '1';
                 setAlign(align);
                 this.setPreview();
                 this.updateLocker();
@@ -243,6 +253,7 @@
             for(var k in this.dom){
                 data[k] = this.dom[k].value;
             }
+            data.isBlockImage = $G('is-block-img').checked;
             return data;
         },
         setPreview: function(){
@@ -255,6 +266,8 @@
                 width,
                 height;
 
+            var that = this;
+
             url = utils.unhtmlForUrl(url);
             title = utils.unhtml(title);
 
@@ -263,7 +276,7 @@
             height = (!ow || !oh) ? '':width*oh/ow;
 
             if(url) {
-                preview.innerHTML = '<img src="' + url + '" width="' + width + '" height="' + height + '" border="' + border + 'px solid #000" title="' + title + '" />';
+                preview.innerHTML = '<img onload="remoteImage.imgLoad(this);" src="' + url + '" width="' + width + '" height="' + height + '" border="' + border + 'px solid #000" title="' + title + '" />';
             }
         },
         getInsertList: function () {
@@ -272,6 +285,9 @@
                 return [{
                     src: data['url'],
                     _src: data['url'],
+                    naturalWidth : data['naturalWidth'] || '',
+                    naturalHeight : data['naturalHeight'] || '',
+                    isBlockImage : !! data.isBlockImage,
                     width: data['width'] || '',
                     height: data['height'] || '',
                     border: data['border'] || '',
@@ -284,6 +300,11 @@
             } else {
                 return [];
             }
+        },
+        imgLoad : function( imgDom ){
+            imgDom.onload = imgDom.onerror = null;
+            this.dom.naturalWidth.value = imgDom.naturalWidth;
+            this.dom.naturalHeight.value = imgDom.naturalHeight;
         }
     };
 
