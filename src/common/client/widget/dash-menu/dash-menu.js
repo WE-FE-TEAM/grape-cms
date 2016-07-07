@@ -25,7 +25,7 @@ function generateMenuList( arr ){
         let itemText = '';
         if( children.length > 0 ){
             itemClass += ' sub-menu-container';
-            itemText = item.channelName+'<span class="glyphicon glyphicon-chevron-right"></span>';
+            itemText = item.channelName+'<span class="glyphicon glyphicon-chevron-right "></span>';
             subMenus = generateMenuList( children );
         }else{
             itemText = '<a href="' + item.realUrl + '" target="_self">' + item.channelName + '</a>';
