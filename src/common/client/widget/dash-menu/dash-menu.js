@@ -86,6 +86,7 @@ let singleton = {
         $menu.html( html );
 
         $menu.on('click', '.sub-menu-container', function(e){
+            e.stopPropagation();
             $(e.currentTarget).toggleClass( MENU_UNFOLD );
         } );
 

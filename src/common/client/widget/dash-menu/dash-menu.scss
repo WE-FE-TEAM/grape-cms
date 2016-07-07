@@ -46,7 +46,7 @@
   //展开子菜单
   .sub-menu-unfold{
     background:#f0f0f0;
-    .menu-list{
+    &>.menu-list{
       display: block;
     }
   }
