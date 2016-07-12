@@ -1,54 +1,56 @@
-
+body{
+  background:#fff;
+  height:100%;
+}
 
 #dash-menu{
-
-  padding: 20px 0;
+  width:198px;
+  margin-left:-4px;
+  background:#2A3F54;
+  color:#fff;
+  padding-top: 20px;
   text-align: left;
-
   a{
+    color:#fff;
     text-decoration: none;
   }
  span{
     position:relative;
-   float:right;
+    float:right;
  }
   .menu-item{
-    padding:10px;
-  }
-  
-  .menu-item{
-
-    .menu-item-text{
-      &:hover{
-        color:#fff;
-        background: #66afe9;
-      }
-    }
-
+    padding:10px 0px 10px 10px;
+    margin:2px 0 2px 0;
   }
 
   .menu-item-selected{
      color:#fff;
-     background:#afd9ee;
-
+     background:#73879C;
   }
 
   //子菜单
   .sub-menu-container{
-   border-bottom:1px solid #d3d3d3;
-    background:#f0f0f0;
-
-    .menu-list{
+    &>.menu-item-text{
+      padding:2px 0 2px 0;
+    }
+    .child_menu{
       display: none;
     }
   }
 
   //展开子菜单
   .sub-menu-unfold{
-    background:#f0f0f0;
-    &>.menu-list{
+    &>.menu-item-text{
+      padding:8px 0 8px 0;
+      text-shadow: rgba(0,0,0,0.25) 0 -1px 0;
+      background: linear-gradient(#334556, #2C4257),#2A3F54;
+      box-shadow: rgba(0,0,0,0.25) 0 1px 0,inset rgba(255,255,255,0.16) 0 1px 0;
+    }
+    &>.child_menu{
       display: block;
     }
+    &>li>a{
+    margin-bottom: 6px;
+  }
   }
 }
-//linear-gradient(to bottom, #337ab7 0%, #265a88 100%); #245580;

@@ -3,6 +3,8 @@
 
 {% block block_head_css %}
 <link rel="stylesheet" type="text/css" href="/client/static/dash/dash.scss">
+<link rel="stylesheet" type="text/css" href="/client/static/dash/custom.scss">
+<link rel="stylesheet" type="text/css" href="/client/static/dash/font-awesome.css">
 {% endblock %}
 
 {% block block_head_js %}
@@ -20,8 +22,13 @@
 {% block block_body %}
 <div id="dash-app" class="container-fluid">
     <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
+        <div class="col-md-2 sidebar left_col">
+
+         <div class="main_menu_side hidden-print main_menu">
+         <div class="menu_section active">
             {% widget "common:widget/dash-menu/dash-menu.tpl" %}
+         </div>
+         </div>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             {% block dash_block_main %}

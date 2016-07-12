@@ -25,8 +25,6 @@
 
         {# bootstrap css #}
         <link rel="stylesheet" type="text/css" href="/client/static/bootstrap/css/bootstrap.css">
-        <link rel="stylesheet" type="text/css" href="/client/static/bootstrap/css/bootstrap-theme.css">
-
         {% block block_head_css %}
         {% endblock %}
 

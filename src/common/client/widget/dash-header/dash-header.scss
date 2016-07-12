@@ -1,25 +1,24 @@
 
 #dash-header{
   z-index: 32;
-  margin-top: -10px;
+  margin-top: 0px;
   height:50px;
   .user-name{
     float: right;
-    margin-top:5px;
-    line-height: 50px;
-    margin-left: 50px;
-    color: #fff;
+    padding:13px 15px 12px;
+    line-height:32px;
+    margin:0px 0px 0 40px;
   }
-  .navbar-nav{
-    margin-top:5px;
-    line-height:40px;
 
-  }
+
   .navbar-brand{
-    margin-top:5px;
+    width:228px;
+    height:52px;
+    background:#2A3F54;
+    position: relative;
+   margin-left:-15px !important;
+    border-bottom:1px solid #2D5B89;
   }
-  background-image: -webkit-linear-gradient(top, #337ab7 0%, #3c3c3c 100%);
-  background-image:      -o-linear-gradient(top, #337ab7 0%, #3c3c3c 100%);
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#337ab7), to(#3c3c3c));
-  background-image:         linear-gradient(to bottom, #337ab7 0%,#3c3c3c 100%);
+  background: #EDEDED;
+  border-bottom: 1px solid #D9DEE4;
 }
