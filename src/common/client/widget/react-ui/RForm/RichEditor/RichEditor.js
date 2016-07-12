@@ -36,7 +36,9 @@ class RichEditor extends React.Component{
 
         // let script = ReactDOM.findDOMNode( this.refs.ueditorscript );
 
-        this.editor = UE.getEditor( this.state.id );
+        this.editor = UE.getEditor( this.state.id, {
+            readonly : this.props.readonly === true
+        } );
 
         this.editor.addListener('contentChange', this.onChange );
 
@@ -127,6 +129,7 @@ class RichEditor extends React.Component{
 
 RichEditor.defaultProps = {
 
+    readonly : false,
     value : '',
     className : '',
     id : '',

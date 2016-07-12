@@ -128,7 +128,8 @@ class ArticleEditor extends React.Component {
             ref : key,
             name : key,
             id : key,
-            placeholder : placeholder
+            placeholder : placeholder,
+            readonly : this.props.isView
         };
 
         if( article && article.data ){
@@ -206,6 +207,19 @@ class ArticleEditor extends React.Component {
             );
         }
 
+        let titleProps = {
+            ref : "articleName",
+            id : "articleName",
+            name : "articleName",
+            type : "text",
+            placeholder : "这里输入文章在在后台显示的标题",
+            value :  articleName
+        };
+
+        if( props.isView ){
+            titleProps.readonly = true;
+        }
+
         return (
             <div className="article-editor">
                 <RForm action="/cms/dash/article/doAdd" method="POST" className="form-horizontal" onSubmit={ this.submit }>
@@ -213,7 +227,7 @@ class ArticleEditor extends React.Component {
                     <div className="form-group">
                         <label htmlFor="articleName" className="col-sm-2 control-label">文章后台显示标题</label>
                         <div className="col-sm-10">
-                            <TextInput value={ articleName  } ref="articleName" id="articleName" name="articleName" type="text" placeholder="这里输入文章在在后台显示的标题"  />
+                            <TextInput  { ...titleProps }  />
                         </div>
                     </div>
                     <div className="text-center split-line">==============以下是文章被普通用户能看到的属性===============</div>

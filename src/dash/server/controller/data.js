@@ -76,12 +76,14 @@ class DataController extends ControllerBase {
         }
         let jsonSchema = channel.articleTemplate;
 
-        let errors = cmsUtils.validateJSON(data, jsonSchema);
+        if( jsonSchema ){
+            let errors = cmsUtils.validateJSON(data, jsonSchema);
 
-        if ( errors && errors.length > 0) {
-            grape.console.log( errors );
-            let error = errors[0];
-            return http.error(`JSON数据格式有误: ${error.dataPath} ${error.message}`);
+            if ( errors && errors.length > 0) {
+                grape.console.log( errors );
+                let error = errors[0];
+                return http.error(`JSON数据格式有误: ${error.dataPath} ${error.message}`);
+            }
         }
 
         //生成一个新的dataID

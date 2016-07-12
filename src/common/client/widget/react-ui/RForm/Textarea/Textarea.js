@@ -60,6 +60,10 @@ class Textarea extends React.Component{
             onChange : this.onChange
         };
 
+        if( props.readonly ){
+            inputProps.readOnly = 'readOnly';
+        }
+
         return (
             <div { ...containerProps }>
                 <textarea { ...inputProps } />

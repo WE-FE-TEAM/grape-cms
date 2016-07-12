@@ -229,7 +229,7 @@ var TextInput = React.createClass({
 
         let placeholder = this.renderPlaceholder();
 
-        let {  type, className, id, name, errorClass } = this.props;
+        let {  type, className, id, name, errorClass, readonly } = this.props;
 
         let { value, invalidMessageList } = this.state;
 
@@ -245,6 +245,10 @@ var TextInput = React.createClass({
             value : value,
             className : INPUT_CLASS
         };
+
+        if( readonly ){
+            inputProps.readOnly = 'readOnly';
+        }
 
         let errorTip = null;
         if( invalidMessageList.length > 0 ){
