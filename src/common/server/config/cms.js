@@ -83,6 +83,7 @@ let urlOperationGroupMap = {
     'dash/article/doDelete' : 'article.delete',
     //发布文章
     'dash/article/doPublish' : 'article.publish',
+    'dash/article/currentRelease' : 'article.publish',
     
     
     //数据栏目相关
@@ -103,6 +104,7 @@ let urlOperationGroupMap = {
     'dash/data/doDelete' : 'data.delete',
     //发布数据
     'dash/data/doPublish' : 'data.publish',
+    'dash/data/currentRelease' : 'data.publish',
     
     
     //文件上传栏目 相关
