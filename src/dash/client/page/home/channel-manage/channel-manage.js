@@ -60,7 +60,16 @@ class App extends React.Component {
         newState[dialogType] = null;
         this.setState( newState );
     }
+    componentDidMount(){
+        let $tree=$('li .r-tree-sub-collapse');
+        if($tree){
+            console.log("tree");
+        }
+        $tree.css('background-color',"red");
+        $tree.find('span').css('background-color',"red");
+        $tree.find('span').addClass('fa fa-home');
 
+    }
 
     render(){
 

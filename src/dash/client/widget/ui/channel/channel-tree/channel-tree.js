@@ -74,6 +74,7 @@ class ChannelTree extends React.Component {
         
         return (
             <div className="channel-tree-node">
+
                 <span className="channel-name col-lg-2 col-md-3" onClick={ onNodeClick }>{ channel.channelName }</span>
                 { editChannelBtn }
                 { deleteChannelBtn }

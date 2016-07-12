@@ -96,7 +96,7 @@ let singleton = {
                 $(e.currentTarget).toggleClass(MENU_UNFOLD);
             });
 
-//选中当前的栏目
+            //选中当前的栏目
             let currentChannel = currentPath[0];
             if (currentChannel) {
                 let channelId = currentChannel._id;
