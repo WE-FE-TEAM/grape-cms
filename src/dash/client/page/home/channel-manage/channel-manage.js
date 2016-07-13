@@ -60,17 +60,8 @@ class App extends React.Component {
         newState[dialogType] = null;
         this.setState( newState );
     }
-    componentDidMount(){
-        let $tree=$('li .r-tree-sub-collapse');
-        if($tree){
-            console.log("tree");
-        }
-        $tree.css('background-color',"red");
-        $tree.find('span').css('background-color',"red");
-        $tree.find('span').addClass('fa fa-home');
-
-    }
-
+  
+  
     render(){
 
         let state = this.state;
@@ -92,6 +83,7 @@ class App extends React.Component {
         if( state.isShowDelete ){
             deleteDialog = <DeleteChannelDialog channel={ state.isShowDelete } onRequestClose={ this.closeDialog.bind( this, 'isShowDelete') } />;
         }
+
 
         return (
             <div className="">

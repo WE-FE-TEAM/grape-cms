@@ -28,6 +28,11 @@ body{
     overflow-y: auto;
     background: #2A3F54;
     border-right: 2px;
+    ::-webkit-scrollbar {
+      width: 13px;
+    }
+
+
   }
 
   //右侧主面板

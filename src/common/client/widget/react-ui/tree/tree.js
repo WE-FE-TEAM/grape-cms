@@ -14,13 +14,14 @@ const ReactDOM = require('react-dom');
 //节点class
 const NODE_CLASS = 'r-tree-node';
 const NODE_HAS_SUB_TREE = 'r-tree-has-sub';
+const NO_SUB_TREE = 'no-sub';
 //子树收起的class
 const SUB_TREE_COLLAPSE = 'r-tree-sub-collapse';
 
 
-class TreeNode extends React.Component{
+class TreeNode extends React.Component {
 
-    constructor(props){
+    constructor(props) {
 
         super(props);
 
@@ -30,30 +31,31 @@ class TreeNode extends React.Component{
 
         let hasChild = false;
 
-        if( children.length > 0 ){
+        if (children.length > 0) {
             hasChild = true;
         }
 
         this.state = {
             //是否有子树
-            hasChild : hasChild,
+            hasChild: hasChild,
             //如果有子树,默认收起
-            collapsed : props.collapsed !== false
+            collapsed: props.collapsed !== false
         };
 
-        this.toggleSubTree = this.toggleSubTree.bind( this );
+        this.toggleSubTree = this.toggleSubTree.bind(this);
     }
 
     //渲染该节点下的子树
-    renderSubTree( arr ){
-        if( ! arr || arr.length < 1 ){
+    renderSubTree(arr) {
+        if (!arr || arr.length < 1) {
             return null;
         }
 
         let props = this.props;
 
-        let list = arr.map( ( obj, index ) => {
+        let list = arr.map((obj, index) => {
             let key = index;
+
             return (
                 <TreeNode
                     key={ key }
@@ -61,7 +63,7 @@ class TreeNode extends React.Component{
                     childrenKey={ props.childrenKey }
                     data={ obj }
                     className={ props.className }
-                    nodeLabelRenderer={ props.nodeLabelRenderer } />
+                    nodeLabelRenderer={ props.nodeLabelRenderer }/>
             );
         });
 
@@ -72,37 +74,54 @@ class TreeNode extends React.Component{
         );
     }
 
-    toggleSubTree(e){
-
-        if( this.state.hasChild ){
+    toggleSubTree(e) {
+        if (this.state.hasChild) {
             this.setState({
-                collapsed : ! this.state.collapsed
+                collapsed: !this.state.collapsed
             });
+            let span = $(e.currentTarget);
+
+            if (this.state.collapsed) {
+                span.removeClass("fa-plus-square-o").addClass("fa-minus-square-o");
+            } else if (!this.state.collapsed) {
+                span.removeClass("fa-minus-square-o").addClass("fa-plus-square-o");
+            }
         }
     }
 
-    render(){
+    componentDidMount() {
+        $(".channel-tree").find(".r-tree-has-sub .r-tree-sub-collapse").find("span").addClass("fa-plus-square-o");
+        $(".channel-tree").find(".no-sub").find("span").removeClass("fa-plus-square-o");
+    }
+
+    render() {
 
         let props = this.props;
         let data = props.data;
 
-        if( ! data ){
+        if (!data) {
             return null;
         }
 
         let className = NODE_CLASS + ( props.className || '' );
 
-        let nodeLabel = props.nodeLabelRenderer( props.data, this.toggleSubTree );
+        let nodeLabel = props.nodeLabelRenderer(props.data, this.toggleSubTree);
 
         let subTree = null;
         let subKey = props.childrenKey;
-        if( data[subKey] ){
-            subTree = this.renderSubTree( data[subKey] );
-            className += ' ' + NODE_HAS_SUB_TREE;
 
-            if( this.state.collapsed ){
+        if (data[subKey]) {
+            subTree = this.renderSubTree(data[subKey]);
+            if (data[subKey].length > 0) {
+                className += ' ' + NODE_HAS_SUB_TREE;
+            } else {
+                className += ' ' + NO_SUB_TREE;
+            }
+
+            if (this.state.collapsed && data[subKey].length > 0) {
                 className += ' ' + SUB_TREE_COLLAPSE;
             }
+
         }
 
         return (
@@ -117,24 +136,24 @@ class TreeNode extends React.Component{
 
 TreeNode.propTypes = {
 
-    nodeLabelRenderer : React.PropTypes.func
+    nodeLabelRenderer: React.PropTypes.func
 };
 
 TreeNode.defaultProps = {
 
     //子树 所在data中的 key
-    childrenKey : 'sub'
+    childrenKey: 'sub'
 
 };
 
 
-class Tree extends React.Component{
+class Tree extends React.Component {
 
-    render(){
-        
+    render() {
+
         let props = this.props;
-        
-        let className = 'r-tree ' + ( props.className || '' ); 
+
+        let className = 'r-tree ' + ( props.className || '' );
 
         return (
             <ul className={ className }>
@@ -143,7 +162,7 @@ class Tree extends React.Component{
                     childrenKey={ props.childrenKey }
                     className={ props.nodeClassName }
                     collapsed={ props.collapsed }
-                    nodeLabelRenderer={ props.nodeLabelRenderer } />
+                    nodeLabelRenderer={ props.nodeLabelRenderer }/>
             </ul>
         );
     }
@@ -151,14 +170,14 @@ class Tree extends React.Component{
 
 Tree.propTypes = {
 
-    nodeClassName : React.PropTypes.string,
-    nodeLabelRenderer : React.PropTypes.func
+    nodeClassName: React.PropTypes.string,
+    nodeLabelRenderer: React.PropTypes.func
 };
 
 
 Tree.defaultProps = {
     //子树 所在data中的 key
-    childrenKey : 'sub'
+    childrenKey: 'sub'
 };
 
 module.exports = Tree;

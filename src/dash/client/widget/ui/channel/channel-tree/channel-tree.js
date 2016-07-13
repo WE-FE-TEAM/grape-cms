@@ -52,6 +52,10 @@ class ChannelTree extends React.Component {
                 console.error( e );
                 alert('请求栏目数据失败');
             });
+        
+      
+       
+
     }
 
     nodeLabelRender( channel, onNodeClick ){
@@ -60,7 +64,7 @@ class ChannelTree extends React.Component {
         let addChildBtn = null;
         
         if( channelUtil.canAddChild(channel) ){
-            addChildBtn = <button onClick={ this.addChannelChild.bind( this, channel) } type="button" className="btn btn-primary">添加子栏目</button>;
+            addChildBtn =<button onClick={ this.addChannelChild.bind( this, channel) } type="button" className="btn btn-primary">添加子栏目</button>;
         }
 
         let editChannelBtn = <button onClick={ this.editChannel.bind( this, channel) } type="button" className="btn btn-warning">编辑栏目</button>;
@@ -74,8 +78,7 @@ class ChannelTree extends React.Component {
         
         return (
             <div className="channel-tree-node">
-
-                <span className="channel-name col-lg-2 col-md-3" onClick={ onNodeClick }>{ channel.channelName }</span>
+                <span className="channel-name col-lg-2 col-md-3 fa" onClick={ onNodeClick }>{ channel.channelName }</span>
                 { editChannelBtn }
                 { deleteChannelBtn }
                 { addChildBtn }

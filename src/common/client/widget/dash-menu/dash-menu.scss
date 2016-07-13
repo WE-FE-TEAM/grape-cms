@@ -1,38 +1,74 @@
 body{
   background:#fff;
   height:100%;
+  scrollbar-face-color: #2D5B89;
+  ::-webkit-scrollbar
+  {
+    width: 1px;
+    height: 5px;
+    background-color: #2D5B89;
+  }
+
+  /*定义滚动条轨道 内阴影+圆角*/
+  ::-webkit-scrollbar-track
+  {
+    -webkit-box-shadow: inset 0 0 1px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    background-color: #2A3F54;
+  }
+
+  /*定义滑块 内阴影+圆角*/
+  ::-webkit-scrollbar-thumb
+  {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 1px rgba(0,0,0,.3);
+    background-color: #2A3F54;
+  }
+
 }
 
 #dash-menu{
-
   margin-left:0px;
   background:#2A3F54;
   color:#fff;
+  font-size:1.1em;
   padding-top: 20px;
   text-align: left;
+  .nav.child_menu li:hover, .nav.child_menu li.active {
+    background-color:transparent;
+  }
+
   a{
     color:#fff;
     text-decoration: none;
+  }
+  a:hover{
+    background-color: rgba(255, 255, 255, 0.1);
   }
  span{
     position:relative;
     float:right;
  }
   .menu-item{
-    padding:5px 0px 5px 10px;
-    margin:3px 0 3px 0;
+    padding:2px 0px 2px 0px;
+
   }
-  .menu-item-text{
-    padding:7px 0 7px 2px;
-  }
+ .menu-item-text{
+
+ }
   .menu-item-selected{
      color:#fff;
      background:#73879C;
   }
-
   //子菜单
   .sub-menu-container{
-
+    &>.menu-item-text:hover{
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    &>.menu-item-text{
+      padding:8px 0 8px 0px;
+    }
+    padding:8px 0 8px 15px;
     .child_menu{
       display: none;
     }
@@ -41,15 +77,19 @@ body{
   //展开子菜单
   .sub-menu-unfold{
     &>.menu-item-text{
+      padding:8px 0 8px 0px;
       text-shadow: rgba(0,0,0,0.25) 0 -1px 0;
       background: linear-gradient(#334556, #2C4257),#2A3F54;
       box-shadow: rgba(0,0,0,0.25) 0 1px 0,inset rgba(255,255,255,0.16) 0 1px 0;
     }
+
     &>.child_menu{
       display: block;
     }
-    &>li>a{
-    margin-bottom: 6px;
+   li:hover, li.active {
+      background-color:transparent;
+    }
+
   }
-  }
+
 }

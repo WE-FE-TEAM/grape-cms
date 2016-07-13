@@ -36,13 +36,10 @@ function generateMenuList(arr, index = 0) {
                 '</li>';
         } else {
             itemText = '<a href="' + item.realUrl + '" target="_self">' + item.channelName + '</a>';
-            out += '<li data-id="' + item._id + '" class="' + itemClass + '">' +
-                '<div class="menu-item-text">' + '<i class="fa fa-clone"></i>' + itemText + '</div>' +
-                subMenus +
+            out += '<li data-id="' + item._id + '" class="' + itemClass + '">' + '<a href="' + item.realUrl + '" target="_self">' + '<div class="menu-item-text">' + '<i class="fa fa-clone"></i>'+ item.channelName +
+                '</div>' + '</a>'+ subMenus +
                 '</li>';
         }
-
-
     });
     out += '</ul>';
     return out;

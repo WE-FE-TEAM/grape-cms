@@ -1,5 +1,5 @@
-body ,html,main,#app{
-  height:100%;
+body, html, main, #app {
+  height: 100%;
 }
 
 .channel-tree {
@@ -11,18 +11,12 @@ body ,html,main,#app{
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
   background-color: #fbfbfb;
   border: 1px solid #999;
-  height:100%;
-  min-height: 500px;
+  height: 100%;
+  min-height: 400px;
   overflow-y: auto;
   padding: 19px;
-  .channel-name{
-    padding:6px 0 6px 6px;
-  }
-  .badge-success {
-    background: #468847;
-  }
-  .badge-info {
-    background: #3a87ad;
+  .channel-name {
+    padding: 6px 0 6px 6px;
   }
 
   a {
@@ -44,13 +38,13 @@ body ,html,main,#app{
     left: -15px;
     position: absolute;
     right: auto;
-    top:-10px;
+    top: -10px;
   }
   li::before {
     border-left: 1px solid #999;
     bottom: 10px;
     height: 100%;
-    top: -13px;
+    top: -9px;
     width: 4px;
     -webkit-transition: border-color 0.1s ease 0.1s;
     -moz-transition: border-color 0.1s ease 0.1s;
@@ -59,8 +53,8 @@ body ,html,main,#app{
   }
   li::after {
     border-top: 1px solid #999;
-    height: 20px;
-    top: 18px;
+    height: 18px;
+    top: 22px;
     width: 18px;
     -webkit-transition: border-color 0.1s ease 0.1s;
     -moz-transition: border-color 0.1s ease 0.1s;
@@ -73,39 +67,46 @@ body ,html,main,#app{
     border: 1px solid #999;
     border-radius: 5px;
     display: inline-block;
-    line-height: 14px;
-    padding: 2px 4px;
+    line-height: 18px;
+    padding: 2px 6px;
     text-decoration: none;
     -webkit-transition: color .2s ease .1s, background-color .2s ease .1s, border-color .3s ease .2s;
     -moz-transition: color .2s ease .1s, background-color .2s ease .1s, border-color .3s ease .2s;
     -o-transition: color .2s ease .1s, background-color .2s ease .1s, border-color .3s ease .2s;
     transition: color .2s ease .1s, background-color .2s ease .1s, border-color .3s ease .2s;
   }
-  li.parent_li > span {
-    cursor: pointer;
+  li span .btn {
+    border: 0px;
   }
-  li.parent_li > span:hover {
-    background-color: #df8505;
-    border: 1px solid #c67605;
-    color: #fff;
+  .r-tree {
+    .r-tree-has-sub {
+      & > ul.r-tree-sub-list {
+        & > li.r-tree-sub-collapse {
+          span.channel-name {
+            background-color:#2D5B89;
+            color: #f0f0f0;
+          }
+          span.channel-name:hover {
+            background-color: #3a84cf;
+            border: 1px solid #c67605;
+            color: #fff;
+          }
+        }
+        span.channel-name:hover {
+          background-color: #df8505;
+          border: 1px solid #c67605;
+          color: #fff;
+        }
+      }
+    }
   }
-  li.parent_li > span:hover + ul li::after {
-    border-top-color: #f89406;
-  }
-  li.parent_li > span:hover + ul li::before {
-    border-left-color: #f89406;
-  }
-  li.parent_li > span:hover + ul li span {
-    background: #fddfb3;
-    border: 1px solid #faa937;
-    color: #000;
-  }
+
   li:last-child::before {
     height: 32px;
   }
 
-  &> ul > li::before,
-  &> ul > li::after {
+  & > ul > li::before,
+  & > ul > li::after {
     border: 0;
   }
 }
