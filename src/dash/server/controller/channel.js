@@ -74,14 +74,17 @@ class ChannelController extends ControllerBase {
         let channelType = body.channelType;
         //如果是文章栏目, 可以配置线上访问某个文章的URL
         let onlineUrl = ( body.onlineUrl || '' ).trim();
-
+        let category = (body.category || '').trim();
+        let section = (body.section || '').trim();
+        let needSearch = body.needSearch;
+        let docUrl = (body.docUrl || '').trim();
         if (!channelName) {
             return this.json({
                 status: -1,
                 message: `栏目名 不能为空!!`
             });
         }
-        console.log("action add in channle data data");
+
         let isTypeValid = Channel.isChannelTypeValida(channelType);
 
         let channelUrl = Channel.getChannelUrlByType(channelType);
@@ -99,16 +102,11 @@ class ChannelController extends ControllerBase {
 
             articleTemplate = body.articleTemplate;
 
-            // console.log( articleTemplate );
-
             try {
-
                 if (!articleTemplate) {
                     throw new Error('articleTemplate must not be empty for article channel!');
                 }
-
                 articleTemplate = JSON.parse(articleTemplate);
-
                 let out = cmsUtils.isArticleTemplateValid(articleTemplate);
 
                 if (out) {
@@ -143,8 +141,6 @@ class ChannelController extends ControllerBase {
                         message: out
                     });
                 }
-
-
             } catch (e) {
                 grape.log.warn(e);
                 return this.json({
@@ -156,8 +152,6 @@ class ChannelController extends ControllerBase {
         }
 
         let temp = await Channel.isNameExist(parentId, channelName);
-
-
         if (temp) {
             //已经存在同名的栏目
             return this.json({
@@ -172,9 +166,13 @@ class ChannelController extends ControllerBase {
             isSystem: false,
             url: channelUrl,
             onlineUrl: onlineUrl,
+            docUrl: docUrl,
+            section: section,
+            category: category,
+            needSearch: needSearch,
             articleTemplate: articleTemplate
         });
-        console.log(channel+"==this is channel");
+
         try {
             let out = await channel.save();
             this.json({
@@ -286,9 +284,7 @@ class ChannelController extends ControllerBase {
         if (Channel.isArticleChannel(channel.channelType)) {
             articleTemplate = body.articleTemplate;
 
-            // console.log( articleTemplate );
             try {
-
                 // articleTemplate = JSON.stringify( articleTemplate );
                 articleTemplate = JSON.parse(articleTemplate);
 
@@ -345,7 +341,7 @@ class ChannelController extends ControllerBase {
         this.json({
             status: 0,
             message: '更新栏目成功',
-            data : result
+            data: result
         });
     }
 

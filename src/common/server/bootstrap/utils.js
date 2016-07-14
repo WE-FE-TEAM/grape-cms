@@ -501,5 +501,4 @@ utils.validateJSON = function (jsonData, jsonSchema) {
     let ajv = new Ajv({  });
      validate = ajv.validate(jsonSchema, jsonData);
     return ajv.errors;
-
 };

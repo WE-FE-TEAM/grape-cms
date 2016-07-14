@@ -86,11 +86,11 @@ body, html, main, #app {
       & > ul.r-tree-sub-list {
         & > li.r-tree-sub-collapse {
           span.channel-name {
-            background-color:#2D5B89;
+            background-color:#3a84cf;
             color: #f0f0f0;
           }
           span.channel-name:hover {
-            background-color: #3a84cf;
+            background-color: #2D5B89;
             border: 1px solid #c67605;
             color: #fff;
           }
@@ -100,6 +100,7 @@ body, html, main, #app {
           border: 1px solid #c67605;
           color: #fff;
         }
+
       }
     }
   }

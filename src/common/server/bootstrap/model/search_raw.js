@@ -13,8 +13,6 @@ const mongoose = require('mongoose');
 
 const cms = global.cms;
 
-
-
 let searchRawSchema = new mongoose.Schema(
     {
         resourceName : {
@@ -50,7 +48,11 @@ let searchRawSchema = new mongoose.Schema(
             default : false
         },
         //提供给搜索使用的数据所属栏目层级关系
-        searchPath : {
+        section : {
+            type : String,
+            default : ''
+        },
+        category : {
             type : String,
             default : ''
         }
