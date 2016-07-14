@@ -5,16 +5,20 @@
   height: 50px;
   .user-name {
     float: right;
-    padding: 13px 15px 12px;
+    padding: 10px 15px 12px;
     line-height: 32px;
     margin: 0px 0px 0 40px;
   }
   .navbar-right {
     li > a {
-      color: #2D5B89;
+      color:#0055aa;
+      margin-left:10px;
+      padding-left:4px;
     }
     li > a:focus,a:hover {
-      color: #fff;
+      color: #2D5B89;
+      background: #eeeeff;
+     border-bottom:2px solid #0e90d2;
     }
   }
 

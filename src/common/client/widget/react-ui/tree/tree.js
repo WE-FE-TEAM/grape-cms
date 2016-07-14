@@ -90,8 +90,12 @@ class TreeNode extends React.Component {
     }
 
     componentDidMount() {
-        $(".channel-tree").find(".r-tree-has-sub .r-tree-sub-collapse").find("span").addClass("fa-plus-square-o");
-        $(".channel-tree").find(".no-sub").find("span").removeClass("fa-plus-square-o");
+        if( $(".channel-tree").find(".r-tree-has-sub .r-tree-sub-collapse")){
+            $(".channel-tree").find(".r-tree-has-sub .r-tree-sub-collapse").find("span").addClass("fa-plus-square-o");
+            $(".channel-tree").find(".no-sub").find("span").removeClass("fa-plus-square-o");
+
+        }
+
     }
 
     render() {

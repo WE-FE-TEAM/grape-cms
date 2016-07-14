@@ -16,9 +16,12 @@ body, html, main, #app {
   overflow-y: auto;
   padding: 19px;
   .channel-name {
+    margin-top:5px;
     padding: 6px 0 6px 6px;
   }
-
+.btn {
+  padding:5px 11px;
+}
   a {
     display: inline;
     overflow: hidden;
@@ -44,7 +47,7 @@ body, html, main, #app {
     border-left: 1px solid #999;
     bottom: 10px;
     height: 100%;
-    top: -9px;
+    top: -3px;
     width: 4px;
     -webkit-transition: border-color 0.1s ease 0.1s;
     -moz-transition: border-color 0.1s ease 0.1s;
@@ -54,7 +57,7 @@ body, html, main, #app {
   li::after {
     border-top: 1px solid #999;
     height: 18px;
-    top: 22px;
+    top: 28px;
     width: 18px;
     -webkit-transition: border-color 0.1s ease 0.1s;
     -moz-transition: border-color 0.1s ease 0.1s;

@@ -3,7 +3,6 @@
 
 {% block block_head_css %}
 <link rel="stylesheet" type="text/css" href="/client/static/dash/dash.scss">
-<link rel="stylesheet" type="text/css" href="/client/static/dash/custom.scss">
 <link rel="stylesheet" type="text/css" href="/client/static/dash/font-awesome.css">
 {% endblock %}
 
