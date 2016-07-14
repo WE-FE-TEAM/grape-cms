@@ -42,6 +42,21 @@ let channelSchema = new mongoose.Schema(
         },
         parentId : {
             type : mongoose.Schema.Types.ObjectId
+        },
+        //该栏目相关的文章地址
+        docUrl : {
+            type : String,
+            default : ''
+        },
+        //该栏目下的内容,是否需要被检索
+        needSearch : {
+            type : Boolean,
+            default : false
+        },
+        //提供给搜索使用的数据所属栏目层级关系
+        searchPath : {
+            type : String,
+            default : ''
         }
         // children : [ mongoose.Schema.Types.ObjectId ]
     },
