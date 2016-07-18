@@ -475,40 +475,36 @@ class DataController extends ControllerBase {
             } catch (e) {
                 return http.error(`保存发布记录失败`, e);
             }
-        }
-        let sdata = null;
-        let searchR = await SearchRaw.findOne({resourceId: jsondata.dataId, resourceType: "data"}).exec();
-        let searchData = null;
-        if (searchR) {
+
+            let sdata = null;
+            let searchR = await SearchRaw.findOne({resourceId: jsondata.dataId, resourceType: "data"}).exec();
+            let searchData = null;
+            if (searchR) {
                 searchData = searchR;
                 searchData.set("resourceName", jsondata.dataName);
                 searchData.set("data", jsondata.data);
-        } else {
-            let url = (channel.onlineUrl || '').trim();
-            url = url.replace(/\{\{dataId\}\}/g, jsondata.dataId);
-            let category = (channel.category || '').trim();
-            let section = (channel.section || '').trim();
-            let needSearch = channel.needSearch;
-            let docUrl = (channel.docUrl || '').trim();
-            searchData = new SearchRaw({
-                resourceName: jsondata.dataName,
-                resourceType: "data",
-                resourceId: jsondata.dataId,
-                accessUrl: url,
-                data: jsondata.data,
-                docUrl: docUrl,
-                needSearch: needSearch,
-                section: section,
-                category: category
-            });
-        }
+            } else {
+                let url = (channel.onlineUrl || '').trim();
+                url = url.replace(/\{\{dataId\}\}/g, jsondata.dataId);
+                let category = (channel.category || '').trim();
+                let section = (channel.section || '').trim();
+                searchData = new SearchRaw({
+                    resourceName: jsondata.dataName,
+                    resourceType: "data",
+                    resourceId: jsondata.dataId,
+                    accessUrl: url,
+                    data: jsondata.data,
+                    section: section,
+                    category: category
+                });
+            }
 
-        try {
-            sdata = await searchData.save();
-        } catch (e) {
-            return http.error(`保存数据searchRaw记录失败`, e);
+            try {
+                sdata = await searchData.save();
+            } catch (e) {
+                return http.error(`保存数据searchRaw记录失败`, e);
+            }
         }
-
 
         this.json({
             status: 0,

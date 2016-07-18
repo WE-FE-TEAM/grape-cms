@@ -37,16 +37,6 @@ let searchRawSchema = new mongoose.Schema(
         data : {
             type : mongoose.Schema.Types.Mixed
         },
-        //该栏目相关的文档地址
-        docUrl : {
-            type : String,
-            default : ''
-        },
-        //该栏目下的内容,是否需要被检索
-        needSearch : {
-            type : Boolean,
-            default : false
-        },
         //提供给搜索使用的数据所属栏目层级关系
         section : {
             type : String,
@@ -56,7 +46,6 @@ let searchRawSchema = new mongoose.Schema(
             type : String,
             default : ''
         }
-        
     },
     {
         minimize : false,

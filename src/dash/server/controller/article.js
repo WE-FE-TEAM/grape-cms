@@ -471,39 +471,35 @@ class ArticleController extends ControllerBase {
             } catch (e) {
                 return http.error(`保存发布记录失败`, e);
             }
-        }
-        let sdata = null;
-        let url = (channel.onlineUrl || '').trim();
-        url = url.replace(/\{\{articleId\}\}/g, article.articleId);
-        let category = (channel.category || '').trim();
-        let section = (channel.section || '').trim();
-        let needSearch = channel.needSearch;
-        let docUrl = (channel.docUrl || '').trim();
-        let searchR = await SearchRaw.findOne({resourceId: article.articleId, resourceType: "article"}).exec();
-        let searchData = null;
-        if (searchR) {
-            searchData = searchR;
-            searchData.set("resourceName", article.articleName);
-            searchData.set("data", article.data);
-        } else {
-            searchData = new SearchRaw({
-                resourceName: article.articleName,
-                resourceType: "article",
-                resourceId: article.articleId,
-                accessUrl: url,
-                data: article.data,
-                docUrl: docUrl,
-                needSearch: needSearch,
-                section: section,
-                category: category
-            });
-        }
-        try {
-            sdata = await searchData.save();
-        } catch (e) {
-            return http.error(`保存文章searchRaw记录失败`, e);
-        }
 
+            let sdata = null;
+            let url = (channel.onlineUrl || '').trim();
+            url = url.replace(/\{\{articleId\}\}/g, article.articleId);
+            let category = (channel.category || '').trim();
+            let section = (channel.section || '').trim();
+            let searchR = await SearchRaw.findOne({resourceId: article.articleId, resourceType: "article"}).exec();
+            let searchData = null;
+            if (searchR) {
+                searchData = searchR;
+                searchData.set("resourceName", article.articleName);
+                searchData.set("data", article.data);
+            } else {
+                searchData = new SearchRaw({
+                    resourceName: article.articleName,
+                    resourceType: "article",
+                    resourceId: article.articleId,
+                    accessUrl: url,
+                    data: article.data,
+                    section: section,
+                    category: category
+                });
+            }
+            try {
+                sdata = await searchData.save();
+            } catch (e) {
+                return http.error(`保存文章searchRaw记录失败`, e);
+            }
+        }
         this.json({
             status: 0,
             message: '发布文章成功',
