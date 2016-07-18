@@ -55,13 +55,13 @@ class EditChannelDialog extends React.Component{
         let onlineUrl = ( this.refs.onlineUrl.getValue() || '' ).trim();
 
         if (needSearch) {
-            if (section== null || section== "") {
+            if (!section) {
                 this.setState({
                     errorMsg: 'section不能为空!'
                 });
                 return;
             }
-            if(onlineUrl==null||onlineUrl==''){
+            if(!onlineUrl){
                 this.setState({
                     errorMsg: '文章访问Url不能为空!'
                 });

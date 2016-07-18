@@ -58,7 +58,7 @@ class AppData extends React.Component {
 
         url = url.replace(/\{\{dataId\}\}/g, mjsondata.dataId);
 
-        if( url[0] === '/' ){
+        if (url[0] === '/') {
             //URL不包含域名部分, 使用和当前CMS部署相同的域名端口
             url = location.protocol + '//' + location.host + url;
         }
@@ -73,6 +73,7 @@ class AppData extends React.Component {
         }
         window.open(url);
     }
+
     //说明文档展示
     onExplain() {
         let channel = this.props.channel;
@@ -96,7 +97,7 @@ class AppData extends React.Component {
             recordId: mjsondata.recordId,
             releaseType: 'preview'
         };
-        console.log(data.channelId + "chnann=" + data.recordId + "====dataid + datareleasetyoe" + data.releaseType);
+
         dataService.publishData(data)
             .then((req) => {
                 if (req.requestStatus === dataService.STATUS.SUCCESS) {
@@ -151,7 +152,7 @@ class AppData extends React.Component {
             recordId: json_data.recordId,
             releaseType: 'publish'
         };
-        console.log("datapublish"+data.channelId + "chnann=" + data.recordId + "====dataid + datareleasetyoe" + data.releaseType);
+
         dataService.publishData(data)
             .then((req) => {
                 if (req.requestStatus === dataService.STATUS.SUCCESS) {
@@ -214,10 +215,10 @@ class AppData extends React.Component {
         let publishBtn = null;
         let historyCon = null;
         let cancelEditBtn = null;
-        let explainBtn=null;
+        let explainBtn = null;
         let currentReleaseBtn = null;
 
-        if( props.jsondata ){
+        if (props.jsondata) {
 
             let data = {
                 channelId: props.channel._id,
@@ -232,6 +233,7 @@ class AppData extends React.Component {
         }
 
         let title = '';
+        let docUrl = props.channel.docUrl;
         if (props.action === ACTION_VIEW) {
             isView = true;
             title = '查看文章';
@@ -262,26 +264,33 @@ class AppData extends React.Component {
             publishBtn = (
                 <span className="btn btn-danger" onClick={ this.onDataPublish }>{ publishText }</span>
             );
-            explainBtn = (
-                <span className="btn btn-info" onClick={this.onExplain}>说明文档</span>
-            );
+
             historyCon = <DataEditHistory channelId={ props.channel._id } dataId={ props.jsondata.dataId }/>;
+            if(docUrl){
+                explainBtn = (
+                    <span className="btn btn-info" onClick={this.onExplain}>说明文档</span>
+                );
+            }
         }
         else if (props.action === ACTION_ADD) {
 
             isAdd = true;
             title = '新增json数据';
-            explainBtn = (
-                <span className="btn btn-info" onClick={this.onExplain}>说明文档</span>
-            );
+            if(docUrl){
+                explainBtn = (
+                    <span className="btn btn-info" onClick={this.onExplain}>说明文档</span>
+                );
+            }
         } else if (props.action === ACTION_EDIT) {
 
             isEdit = true;
             title = '编辑json数据';
 
-            explainBtn = (
-                <span className="btn btn-info" onClick={this.onExplain}>说明文档</span>
-            );
+            if(docUrl){
+                explainBtn = (
+                    <span className="btn btn-info" onClick={this.onExplain}>说明文档</span>
+                );
+            }
             cancelEditBtn = (
                 <span className="btn btn-info" onClick={ this.onCancelEdit }>退出编辑</span>
             );

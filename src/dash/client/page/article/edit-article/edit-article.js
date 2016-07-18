@@ -248,7 +248,7 @@ class App extends React.Component {
             );
 
         }
-
+        let docUrl=props.channel.docUrl;
         let title = '';
         if (props.action === ACTION_VIEW) {
             isView = true;
@@ -259,6 +259,7 @@ class App extends React.Component {
                 recordId: props.article._id
             };
             let editUrl = '/cms/dash/article/edit?' + utils.json2query(data);
+
             editBtn = (
                 <a className="btn btn-warning" target="_self" href={ editUrl }>编辑文章</a>
             );
@@ -280,24 +281,30 @@ class App extends React.Component {
             publishBtn = (
                 <span className="btn btn-danger" onClick={ this.onArticlePublish }>{ publishText }</span>
             );
-            explainBtn = (
-                <span className="btn btn-info" onClick={this.onExplain}>说明文档</span>
-            );
-            historyCon = <ArticleEditHistory channelId={ props.channel._id } articleId={ props.article.articleId }/>;
 
+            historyCon = <ArticleEditHistory channelId={ props.channel._id } articleId={ props.article.articleId }/>;
+            if(docUrl){
+                explainBtn = (
+                    <span className="btn btn-info" onClick={this.onExplain}>说明文档</span>
+                );
+            }
         } else if (props.action === ACTION_ADD) {
             isAdd = true;
             title = '新增文章';
-            explainBtn = (
-                <span className="btn btn-info" onClick={this.onExplain}>说明文档</span>
-            );
+            if(docUrl){
+                explainBtn = (
+                    <span className="btn btn-info" onClick={this.onExplain}>说明文档</span>
+                );
+            }
         } else if (props.action === ACTION_EDIT) {
 
             isEdit = true;
             title = '编辑文章';
-            explainBtn = (
-                <span className="btn btn-info" onClick={this.onExplain}>说明文档</span>
-            );
+            if(docUrl){
+                explainBtn = (
+                    <span className="btn btn-info" onClick={this.onExplain}>说明文档</span>
+                );
+            }
             cancelEditBtn = (
                 <span className="btn btn-info" onClick={ this.onCancelEdit }>退出编辑</span>
             );

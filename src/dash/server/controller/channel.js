@@ -78,13 +78,27 @@ class ChannelController extends ControllerBase {
         let section = (body.section || '').trim();
         let needSearch = body.needSearch;
         let docUrl = (body.docUrl || '').trim();
+
         if (!channelName) {
             return this.json({
                 status: -1,
                 message: `栏目名 不能为空!!`
             });
         }
-
+        if (needSearch) {
+            if (!section) {
+                return this.json({
+                    status: -1,
+                    message: `section字段 不能为空!!`
+                });
+            }
+            if(!onlineUrl){
+                return this.json({
+                    status: -1,
+                    message: `文章访问URL 不能为空!!`
+                });
+            }
+        }
         let isTypeValid = Channel.isChannelTypeValida(channelType);
 
         let channelUrl = Channel.getChannelUrlByType(channelType);
@@ -249,7 +263,20 @@ class ChannelController extends ControllerBase {
                 message: `栏目名 不能为空!!`
             });
         }
-
+        if (needSearch) {
+            if (!section) {
+                return this.json({
+                    status: -1,
+                    message: `section字段 不能为空!!`
+                });
+            }
+            if(!onlineUrl){
+                return this.json({
+                    status: -1,
+                    message: `文章访问URL 不能为空!!`
+                });
+            }
+        }
         let channel = null;
         try {
             channel = await Channel.findOne({_id: channelId}).exec();
@@ -341,7 +368,7 @@ class ChannelController extends ControllerBase {
             articleTemplate: articleTemplate,
             onlineUrl: onlineUrl
         }).exec();
-        
+
         grape.log.info(result);
 
         this.json({
