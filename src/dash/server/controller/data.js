@@ -76,11 +76,11 @@ class DataController extends ControllerBase {
         }
         let jsonSchema = channel.articleTemplate;
 
-        if( jsonSchema ){
+        if (jsonSchema) {
             let errors = cmsUtils.validateJSON(data, jsonSchema);
 
-            if ( errors && errors.length > 0) {
-                grape.console.log( errors );
+            if (errors && errors.length > 0) {
+                grape.console.log(errors);
                 let error = errors[0];
                 return http.error(`JSON数据格式有误: ${error.dataPath} ${error.message}`);
             }
@@ -294,11 +294,11 @@ class DataController extends ControllerBase {
         }
         let jsonSchema = channel.articleTemplate;
 
-        if( jsonSchema ){
+        if (jsonSchema) {
             let errors = cmsUtils.validateJSON(data, jsonSchema);
 
-            if ( errors && errors.length > 0) {
-                grape.console.log( errors );
+            if (errors && errors.length > 0) {
+                grape.console.log(errors);
                 let error = errors[0];
                 return http.error(`JSON数据格式有误: ${error.dataPath} ${error.message}`);
             }
@@ -415,13 +415,13 @@ class DataController extends ControllerBase {
     async doPublishAction() {
         const Channel = this.model('Channel');
         const Data = this.model('Data');
-
+        const SearchRaw = this.model('SearchRaw');
         let http = this.http;
 
         let user = http.getUser();
 
         let query = http.req.body;
-        console.log(JSON.stringify(query) + "query http http");
+
         let channelId = http.getChannelId();
         let dataId = ( query.dataId || '' ).trim();
         let recordId = ( query.recordId || '' ).trim();
@@ -438,13 +438,9 @@ class DataController extends ControllerBase {
         if (!channel) {
             return http.error(`指定的栏目不存在! 栏目ID: ${channelId}`);
         }
-
         let jsondata = null;
-
         try {
-
             jsondata = await Data.findOne({channelId: channelId, _id: recordId}).lean(true);
-
         } catch (e) {
             grape.log.warn(e);
             return http.error(`获取指定的数据详情出错!`, e);
@@ -480,6 +476,39 @@ class DataController extends ControllerBase {
                 return http.error(`保存发布记录失败`, e);
             }
         }
+        let sdata = null;
+        let searchR = await SearchRaw.findOne({resourceId: jsondata.dataId, resourceType: "data"}).exec();
+        let searchData = null;
+        if (searchR) {
+                searchData = searchR;
+                searchData.set("resourceName", jsondata.dataName);
+                searchData.set("data", jsondata.data);
+        } else {
+            let url = (channel.onlineUrl || '').trim();
+            url = url.replace(/\{\{dataId\}\}/g, jsondata.dataId);
+            let category = (channel.category || '').trim();
+            let section = (channel.section || '').trim();
+            let needSearch = channel.needSearch;
+            let docUrl = (channel.docUrl || '').trim();
+            searchData = new SearchRaw({
+                resourceName: jsondata.dataName,
+                resourceType: "data",
+                resourceId: jsondata.dataId,
+                accessUrl: url,
+                data: jsondata.data,
+                docUrl: docUrl,
+                needSearch: needSearch,
+                section: section,
+                category: category
+            });
+        }
+
+        try {
+            sdata = await searchData.save();
+        } catch (e) {
+            return http.error(`保存数据searchRaw记录失败`, e);
+        }
+
 
         this.json({
             status: 0,

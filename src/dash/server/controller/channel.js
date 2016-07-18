@@ -239,7 +239,10 @@ class ChannelController extends ControllerBase {
         let channelId = body.channelId;
         let channelName = ( body.channelName || '' ).trim();
         let onlineUrl = ( body.onlineUrl || '' ).trim();
-
+        let category = (body.category || '').trim();
+        let section = (body.section || '').trim();
+        let needSearch = body.needSearch;
+        let docUrl = (body.docUrl || '').trim();
         if (!channelName) {
             return this.json({
                 status: -1,
@@ -311,7 +314,6 @@ class ChannelController extends ControllerBase {
 
                 // articleTemplate = JSON.stringify( articleTemplate );
                 articleTemplate = JSON.parse(articleTemplate);
-
                 let out = cmsUtils.isDataTemplateValid(articleTemplate);
 
                 if (out) {
@@ -331,11 +333,15 @@ class ChannelController extends ControllerBase {
         }
 
         let result = await channel.update({
+            section:section,
+            category:category,
+            needSearch:needSearch,
+            docUrl:docUrl,
             channelName: channelName,
             articleTemplate: articleTemplate,
             onlineUrl: onlineUrl
         }).exec();
-
+        
         grape.log.info(result);
 
         this.json({

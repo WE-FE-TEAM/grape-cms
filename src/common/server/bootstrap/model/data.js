@@ -133,7 +133,6 @@ dataSchema.statics.getDataNumberOfChannel = async function (channelId) {
         }
     ]).exec();
 
-    console.log(out, channelId);
 
     num = out.length;
 
@@ -205,9 +204,9 @@ dataSchema.statics.getEditHistory = async function (dataId) {
 
     const Data = mongoose.model('Data');
     const User = mongoose.model('User');
-    console.log("arr in model getEdithistoty+" +dataId);
+
     let arr = await  Data.find({dataId: dataId}).sort({createdAt: -1}).lean(true);
-    console.log("arr in model getEdithistoty+" + arr);
+
     out = await Promise.all(arr.map(function (jsondata, index) {
 
         //查找编辑的用户和发布的用户
@@ -239,7 +238,7 @@ dataSchema.statics.getEditHistory = async function (dataId) {
             return jsondata;
         });
     }));
-    console.log("out outout out " + JSON.stringify(out));
+
     return out;
 };
 

@@ -49,8 +49,9 @@ class EditChannelDialog extends React.Component{
 
         let section = (this.refs.sectionInput.getValue() || '' ).trim();
         let category = (this.refs.categoryInput.getValue() || '' ).trim();
+
         let needSearch = this.refs.checkboxSelector.state.checked;
-        let docURL = (this.refs.readmeDoc.getValue()|| '' ).trim();
+        let docUrl = (this.refs.readmeDoc.getValue()|| '' ).trim();
         let onlineUrl = ( this.refs.onlineUrl.getValue() || '' ).trim();
 
         if (needSearch) {
@@ -88,6 +89,10 @@ class EditChannelDialog extends React.Component{
 
         //只能修改 栏目名/文章模板
         let data = {
+            section:section,
+            category:category,
+            needSearch:needSearch,
+            docUrl:docUrl,
             channelId : channel._id,
             channelName : this.refs.channelName.getValue(),
             onlineUrl : onlineUrl,
@@ -171,13 +176,13 @@ class EditChannelDialog extends React.Component{
                     <div className="form-group">
                         <label for="sectionInput" className="col-sm-2 control-label">Section</label>
                         <div className="col-sm-9">
-                            <TextInput ref="sectionInput" name="Section" defaultValue={channel.section}/>
+                            <TextInput ref="sectionInput" name="Section" value={channel.section}/>
                         </div>
                     </div>
                     <div className="form-group">
                         <label for="categoryInput" className="col-sm-2 control-label">Category</label>
                         <div className="col-sm-9">
-                            <TextInput ref="categoryInput" name="Category" defaultValue={channel.category}/>
+                            <TextInput ref="categoryInput" name="Category" value={channel.category}/>
                         </div>
                     </div>
 
@@ -190,7 +195,7 @@ class EditChannelDialog extends React.Component{
                     <div className="form-group">
                         <label for="readmeDoc" className="col-sm-2 control-label">说明文档URL</label>
                         <div className="col-sm-9">
-                            <TextInput ref="readmeDoc" name="readmeDoc" value={channel.docURL}/>
+                            <TextInput ref="readmeDoc" name="readmeDoc" value={channel.docUrl}/>
                         </div>
                     </div>
                     <div className="form-group">

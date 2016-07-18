@@ -1,7 +1,9 @@
 
 .edit-channel-dialog{
 
-
+.col-sm-9{
+  padding-top:6px;
+}
   //错误消息
   .error-info{
     color: red;
@@ -10,5 +12,6 @@
     text-align:right;
     margin-left:15px;
   }
+
 
 }

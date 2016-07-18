@@ -43,6 +43,7 @@ class App extends React.Component {
         this.onArticlePublishPreview = this.onArticlePublishPreview.bind(this);
         this.onArticlePublish = this.onArticlePublish.bind(this);
         this.onCancelEdit = this.onCancelEdit.bind(this);
+        this.onExplain = this.onExplain.bind(this);
     }
 
     openOnlinePage(type) {
@@ -62,7 +63,7 @@ class App extends React.Component {
 
         url = url.replace(/\{\{articleId\}\}/g, article.articleId);
 
-        if( url[0] === '/' ){
+        if (url[0] === '/') {
             //URL不包含域名部分, 使用和当前CMS部署相同的域名端口
             url = location.protocol + '//' + location.host + url;
         }
@@ -135,6 +136,13 @@ class App extends React.Component {
 
     }
 
+    //说明文档展示
+    onExplain() {
+        let channel = this.props.channel;
+        let viewUrl = channel.docUrl;
+        location.href = viewUrl;
+    }
+
     //异步发布文章
     onArticlePublish() {
 
@@ -203,7 +211,6 @@ class App extends React.Component {
         };
 
         let viewUrl = '/cms/dash/article/view?' + utils.json2query(data);
-
         location.href = viewUrl;
     }
 
@@ -218,6 +225,8 @@ class App extends React.Component {
         let isAdd = false;
         let isEdit = false;
 
+        let explainBtn = null;
+
         let editBtn = null;
         let publishPreviewBtn = null;
         let publishBtn = null;
@@ -226,7 +235,7 @@ class App extends React.Component {
 
         let currentReleaseBtn = null;
 
-        if( article ){
+        if (article) {
 
             let data = {
                 channelId: props.channel._id,
@@ -271,17 +280,24 @@ class App extends React.Component {
             publishBtn = (
                 <span className="btn btn-danger" onClick={ this.onArticlePublish }>{ publishText }</span>
             );
-
+            explainBtn = (
+                <span className="btn btn-info" onClick={this.onExplain}>说明文档</span>
+            );
             historyCon = <ArticleEditHistory channelId={ props.channel._id } articleId={ props.article.articleId }/>;
 
         } else if (props.action === ACTION_ADD) {
             isAdd = true;
             title = '新增文章';
+            explainBtn = (
+                <span className="btn btn-info" onClick={this.onExplain}>说明文档</span>
+            );
         } else if (props.action === ACTION_EDIT) {
 
             isEdit = true;
             title = '编辑文章';
-
+            explainBtn = (
+                <span className="btn btn-info" onClick={this.onExplain}>说明文档</span>
+            );
             cancelEditBtn = (
                 <span className="btn btn-info" onClick={ this.onCancelEdit }>退出编辑</span>
             );
@@ -298,6 +314,7 @@ class App extends React.Component {
                 <div className="operation-bar">
                     { currentReleaseBtn }
                     { publishPreviewBtn }
+                    {explainBtn}
                     { editBtn }
                     { publishBtn }
                     { cancelEditBtn }

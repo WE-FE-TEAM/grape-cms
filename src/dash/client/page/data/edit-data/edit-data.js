@@ -38,6 +38,7 @@ class AppData extends React.Component {
         this.onDataPublishPreview = this.onDataPublishPreview.bind(this);
         this.onDataPublish = this.onDataPublish.bind(this);
         this.onCancelEdit = this.onCancelEdit.bind(this);
+        this.onExplain = this.onExplain.bind(this);
     }
 
     openOnlinePage(type) {
@@ -71,6 +72,12 @@ class AppData extends React.Component {
             url += '&cmsPreview=1';
         }
         window.open(url);
+    }
+    //说明文档展示
+    onExplain() {
+        let channel = this.props.channel;
+        let viewUrl = channel.docUrl;
+        location.href = viewUrl;
     }
 
     onDataPublishPreview() {
@@ -207,7 +214,7 @@ class AppData extends React.Component {
         let publishBtn = null;
         let historyCon = null;
         let cancelEditBtn = null;
-
+        let explainBtn=null;
         let currentReleaseBtn = null;
 
         if( props.jsondata ){
@@ -255,17 +262,26 @@ class AppData extends React.Component {
             publishBtn = (
                 <span className="btn btn-danger" onClick={ this.onDataPublish }>{ publishText }</span>
             );
+            explainBtn = (
+                <span className="btn btn-info" onClick={this.onExplain}>说明文档</span>
+            );
             historyCon = <DataEditHistory channelId={ props.channel._id } dataId={ props.jsondata.dataId }/>;
         }
         else if (props.action === ACTION_ADD) {
+
             isAdd = true;
             title = '新增json数据';
-
+            explainBtn = (
+                <span className="btn btn-info" onClick={this.onExplain}>说明文档</span>
+            );
         } else if (props.action === ACTION_EDIT) {
 
             isEdit = true;
             title = '编辑json数据';
-            console.log(title + "props.jsondat.dataid" + props.jsondata.dataId);
+
+            explainBtn = (
+                <span className="btn btn-info" onClick={this.onExplain}>说明文档</span>
+            );
             cancelEditBtn = (
                 <span className="btn btn-info" onClick={ this.onCancelEdit }>退出编辑</span>
             );
@@ -281,6 +297,7 @@ class AppData extends React.Component {
                 <div className="operation-bar">
                     { currentReleaseBtn }
                     { publishPreviewBtn }
+                    {explainBtn}
                     { editBtn }
                     { publishBtn }
                     { cancelEditBtn }
