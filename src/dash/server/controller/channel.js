@@ -85,14 +85,14 @@ class ChannelController extends ControllerBase {
                 message: `栏目名 不能为空!!`
             });
         }
-        if (needSearch) {
+        if (needSearch == "true") {
             if (!section) {
                 return this.json({
                     status: -1,
                     message: `section字段 不能为空!!`
                 });
             }
-            if(!onlineUrl){
+            if (!onlineUrl) {
                 return this.json({
                     status: -1,
                     message: `文章访问URL 不能为空!!`
@@ -256,6 +256,7 @@ class ChannelController extends ControllerBase {
         let category = (body.category || '').trim();
         let section = (body.section || '').trim();
         let needSearch = body.needSearch;
+        console.log(needSearch);
         let docUrl = (body.docUrl || '').trim();
         if (!channelName) {
             return this.json({
@@ -263,17 +264,17 @@ class ChannelController extends ControllerBase {
                 message: `栏目名 不能为空!!`
             });
         }
-        if (needSearch) {
+        if (needSearch == "true") {
             if (!section) {
                 return this.json({
                     status: -1,
                     message: `section字段 不能为空!!`
                 });
             }
-            if(!onlineUrl){
+            if (!onlineUrl) {
                 return this.json({
                     status: -1,
-                    message: `文章访问URL 不能为空!!`
+                    message: `文章访问URL 不能为空!!!`
                 });
             }
         }
@@ -360,10 +361,10 @@ class ChannelController extends ControllerBase {
         }
 
         let result = await channel.update({
-            section:section,
-            category:category,
-            needSearch:needSearch,
-            docUrl:docUrl,
+            section: section,
+            category: category,
+            needSearch: needSearch,
+            docUrl: docUrl,
             channelName: channelName,
             articleTemplate: articleTemplate,
             onlineUrl: onlineUrl

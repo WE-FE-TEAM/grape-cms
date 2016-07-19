@@ -336,7 +336,6 @@ class App extends React.Component {
 
 
 let singleton = {
-
     init: function (args) {
 
         let action = args.action;

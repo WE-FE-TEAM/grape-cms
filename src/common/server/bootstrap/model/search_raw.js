@@ -30,7 +30,7 @@ let searchRawSchema = new mongoose.Schema(
         },
         //该资源对外访问的URL
         accessUrl : {
-            type : String  ,
+            type : String,
             required : true
         },
         //文章栏目, 具有此字段, 用来生成文章编辑时需要填写的内容

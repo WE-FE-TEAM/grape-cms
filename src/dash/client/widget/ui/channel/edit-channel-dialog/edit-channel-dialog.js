@@ -53,7 +53,7 @@ class EditChannelDialog extends React.Component{
         let needSearch = this.refs.checkboxSelector.state.checked;
         let docUrl = (this.refs.readmeDoc.getValue()|| '' ).trim();
         let onlineUrl = ( this.refs.onlineUrl.getValue() || '' ).trim();
-
+    
         if (needSearch) {
             if (!section) {
                 this.setState({

@@ -413,6 +413,7 @@ class DataController extends ControllerBase {
     //异步接口: 发布数据到线上, 用户可以发布json数据的某一次编辑内容
     //每次发布, 都会插入一条新的历史记录
     async doPublishAction() {
+          console.log("publish action");
         const Channel = this.model('Channel');
         const Data = this.model('Data');
         const SearchRaw = this.model('SearchRaw');
@@ -461,6 +462,7 @@ class DataController extends ControllerBase {
 
         //如果是正式发布, 需要插入一条新的记录
         if (releaseType === 'publish') {
+            console.log("publish publish zhengshide");
             let record = new Data({
                 channelId: jsondata.channelId,
                 dataId: jsondata.dataId,
@@ -488,6 +490,7 @@ class DataController extends ControllerBase {
                 url = url.replace(/\{\{dataId\}\}/g, jsondata.dataId);
                 let category = (channel.category || '').trim();
                 let section = (channel.section || '').trim();
+               console.log("url"+url+"category"+category+"section"+section);
                 searchData = new SearchRaw({
                     resourceName: jsondata.dataName,
                     resourceType: "data",
@@ -498,10 +501,13 @@ class DataController extends ControllerBase {
                     category: category
                 });
             }
-
+            
+            console.log("category"+JSON.stringify(searchData));
             try {
+                console.log("publish data"+jsondata.dataName+JSON.stringify(searchData));
                 sdata = await searchData.save();
             } catch (e) {
+                console.log(e+e.type+e.message);
                 return http.error(`保存数据searchRaw记录失败`, e);
             }
         }

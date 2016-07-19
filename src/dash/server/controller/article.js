@@ -494,7 +494,9 @@ class ArticleController extends ControllerBase {
                     category: category
                 });
             }
+            console.log("category" + JSON.stringify(searchData));
             try {
+                console.log("publish data" + article.articleName + JSON.stringify(searchData));
                 sdata = await searchData.save();
             } catch (e) {
                 return http.error(`保存文章searchRaw记录失败`, e);
