@@ -471,36 +471,39 @@ class ArticleController extends ControllerBase {
             } catch (e) {
                 return http.error(`保存发布记录失败`, e);
             }
+            let needSearch=channel.needSearch;
+            if(needSearch){
+                let sdata = null;
+                let url = (channel.onlineUrl || '').trim();
+                url = url.replace(/\{\{articleId\}\}/g, article.articleId);
+                let category = (channel.category || '').trim();
+                let section = (channel.section || '').trim();
+                let searchR = await SearchRaw.findOne({resourceId: article.articleId, resourceType: "article"}).exec();
+                let searchData = null;
+                if (searchR) {
+                    searchData = searchR;
+                    searchData.set("resourceName", article.articleName);
+                    searchData.set("data", article.data);
+                } else {
+                    searchData = new SearchRaw({
+                        resourceName: article.articleName,
+                        resourceType: "article",
+                        resourceId: article.articleId,
+                        accessUrl: url,
+                        data: article.data,
+                        section: section,
+                        category: category
+                    });
+                }
+                try {
+                   grape.console.log("save article into SearchRaw");
+                    sdata = await searchData.save();
+                } catch (e) {
+                    return http.error(`保存文章searchRaw记录失败`, e);
+                }
 
-            let sdata = null;
-            let url = (channel.onlineUrl || '').trim();
-            url = url.replace(/\{\{articleId\}\}/g, article.articleId);
-            let category = (channel.category || '').trim();
-            let section = (channel.section || '').trim();
-            let searchR = await SearchRaw.findOne({resourceId: article.articleId, resourceType: "article"}).exec();
-            let searchData = null;
-            if (searchR) {
-                searchData = searchR;
-                searchData.set("resourceName", article.articleName);
-                searchData.set("data", article.data);
-            } else {
-                searchData = new SearchRaw({
-                    resourceName: article.articleName,
-                    resourceType: "article",
-                    resourceId: article.articleId,
-                    accessUrl: url,
-                    data: article.data,
-                    section: section,
-                    category: category
-                });
             }
-            console.log("category" + JSON.stringify(searchData));
-            try {
-                console.log("publish data" + article.articleName + JSON.stringify(searchData));
-                sdata = await searchData.save();
-            } catch (e) {
-                return http.error(`保存文章searchRaw记录失败`, e);
-            }
+
         }
         this.json({
             status: 0,

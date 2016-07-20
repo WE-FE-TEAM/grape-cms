@@ -28,7 +28,7 @@ body{
 }
 
 #dash-menu{
-  margin-left:0px;
+  margin:0 0 20px 0;
   background:#2A3F54;
   color:#fff;
   font-size:1.1em;
@@ -51,11 +51,8 @@ body{
  }
   .menu-item{
     padding:2px 0px 2px 0px;
-
   }
- .menu-item-text{
 
- }
   .menu-item-selected{
      color:#fff;
      background:#73879C;
@@ -159,7 +156,7 @@ body{
   }
   .nav.child_menu > li > a {
     color: rgba(255, 255, 255, 0.75);
-    font-size: 12px;
+    font-size: 13px;
     padding:8px 0 4px 12px;
   }
 

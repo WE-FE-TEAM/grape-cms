@@ -27,7 +27,7 @@ class DataController extends ControllerBase {
 
         let channel = await Channel.findOne({_id: channelId}).lean(true);
         // let json = await cmsUtils.getDefaultJSON();
-        // console.log("add action json" + json + "json" + JSON.stringify(json));
+        
 
         http.assign('channel', channel);
         http.assign('action', 'add');
@@ -413,7 +413,7 @@ class DataController extends ControllerBase {
     //异步接口: 发布数据到线上, 用户可以发布json数据的某一次编辑内容
     //每次发布, 都会插入一条新的历史记录
     async doPublishAction() {
-          console.log("publish action");
+
         const Channel = this.model('Channel');
         const Data = this.model('Data');
         const SearchRaw = this.model('SearchRaw');
@@ -462,7 +462,7 @@ class DataController extends ControllerBase {
 
         //如果是正式发布, 需要插入一条新的记录
         if (releaseType === 'publish') {
-            console.log("publish publish zhengshide");
+
             let record = new Data({
                 channelId: jsondata.channelId,
                 dataId: jsondata.dataId,
@@ -478,38 +478,43 @@ class DataController extends ControllerBase {
                 return http.error(`保存发布记录失败`, e);
             }
 
-            let sdata = null;
-            let searchR = await SearchRaw.findOne({resourceId: jsondata.dataId, resourceType: "data"}).exec();
-            let searchData = null;
-            if (searchR) {
-                searchData = searchR;
-                searchData.set("resourceName", jsondata.dataName);
-                searchData.set("data", jsondata.data);
-            } else {
-                let url = (channel.onlineUrl || '').trim();
-                url = url.replace(/\{\{dataId\}\}/g, jsondata.dataId);
-                let category = (channel.category || '').trim();
-                let section = (channel.section || '').trim();
-               console.log("url"+url+"category"+category+"section"+section);
-                searchData = new SearchRaw({
-                    resourceName: jsondata.dataName,
-                    resourceType: "data",
-                    resourceId: jsondata.dataId,
-                    accessUrl: url,
-                    data: jsondata.data,
-                    section: section,
-                    category: category
-                });
+            let needSearch=channel.needSearch;
+
+            if(needSearch){
+
+                let searchData = null;
+                let sdata = null;
+                let searchR = await SearchRaw.findOne({resourceId: jsondata.dataId, resourceType: "data"}).exec();
+                if (searchR) {
+                    searchData = searchR;
+                    searchData.set("resourceName", jsondata.dataName);
+                    searchData.set("data", jsondata.data);
+                } else {
+                    let url = (channel.onlineUrl || '').trim();
+                    url = url.replace(/\{\{dataId\}\}/g, jsondata.dataId);
+                    let category = (channel.category || '').trim();
+                    let section = (channel.section || '').trim();
+
+                    searchData = new SearchRaw({
+                        resourceName: jsondata.dataName,
+                        resourceType: "data",
+                        resourceId: jsondata.dataId,
+                        accessUrl: url,
+                        data: jsondata.data,
+                        section: section,
+                        category: category
+                    });
+                }
+
+                try {
+                    sdata = await searchData.save();
+                    grape.console.log("save data into searchRaw");
+                } catch (e) {
+                    return http.error(`保存数据searchRaw记录失败`, e);
+                }
             }
-            
-            console.log("category"+JSON.stringify(searchData));
-            try {
-                console.log("publish data"+jsondata.dataName+JSON.stringify(searchData));
-                sdata = await searchData.save();
-            } catch (e) {
-                console.log(e+e.type+e.message);
-                return http.error(`保存数据searchRaw记录失败`, e);
-            }
+
+
         }
 
         this.json({
