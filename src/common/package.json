@@ -13,6 +13,7 @@
     "console-polyfill": "^0.2.2",
     "es5-shim": "^4.5.8",
     "express": "^4.14.0",
+    "flat": "^2.0.1",
     "font-awesome": "^4.6.3",
     "html5shiv": "^3.7.3",
     "jsoneditor": "^5.5.6",

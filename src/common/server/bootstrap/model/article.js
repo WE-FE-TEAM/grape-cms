@@ -63,6 +63,7 @@ let articleSchema = new mongoose.Schema(
 
     },
     {
+        versionKey: false,
         minimize : false,
         collection : 'articles',
         timestamps: { createdAt: 'createdAt', updatedAt : 'updatedAt' }

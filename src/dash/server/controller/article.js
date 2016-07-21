@@ -12,7 +12,7 @@ const ControllerBase = grape.get('controller_base');
 const cms = global.cms;
 
 const cmsUtils = cms.utils;
-
+const flat = require('flat');
 
 class ArticleController extends ControllerBase {
 
@@ -333,12 +333,10 @@ class ArticleController extends ControllerBase {
 
         const Channel = this.model('Channel');
         const Article = this.model('Article');
+        const SearchRaw = this.model('SearchRaw');
 
         let http = this.http;
-
         let body = http.req.body;
-
-        let user = http.getUser();
 
         let channelId = http.getChannelId();
         let articleId = ( body.articleId || '' ).trim();
@@ -347,6 +345,24 @@ class ArticleController extends ControllerBase {
             return http.error(`要删除的文章ID(articleId), 不能为空!!!`);
         }
 
+
+        let channel = await Channel.findOne({_id: channelId}).exec();
+        let needSearch = channel.needSearch;
+        if (needSearch) {
+            let article = await Article.find({channelId: channelId, articleId: articleId}).exec();
+            if (article.length > 1) {
+                let sdata = null;
+                let searchData = await SearchRaw.findOne({resourceId: articleId, resourceType: "article"}).exec();
+                if(searchData){
+                    searchData.set("__is_search_enabled", 0);
+                    try {
+                        sdata = await searchData.save();
+                    } catch (e) {
+                        grape.log.error(`删除文章searchRaw记录失败`+e);
+                    }
+                }
+            }
+        }
 
         try {
             let result = await Article.remove({channelId: channelId, articleId: articleId}).exec();
@@ -360,20 +376,6 @@ class ArticleController extends ControllerBase {
             http.error('删除文章失败', e);
         }
 
-        // if( ! article ){
-        //     return http.error(`找不到[${articleId}]对应的文章数据`);
-        // }
-
-        // try{
-        //     let result = await article.remove();
-        //     this.json({
-        //         status : 0,
-        //         message : '删除文章成功',
-        //         data : result
-        //     });
-        // }catch(e){
-        //     http.error('删除文章失败', e);
-        // }
     }
 
     //异步接口: 获取某篇文章的编辑历史记录
@@ -416,7 +418,6 @@ class ArticleController extends ControllerBase {
         let user = http.getUser();
 
         let query = http.req.body;
-
         let channelId = http.getChannelId();
         let articleId = ( query.articleId || '' ).trim();
         let recordId = ( query.recordId || '' ).trim();
@@ -471,35 +472,36 @@ class ArticleController extends ControllerBase {
             } catch (e) {
                 return http.error(`保存发布记录失败`, e);
             }
-            let needSearch=channel.needSearch;
-            if(needSearch){
+            let needSearch = channel.needSearch;
+            if (needSearch) {
                 let sdata = null;
-                let url = (channel.onlineUrl || '').trim();
-                url = url.replace(/\{\{articleId\}\}/g, article.articleId);
-                let category = (channel.category || '').trim();
-                let section = (channel.section || '').trim();
+                let options={"delimiter":'#'};
+                let data_flat = flat(article.data,options);
                 let searchR = await SearchRaw.findOne({resourceId: article.articleId, resourceType: "article"}).exec();
                 let searchData = null;
                 if (searchR) {
                     searchData = searchR;
                     searchData.set("resourceName", article.articleName);
-                    searchData.set("data", article.data);
+                    searchData.set("data", data_flat);
                 } else {
+                    let url = (channel.onlineUrl || '').trim();
+                    url = url.replace(/\{\{articleId\}\}/g, article.articleId);
+                    let category = (channel.category || '').trim();
+                    let section = (channel.section || '').trim();
                     searchData = new SearchRaw({
                         resourceName: article.articleName,
                         resourceType: "article",
                         resourceId: article.articleId,
                         accessUrl: url,
-                        data: article.data,
+                        data: data_flat,
                         section: section,
                         category: category
                     });
                 }
                 try {
-                   grape.console.log("save article into SearchRaw");
                     sdata = await searchData.save();
                 } catch (e) {
-                    return http.error(`保存文章searchRaw记录失败`, e);
+                    grape.log.error(`保存文章searchRaw记录失败`+ e);
                 }
 
             }

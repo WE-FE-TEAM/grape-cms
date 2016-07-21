@@ -48,6 +48,7 @@ let dataSchema = new mongoose.Schema(
 
     },
     {
+        versionKey: false,
         minimize: false,
         collection: 'data',
         timestamps: {createdAt: 'createdAt', updatedAt: 'updatedAt'}

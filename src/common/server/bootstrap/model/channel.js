@@ -65,6 +65,7 @@ let channelSchema = new mongoose.Schema(
         // children : [ mongoose.Schema.Types.ObjectId ]
     },
     {
+        versionKey: false,
         minimize : false,
         collection : 'channels',
         timestamps: { createdAt: 'createdAt', updatedAt : 'updatedAt' }

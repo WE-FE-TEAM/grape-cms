@@ -26,6 +26,7 @@ let roleSchema = new mongoose.Schema(
         }
 }, 
     {
+        versionKey: false,
         minimize : false,
         collection : 'roles',
         timestamps: { createdAt: 'createdAt', updatedAt : 'updatedAt' }

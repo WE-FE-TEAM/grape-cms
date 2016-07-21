@@ -48,15 +48,12 @@ class ArticleEditor extends React.Component {
             return;
         }
 
-
-
         let channel = props.channel;
         let article = props.article;
         let articleTemplate = channel.articleTemplate;
         let fields = articleTemplate.fields || [];
 
         let isAdd = ! article;
-
         let articleName = this.refs.articleName.getValue();
         let data = article ? article.data : {} ;
 

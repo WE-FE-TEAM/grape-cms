@@ -8,11 +8,11 @@
 
 
 const ControllerBase = grape.get('controller_base');
-
+const mongoose =require('mongoose');
 const cms = global.cms;
 
 const cmsUtils = cms.utils;
-
+const flat = require('flat');
 
 class DataController extends ControllerBase {
 
@@ -27,7 +27,7 @@ class DataController extends ControllerBase {
 
         let channel = await Channel.findOne({_id: channelId}).lean(true);
         // let json = await cmsUtils.getDefaultJSON();
-        
+
 
         http.assign('channel', channel);
         http.assign('action', 'add');
@@ -260,6 +260,7 @@ class DataController extends ControllerBase {
         const Channel = this.model('Channel');
         const Data = this.model('Data');
 
+
         let http = this.http;
 
         let body = http.req.body;
@@ -356,12 +357,10 @@ class DataController extends ControllerBase {
     async doDeleteAction() {
         const Channel = this.model('Channel');
         const Data = this.model('Data');
-
+        const SearchRaw = this.model('SearchRaw');
         let http = this.http;
 
         let body = http.req.body;
-
-        let user = http.getUser();
 
         let channelId = http.getChannelId();
         let dataId = ( body.dataId || '' ).trim();
@@ -370,6 +369,23 @@ class DataController extends ControllerBase {
             return http.error(`要删除的数据ID(dataId), 不能为空!!!`);
         }
 
+        let channel = await Channel.findOne({_id: channelId}).exec();
+        let needSearch = channel.needSearch;
+        let jsondata = await Data.find({channelId: channelId, dataId: dataId}).exec();
+        if (needSearch) {
+            if (jsondata.length > 1) {
+                let sdata = null;
+                let searchData = await SearchRaw.findOne({resourceId: dataId, resourceType: "data"}).exec();
+                if(searchData){
+                    searchData.set("__is_search_enabled", 0);
+                    try {
+                        sdata = await searchData.save();
+                    } catch (e) {
+                        grape.log.error(`删除searchRaw记录失败`+e);
+                    }
+                }
+            }
+        }
         try {
             let result = await Data.remove({channelId: channelId, dataId: dataId}).exec();
             this.json({
@@ -418,16 +434,12 @@ class DataController extends ControllerBase {
         const Data = this.model('Data');
         const SearchRaw = this.model('SearchRaw');
         let http = this.http;
-
         let user = http.getUser();
-
         let query = http.req.body;
-
         let channelId = http.getChannelId();
         let dataId = ( query.dataId || '' ).trim();
         let recordId = ( query.recordId || '' ).trim();
         let releaseType = ( query.releaseType || '').trim();
-
 
         if (!dataId || !recordId || !releaseType) {
             return http.error(`数据ID( dataId, recordId ),发布类型(releaseType)必须指定!!`);
@@ -462,7 +474,6 @@ class DataController extends ControllerBase {
 
         //如果是正式发布, 需要插入一条新的记录
         if (releaseType === 'publish') {
-
             let record = new Data({
                 channelId: jsondata.channelId,
                 dataId: jsondata.dataId,
@@ -478,43 +489,38 @@ class DataController extends ControllerBase {
                 return http.error(`保存发布记录失败`, e);
             }
 
-            let needSearch=channel.needSearch;
-
-            if(needSearch){
-
+            let needSearch = channel.needSearch;
+            if (needSearch) {
                 let searchData = null;
                 let sdata = null;
+                let options={"delimiter":'#'};
+                let data_flat = flat(jsondata.data,options);
                 let searchR = await SearchRaw.findOne({resourceId: jsondata.dataId, resourceType: "data"}).exec();
                 if (searchR) {
                     searchData = searchR;
                     searchData.set("resourceName", jsondata.dataName);
-                    searchData.set("data", jsondata.data);
+                    searchData.set("data", data_flat);
                 } else {
                     let url = (channel.onlineUrl || '').trim();
                     url = url.replace(/\{\{dataId\}\}/g, jsondata.dataId);
-                    let category = (channel.category || '').trim();
+                     let category = (channel.category || '').trim();
                     let section = (channel.section || '').trim();
-
                     searchData = new SearchRaw({
                         resourceName: jsondata.dataName,
                         resourceType: "data",
                         resourceId: jsondata.dataId,
                         accessUrl: url,
-                        data: jsondata.data,
+                        data: data_flat,
                         section: section,
                         category: category
                     });
                 }
-
                 try {
                     sdata = await searchData.save();
-                    grape.console.log("save data into searchRaw");
                 } catch (e) {
-                    return http.error(`保存数据searchRaw记录失败`, e);
+                    grape.log.error("fail searchRaw" + e);
                 }
             }
-
-
         }
 
         this.json({

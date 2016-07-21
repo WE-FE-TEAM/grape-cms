@@ -42,6 +42,7 @@ let userSchema = mongoose.Schema({
         default : []
     }
 }, {
+    versionKey: false,
     minimize : false,
     collection : 'users',
     timestamps: { createdAt: 'createdAt', updatedAt : 'updatedAt' }
