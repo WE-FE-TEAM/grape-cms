@@ -39,10 +39,11 @@ let searchRawSchema = new mongoose.Schema(
             default: 1,
             enum: [1, 0]
         },
+        //具体的数据JSON,打平之后直接放在document第一级
         //文章栏目, 具有此字段, 用来生成文章编辑时需要填写的内容
-        data: {
-            type: mongoose.Schema.Types.Mixed
-        },
+        // data: {
+        //     type: mongoose.Schema.Types.Mixed
+        // },
         //提供给搜索使用的数据所属栏目层级关系
         section: {
             type: String,
@@ -54,6 +55,7 @@ let searchRawSchema = new mongoose.Schema(
         }
     },
     {
+        strict : false,
         versionKey: false,
         minimize: false,
         collection: 'searchRaw',

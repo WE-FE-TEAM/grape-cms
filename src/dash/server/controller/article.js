@@ -474,29 +474,29 @@ class ArticleController extends ControllerBase {
             }
             let needSearch = channel.needSearch;
             if (needSearch) {
+                let url = (channel.onlineUrl || '').trim();
+                url = url.replace(/\{\{articleId\}\}/g, article.articleId);
+                let category = (channel.category || '').trim();
+                let section = (channel.section || '').trim();
                 let sdata = null;
                 let options={"delimiter":'#'};
                 let data_flat = flat(article.data,options);
+                Object.assign( data_flat, {
+                    resourceName: article.articleName,
+                    resourceType: "article",
+                    resourceId: article.articleId,
+                    accessUrl: url,
+                    section: section,
+                    category: category
+                } );
                 let searchR = await SearchRaw.findOne({resourceId: article.articleId, resourceType: "article"}).exec();
                 let searchData = null;
                 if (searchR) {
                     searchData = searchR;
-                    searchData.set("resourceName", article.articleName);
-                    searchData.set("data", data_flat);
+                    searchData.set( data_flat);
                 } else {
-                    let url = (channel.onlineUrl || '').trim();
-                    url = url.replace(/\{\{articleId\}\}/g, article.articleId);
-                    let category = (channel.category || '').trim();
-                    let section = (channel.section || '').trim();
-                    searchData = new SearchRaw({
-                        resourceName: article.articleName,
-                        resourceType: "article",
-                        resourceId: article.articleId,
-                        accessUrl: url,
-                        data: data_flat,
-                        section: section,
-                        category: category
-                    });
+
+                    searchData = new SearchRaw( data_flat );
                 }
                 try {
                     sdata = await searchData.save();

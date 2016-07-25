@@ -371,18 +371,16 @@ class DataController extends ControllerBase {
 
         let channel = await Channel.findOne({_id: channelId}).exec();
         let needSearch = channel.needSearch;
-        let jsondata = await Data.find({channelId: channelId, dataId: dataId}).exec();
+        
         if (needSearch) {
-            if (jsondata.length > 1) {
-                let sdata = null;
-                let searchData = await SearchRaw.findOne({resourceId: dataId, resourceType: "data"}).exec();
-                if(searchData){
-                    searchData.set("__is_search_enabled", 0);
-                    try {
-                        sdata = await searchData.save();
-                    } catch (e) {
-                        grape.log.error(`删除searchRaw记录失败`+e);
-                    }
+            let sdata = null;
+            let searchData = await SearchRaw.findOne({resourceId: dataId, resourceType: "data"}).exec();
+            if(searchData){
+                searchData.set("__is_search_enabled", 0);
+                try {
+                    sdata = await searchData.save();
+                } catch (e) {
+                    grape.log.error(`删除searchRaw记录失败`+e);
                 }
             }
         }
@@ -491,29 +489,29 @@ class DataController extends ControllerBase {
 
             let needSearch = channel.needSearch;
             if (needSearch) {
+                let url = (channel.onlineUrl || '').trim();
+                url = url.replace(/\{\{dataId\}\}/g, jsondata.dataId);
+                let category = (channel.category || '').trim();
+                let section = (channel.section || '').trim();
                 let searchData = null;
                 let sdata = null;
                 let options={"delimiter":'#'};
                 let data_flat = flat(jsondata.data,options);
+                Object.assign( data_flat, {
+                    resourceName: jsondata.dataName,
+                    resourceType: "data",
+                    resourceId: jsondata.dataId,
+                    accessUrl: url,
+                    section: section,
+                    category: category
+                } );
                 let searchR = await SearchRaw.findOne({resourceId: jsondata.dataId, resourceType: "data"}).exec();
                 if (searchR) {
                     searchData = searchR;
-                    searchData.set("resourceName", jsondata.dataName);
-                    searchData.set("data", data_flat);
+                    searchData.set(data_flat);
                 } else {
-                    let url = (channel.onlineUrl || '').trim();
-                    url = url.replace(/\{\{dataId\}\}/g, jsondata.dataId);
-                     let category = (channel.category || '').trim();
-                    let section = (channel.section || '').trim();
-                    searchData = new SearchRaw({
-                        resourceName: jsondata.dataName,
-                        resourceType: "data",
-                        resourceId: jsondata.dataId,
-                        accessUrl: url,
-                        data: data_flat,
-                        section: section,
-                        category: category
-                    });
+
+                    searchData = new SearchRaw( data_flat );
                 }
                 try {
                     sdata = await searchData.save();
