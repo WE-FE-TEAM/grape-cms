@@ -187,7 +187,14 @@ articleSchema.statics.getArticleList = async function( channelId, start, num ){
                 channelId : { $first : "$channelId" },
                 articleId : { $first : "$articleId" },
                 recordId : { $first : "$_id" },
-                articleName : { $first : "$articleName" }
+                articleName : { $first : "$articleName" },
+                createdAt: {$first: "$createdAt"}
+            }
+        },
+        {
+            $sort: {
+                //按创建时间倒序排列
+                createdAt: -1
             }
         },
         {
