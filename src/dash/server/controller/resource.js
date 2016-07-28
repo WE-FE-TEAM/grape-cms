@@ -145,7 +145,7 @@ class ResourceController extends ControllerBase {
 
     //异步接口: 上传单个文件
     async uploadAction(){
-
+        grape.console.log("upload action");
         let http = this.http;
         let req = http.req;
 
@@ -180,15 +180,16 @@ class ResourceController extends ControllerBase {
 
         let files = req.files || {};
         let keys = Object.keys( files );
-        let file = files[ keys[0] ];
 
+        let file = files[keys[0]];
+        grape.console.log(JSON.stringify(file));
         if( ! file ){
             return http.error('未添加要上传的文件!!');
         }
 
-        if( keys.length > 1 ){
-            return http.error('一次只能上传一个文件!!');
-        }
+        // if( keys.length > 1 ){
+        //     return http.error('一次只能上传一个文件!!');
+        // }
 
         //判断要上传的文件是否已经存在
         let fileName = file.name;

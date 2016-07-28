@@ -143,8 +143,7 @@ class App extends React.Component{
     
     //渲染创建子目录按钮区域
     renderMkdirSection(){
-        
-        
+
         return (
             <dl className="dir-create-con form-inline">
                 <dt>创建子目录</dt>

@@ -1,17 +1,18 @@
 
-.edit-role-dialog{
+.edit-role-dialog {
 
-  $width: 980px;
+  $width: 1000px;
 
   width: $width;
   top: 50px;
   left: 50%;
   margin-left: - $width / 2;
 
-
   //错误消息
-  .error-info{
+  .error-info {
     color: red;
   }
-
+  .rui-form-checkbox{
+    margin-left:13px;
+  }
 }
