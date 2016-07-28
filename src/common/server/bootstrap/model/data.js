@@ -180,7 +180,14 @@ dataSchema.statics.getDataList = async function (channelId, start, num) {
                 channelId: {$first: "$channelId"},
                 dataId: {$first: "$dataId"},
                 recordId: {$first: "$_id"},
-                dataName: {$first: "$dataName"}
+                dataName: {$first: "$dataName"},
+                createdAt: {$first: "$createdAt"}
+            }
+        },
+        {
+            $sort: {
+                //按创建时间倒序排列
+                createdAt: -1
             }
         },
         {
