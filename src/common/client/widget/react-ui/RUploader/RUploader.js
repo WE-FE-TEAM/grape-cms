@@ -37,6 +37,10 @@ class RUploader extends React.Component {
         this.state = {
             //当前上传的文件数
             fileCount: 0,
+            //当前所有选中的文件
+            files : [],
+            //上传出错的信息
+            errorInfo : [],
             //是否正在上传中
             isUploading: false,
             pickerId: uuid('r-uploader-picker-'),
@@ -92,9 +96,10 @@ class RUploader extends React.Component {
     resetUploader() {
         this.uploader.stop(true);
         this.uploader.reset();
-        this.removeFile();
+
         this.setState({
-            fileCount: 0,
+            files : [],
+            errorInfo : [],
             isUploading: false
         });
     }
@@ -124,31 +129,30 @@ class RUploader extends React.Component {
             return;
         }
 
-        this.uploader.upload();
+
         this.state.isUploading = true;
         this.setState({
-            isUploading: true
+            isUploading: true,
+            errorInfo : []
+        }, () => {
+            this.uploader.upload();
         });
     }
 
     removeFile() {
-        $("#file-list").find('.info').remove();
+
     }
 
     onFileQueued(file) {
-        let $list = $('#file-list');
-        let $li = $(
-            '<div class="info"><span class="fileName">' + file.name + '</span></div>'
-        );
-        $list.append($li);
+
         console.log('file queued', file);
 
-        let mfileCount = this.state.fileCount;
-        mfileCount++;
+        this.state.files.push(file);
+
         this.setState({
-            fileCount: mfileCount
+            files : this.state.files
         });
-        console.log(mfileCount);
+
     }
 
     uploadAccept(file, response) {
@@ -161,28 +165,27 @@ class RUploader extends React.Component {
         console.log('onUploadSuccess', file);
         let status = response.status;
         let newState = {
-            isUploading: false
+
         };
+        let errorInfo = this.state.errorInfo;
+        let stat = this.uploader.getStats();
         if (status === 0) {
             //上传成功
-            console.log("上传成功");
-            let stat = this.uploader.getStats();
-            if (stat.successNum == this.state.fileCount) {
-                alert('上传成功 :)' + "DDD" + stat.successNum);
-                this.uploader.reset();
-                this.removeFile();//删除list里的元素
-                newState.file = null;
-                this.props.onSuccess(file);
-                this.setState({
-                    fileCount: 0
-                });
-            }
         } else if (status === 2) {
             //存在同名文件, 需要让用户勾选覆盖已有文件
-            alert(response.message + ' 如果覆盖, 请勾选 覆盖提示框');
+            errorInfo.push(`[${file.name}] 已经存在同名文件, 如果要覆盖, 请勾选 覆盖提示框 !!`);
         } else {
-            alert("else" + response.message);
+            errorInfo.push( response.message);
         }
+        if( stat.queueNum === 0 && stat.progressNum === 0 ){
+            //全部图片都已上传完毕
+            alert('全部图片上传完毕!!');
+            newState.isUploading = false;
+            newState.files = [];
+            this.uploader.reset();
+            this.props.onSuccess(file);
+        }
+        newState.errorInfo = errorInfo;
         this.setState(newState);
     }
 
@@ -213,6 +216,36 @@ class RUploader extends React.Component {
         //     );
         // }
 
+        let queuedFiles = state.files || [];
+        let queuedInfoList = queuedFiles.map( ( file, index ) => {
+            return (
+                <li key={ file.name + index } className="file-info">
+                    <span className="file-name">{ file.name }</span>
+                </li>
+            );
+        });
+
+        //错误消息列表
+        let errorInfo = state.errorInfo || [];
+        let errorList = errorInfo.map( ( info, index) => {
+            return (
+                <li key={ 'error-' + index } className="error-item">
+                    { info }
+                </li>
+            );
+        });
+
+        let errorContainer = null;
+        if( errorList.length > 0 ){
+            errorContainer = (
+                <ul className="error-list">{ errorList }</ul>
+            );
+        }else{
+            errorContainer = (
+                <div className="info error-list">无</div>
+            );
+        }
+
         let overrideCheckProps = {
             name: 'isOverride',
             ref: 'isOverride',
@@ -223,8 +256,11 @@ class RUploader extends React.Component {
 
         return (
             <div className="r-uploader">
-                <div id="file-list"></div>
-                <div>本次共选择了{state.fileCount}个文件</div>
+
+                <div>本次共选择了{ queuedFiles.length }个文件</div>
+                <ul className="queued-file-list">
+                    { queuedInfoList }
+                </ul>
                 <div className="btns">
                     <span id={ state.pickerId } className="file-choose-btn btn">选择文件</span>
                     <button onClick={ this.upload } className=" btn btn-info">{ uploadText }</button>
@@ -233,6 +269,12 @@ class RUploader extends React.Component {
                         <Checkbox { ...overrideCheckProps } />
                     </span>
                 </div>
+                <dl className="error-info-wrap">
+                    <dt className="error-title">错误信息:</dt>
+                    <dd className="error-detail-section">
+                        { errorContainer }
+                    </dd>
+                </dl>
             </div>
         );
     }

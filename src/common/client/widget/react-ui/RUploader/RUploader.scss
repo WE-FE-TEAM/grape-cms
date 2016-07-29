@@ -1,15 +1,10 @@
 
 .r-uploader{
 
-  #file-list{
-    position:relative;
+  .queued-file-list{
+    padding: 15px;
     margin: 15px 0;
-    font-size: 16px;
-    min-height:100px;
-    border:1px solid #CCCCCC;
-    span{margin:10px 10px;
-      padding:3px;
-     }
+    border: 2px dotted pink;
   }
 
   .file-choose-btn{
@@ -22,6 +17,27 @@
     width: 86px;
     height: 40px;
     margin-right: 20px;
+  }
+
+  .error-info-wrap{
+    margin: 15px 0;
+
+    .error-title{
+      font-size: 24px;
+    }
+
+    .error-detail-section{
+      margin: 0;
+    }
+  }
+
+  .error-list{
+    padding: 15px;
+    border: 2px dashed orange;
+
+    .error-item{
+      color: #f00;
+    }
   }
 
 }

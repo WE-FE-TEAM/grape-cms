@@ -182,7 +182,7 @@ class ResourceController extends ControllerBase {
         let keys = Object.keys( files );
 
         let file = files[keys[0]];
-        grape.console.log(JSON.stringify(file));
+        
         if( ! file ){
             return http.error('未添加要上传的文件!!');
         }
