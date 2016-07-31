@@ -312,6 +312,11 @@ class ArticleController extends ControllerBase {
         article.set('editUserId', user._id.toString());
         article.set('data', data);
 
+        //强制标注为 已改变
+        article.markModified('articleName');
+        article.markModified( 'editUserId');
+        article.markModified( 'data');
+
         let result = null;
 
         try {

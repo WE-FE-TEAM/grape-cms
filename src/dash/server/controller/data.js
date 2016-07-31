@@ -337,6 +337,11 @@ class DataController extends ControllerBase {
 
         let result = null;
 
+        //强制标注为 已改变
+        mjsondata.markModified('dataName');
+        mjsondata.markModified( 'editUserId');
+        mjsondata.markModified( 'data');
+
         try {
             result = await mjsondata.save();
 
