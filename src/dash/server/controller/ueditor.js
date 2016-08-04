@@ -117,7 +117,7 @@ class UeditorController extends ControllerBase {
         else if (req.query.action == "uploadimage") {
             let x = this.uploadImage();
             res.setHeader('Content-Type', 'text/html');
-
+            grape.console.log(x);
             return res.json(x);
         }
     }
