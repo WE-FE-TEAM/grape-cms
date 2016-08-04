@@ -63,7 +63,11 @@ let cms119 = Object.assign( {}, cmsConf, {
     //CMS文件上传的根目录
     uploadRootPath : `/cms/static`,
     //文件上传之后,访问文件时,要添加的URL前缀
-    uploadUrlPrefix : 'http://172.16.3.119/cms'
+    uploadUrlPrefix : 'http://172.16.3.119/cms/',
+    //ueditor 图片上传的根目录
+    ueditorUploadRootPath:`/cms/static/ueditor`,
+    //文件上传之后,访问文件时,要添加的URL前缀
+    ueditorUploadUrlPrefix : 'http://172.16.3.119/cms',
 
 } );
 

@@ -68,6 +68,7 @@ class ResourceController extends ControllerBase {
      */
     getUploadFileUrl( finalFilePath ){
         let relativeToUploadRoot = path.relative( this.uploadRootPath, finalFilePath);
+     
         return this.uploadUrlPrefix + '/' + relativeToUploadRoot.split('\\').join('/');
     }
 
@@ -235,7 +236,8 @@ class ResourceController extends ControllerBase {
             }
         };
 
-
+        grape.console.log(finalFilePath);
+       grape.console.log(data);
         this.json( data );
         
     }

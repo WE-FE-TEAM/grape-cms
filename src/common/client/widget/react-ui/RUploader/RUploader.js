@@ -146,13 +146,10 @@ class RUploader extends React.Component {
     onFileQueued(file) {
 
         console.log('file queued', file);
-
         this.state.files.push(file);
-
         this.setState({
             files : this.state.files
         });
-
     }
 
     uploadAccept(file, response) {
@@ -165,7 +162,6 @@ class RUploader extends React.Component {
         console.log('onUploadSuccess', file);
         let status = response.status;
         let newState = {
-
         };
         let errorInfo = this.state.errorInfo;
         let stat = this.uploader.getStats();
@@ -208,13 +204,6 @@ class RUploader extends React.Component {
         if (state.isUploading) {
             uploadText = '停止上传';
         }
-        // if( file ){
-        //     fileInfo = (
-        //         <div className="file-info">
-        //             <span>文件名: { file.name }</span>
-        //         </div>
-        //     );
-        // }
 
         let queuedFiles = state.files || [];
         let queuedInfoList = queuedFiles.map( ( file, index ) => {

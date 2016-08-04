@@ -314,8 +314,8 @@ class ArticleController extends ControllerBase {
 
         //强制标注为 已改变
         article.markModified('articleName');
-        article.markModified( 'editUserId');
-        article.markModified( 'data');
+        article.markModified('editUserId');
+        article.markModified('data');
 
         let result = null;
 
@@ -358,12 +358,12 @@ class ArticleController extends ControllerBase {
             if (article.length > 1) {
                 let sdata = null;
                 let searchData = await SearchRaw.findOne({resourceId: articleId, resourceType: "article"}).exec();
-                if(searchData){
+                if (searchData) {
                     searchData.set("__is_search_enabled", 0);
                     try {
                         sdata = await searchData.save();
                     } catch (e) {
-                        grape.log.error(`删除文章searchRaw记录失败`+e);
+                        grape.log.error(`删除文章searchRaw记录失败` + e);
                     }
                 }
             }
@@ -484,29 +484,29 @@ class ArticleController extends ControllerBase {
                 let category = (channel.category || '').trim();
                 let section = (channel.section || '').trim();
                 let sdata = null;
-                let options={"delimiter":'#'};
-                let data_flat = flat(article.data,options);
-                Object.assign( data_flat, {
+                let options = {"delimiter": '#'};
+                let data_flat = flat(article.data, options);
+                Object.assign(data_flat, {
                     resourceName: article.articleName,
                     resourceType: "article",
                     resourceId: article.articleId,
                     accessUrl: url,
                     section: section,
                     category: category
-                } );
+                });
                 let searchR = await SearchRaw.findOne({resourceId: article.articleId, resourceType: "article"}).exec();
                 let searchData = null;
                 if (searchR) {
                     searchData = searchR;
-                    searchData.set( data_flat);
+                    searchData.set(data_flat);
                 } else {
 
-                    searchData = new SearchRaw( data_flat );
+                    searchData = new SearchRaw(data_flat);
                 }
                 try {
                     sdata = await searchData.save();
                 } catch (e) {
-                    grape.log.error(`保存文章searchRaw记录失败`+ e);
+                    grape.log.error(`保存文章searchRaw记录失败` + e);
                 }
 
             }
@@ -568,6 +568,19 @@ class ArticleController extends ControllerBase {
 
         res.end(content);
     }
+
+    // ueditor  upload action
+
+     ueditorUploadAction(){
+        grape.console.log("how to ueditor upload xxxx");
+
+        let http = this.http;
+        let res = http.res;
+        let query = http.req.query;
+        grape.console.log(http + res + query);
+    }
+
+
 }
 
 

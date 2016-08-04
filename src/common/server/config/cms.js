@@ -201,7 +201,9 @@ module.exports = {
     dataPreviewRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_publish/data_preview`,
     //数据的发布根目录
     dataPublishRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_publish/data`,
-
+    //richtext富文本编辑器上传图片的目录
+    ueditorUploadRootPath:`${path.dirname(grape.path.APP_PATH)}${sep}cms_upload/ueditor`,
+    ueditorUploadUrlPrefix : 'http://some.we.com/ueditor',
     //CMS文件上传的根目录
     uploadRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_upload`,
     //文件上传之后,访问文件时,要添加的URL前缀

@@ -51,6 +51,8 @@ const finalCmsConfig = Object.assign( {}, cmsConf, {
     //数据的发布根目录
     dataPublishRootPath : `/cms/data`,
 
+    ueditorUploadRootPath:`/cms/static/ueditor`,
+    ueditorUploadUrlPrefix : 'http://www.we.com/cms',
     //CMS文件上传的根目录
     uploadRootPath : `/cms/static`,
     //文件上传之后,访问文件时,要添加的URL前缀

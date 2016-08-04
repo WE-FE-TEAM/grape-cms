@@ -15,6 +15,7 @@ const articleService = require('./article-service.js');
 const resourceService = require('./resource-service.js');
 const dataService = require('./data-service.js');
 
+
 let serviceMap = {
     user : userService,
     dash : dashService,
@@ -23,6 +24,7 @@ let serviceMap = {
     article : articleService,
     resource : resourceService,
     data : dataService
+
 };
 
 let singleton = {
