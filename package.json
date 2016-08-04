@@ -25,7 +25,6 @@
   "dependencies": {
     "ajv": "^4.1.5",
     "babel-plugin-transform-runtime": "^6.4.3",
-    "body-parser": "^1.15.2",
     "connect-redis": "^3.0.2",
     "express-session": "^1.13.0",
     "flat": "^2.0.1",
@@ -33,7 +32,6 @@
     "fs-extra": "^0.30.0",
     "grapejs": "^1.1.2",
     "mongoose": "^4.4.19",
-    "ueditor": "^1.1.4",
     "validate.js": "^0.10.0"
   },
   "devDependencies": {

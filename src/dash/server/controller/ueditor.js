@@ -7,7 +7,6 @@ const ControllerBase = grape.get('controller_base');
 const path = require('path');
 const sep = path.sep;
 const cmsUtils = cms.utils;
-
 const uuid=require('node-uuid');
 
 class UeditorController extends ControllerBase {
@@ -118,7 +117,7 @@ class UeditorController extends ControllerBase {
         else if (req.query.action == "uploadimage") {
             let x = this.uploadImage();
             res.setHeader('Content-Type', 'text/html');
-         
+
             return res.json(x);
         }
     }
