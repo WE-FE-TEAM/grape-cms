@@ -568,17 +568,9 @@ class ArticleController extends ControllerBase {
 
         res.end(content);
     }
+    
 
-    // ueditor  upload action
 
-     ueditorUploadAction(){
-        grape.console.log("how to ueditor upload xxxx");
-
-        let http = this.http;
-        let res = http.res;
-        let query = http.req.query;
-        grape.console.log(http + res + query);
-    }
 
 
 }
