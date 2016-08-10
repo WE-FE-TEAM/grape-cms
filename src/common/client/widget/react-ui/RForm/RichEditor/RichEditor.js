@@ -10,6 +10,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 
+var utils = require('common:widget/ui/utils/utils.js');
 
 function noop(){}
 
@@ -34,9 +35,14 @@ class RichEditor extends React.Component{
 
     componentDidMount(){
 
+        let searchConf = utils.getSearchConf();
+
+        let channelId = searchConf.channelId || '';
+
         // let script = ReactDOM.findDOMNode( this.refs.ueditorscript );
 
         this.editor = UE.getEditor( this.state.id, {
+            serverUrl: '/cms/dash/ueditor/index?channelId=' + encodeURIComponent(channelId),
             readonly : this.props.readonly === true
         } );
 

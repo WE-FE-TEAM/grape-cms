@@ -43,6 +43,11 @@ let channelSchema = new mongoose.Schema(
         parentId : {
             type : mongoose.Schema.Types.ObjectId
         },
+        //文章栏目中, 富文本编辑框上传图片的访问URL前缀
+        ueditorUploadUrlPrefix : {
+            type : String,
+            default : ''
+        },
         //该栏目相关的文章地址
         docUrl : {
             type : String,

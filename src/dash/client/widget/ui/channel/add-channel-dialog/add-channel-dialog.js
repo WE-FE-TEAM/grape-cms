@@ -55,6 +55,7 @@ class AddChannelDialog extends React.Component {
         let needSearch = this.refs.checkboxSelector.state.checked;
         let docURL = this.refs.readmeDoc.getValue().trim();
         let onlineUrl = ( this.refs.onlineUrl.getValue() || '' ).trim();
+        let ueditorUploadUrlPrefix = ( this.refs.ueditorUploadUrlPrefix.getValue() || '').trim();
         console.log(needSearch);
         if (needSearch) {
             if (!section) {
@@ -109,7 +110,8 @@ class AddChannelDialog extends React.Component {
             channelName: this.refs.channelName.getValue(),
             channelType: type,
             onlineUrl: onlineUrl,
-            articleTemplate: articleTemplate
+            articleTemplate: articleTemplate,
+            ueditorUploadUrlPrefix : ueditorUploadUrlPrefix
         };
 
 
@@ -227,6 +229,12 @@ class AddChannelDialog extends React.Component {
                         <div className="col-sm-9">
                             <textarea ref="articleTemplate" id="article-template" name="articleTemplate"
                                       className="form-control" rows="4" placeholder="输入文章模板"></textarea>
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <label for="ueditorUploadUrlPrefix" className="col-sm-2 control-label">富文本上传图片访问URL</label>
+                        <div className="col-sm-9">
+                            <TextInput ref="ueditorUploadUrlPrefix" name="ueditorUploadUrlPrefix"/>
                         </div>
                     </div>
                     <div className="form-group">

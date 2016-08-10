@@ -78,6 +78,7 @@ class ChannelController extends ControllerBase {
         let section = (body.section || '').trim();
         let needSearch = body.needSearch;
         let docUrl = (body.docUrl || '').trim();
+        let ueditorUploadUrlPrefix = ( body.ueditorUploadUrlPrefix || '' ).trim();
 
         if (!channelName) {
             return this.json({
@@ -184,7 +185,8 @@ class ChannelController extends ControllerBase {
             section: section,
             category: category,
             needSearch: needSearch,
-            articleTemplate: articleTemplate
+            articleTemplate: articleTemplate,
+            ueditorUploadUrlPrefix : ueditorUploadUrlPrefix
         });
 
         try {
@@ -256,6 +258,7 @@ class ChannelController extends ControllerBase {
         let category = (body.category || '').trim();
         let section = (body.section || '').trim();
         let needSearch = body.needSearch;
+        let ueditorUploadUrlPrefix = ( body.ueditorUploadUrlPrefix || '').trim();
 
         let docUrl = (body.docUrl || '').trim();
         if (!channelName) {
@@ -367,7 +370,8 @@ class ChannelController extends ControllerBase {
             docUrl: docUrl,
             channelName: channelName,
             articleTemplate: articleTemplate,
-            onlineUrl: onlineUrl
+            onlineUrl: onlineUrl,
+            ueditorUploadUrlPrefix : ueditorUploadUrlPrefix
         }).exec();
 
         grape.log.info(result);
