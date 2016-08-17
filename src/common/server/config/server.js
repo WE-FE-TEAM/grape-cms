@@ -10,5 +10,8 @@ module.exports = {
 
     port : 9203,
 
+    //请求的大小限制
+    limit : '10mb',
+
     'x-powered-by' : 'grape-cms-v1'
 };

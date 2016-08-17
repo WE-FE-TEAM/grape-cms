@@ -30,7 +30,7 @@
     "flat": "^2.0.1",
     "formidable": "^1.0.17",
     "fs-extra": "^0.30.0",
-    "grapejs": "^1.1.2",
+    "grapejs": "^1.1.5",
     "mongoose": "^4.4.19",
     "node-uuid": "^1.4.7",
     "validate.js": "^0.10.0"

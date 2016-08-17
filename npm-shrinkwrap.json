@@ -143,8 +143,8 @@
       "resolved": "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.1.4.tgz"
     },
     "grapejs": {
-      "version": "1.1.2",
-      "from": "grapejs@1.1.2",
+      "version": "1.1.5",
+      "from": "grapejs@1.1.5",
       "dependencies": {
         "accepts": {
           "version": "1.2.13",
