@@ -237,6 +237,8 @@ class ChannelController extends ControllerBase {
                 return http.render('dash/page/channel/channel-data/channel-data.tpl');
             case 'resource' :
                 return http.render('dash/page/channel/channel-resource/channel-resource.tpl');
+            case 'page' :
+                return http.render('dash/page/channel/channel-page/channel-page.tpl');
             default:
                 return http.e404();
         }

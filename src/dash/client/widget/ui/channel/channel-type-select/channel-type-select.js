@@ -34,6 +34,10 @@ const types = [
         value : 'resource'
     },
     {
+        text : '页面构建栏目',
+        value : 'page'
+    },
+    {
         text : '栏目管理(系统级栏目, 不能添加!!)',
         value : 'channelManage'
     },

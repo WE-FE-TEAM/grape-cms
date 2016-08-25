@@ -174,6 +174,41 @@ let typeDef = {
                 name : urlOperationGroupMap['dash/channel/resource']
             }
         ]
+    },
+
+    //页面类型
+    page : {
+        isSystem : false,
+        text : '页面栏目',
+        //查看栏目的URL
+        url : 'dash/channel/page',
+        //该栏目下支持的操作
+        operations : [
+            {
+                text : '查看栏目',
+                name : urlOperationGroupMap['dash/channel/page']
+            },
+            {
+                text : '查看页面',
+                name : urlOperationGroupMap['designer/app/view']
+            },
+            {
+                text : '新增页面',
+                name : urlOperationGroupMap['designer/app/add']
+            },
+            {
+                text : '编辑页面',
+                name : urlOperationGroupMap['designer/app/edit']
+            },
+            {
+                text : '删除页面',
+                name : urlOperationGroupMap['designer/app/doDelete']
+            },
+            {
+                text : '发布页面',
+                name : urlOperationGroupMap['designer/app/doPublish']
+            }
+        ]
     }
 };
 

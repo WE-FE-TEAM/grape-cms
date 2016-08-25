@@ -20,6 +20,7 @@ const channelTypes = {
     article : 'article',
     data : 'data',
     resource : 'resource',
+    page : 'page',
 
     //下面三个是系统自带的栏目
     channelManage : 'channelManage',
@@ -34,6 +35,7 @@ const channelTypeText = {
     article : '文章栏目',
     data : '数据栏目',
     resource : '文件上传栏目',
+    page : '页面构建栏目',
 
     //下面三个是系统自带的栏目
     channelManage : '栏目管理',
@@ -205,6 +207,41 @@ utils.getChannelOperationSet = function( channelType ){
             {
                 text : '上传文件',
                 value : 'resource.upload'
+            }
+        ],
+        //页面栏目对应操作集合
+        page : [
+            {
+                text : '查看栏目',
+                value : 'channel.view'
+            },
+            {
+                text : '编辑栏目',
+                value : 'channel.update'
+            },
+            {
+                text : '删除栏目',
+                value : 'channel.delete'
+            },
+            {
+                text : '查看页面',
+                value : 'page.view'
+            },
+            {
+                text : '新增页面',
+                value : 'page.add'
+            },
+            {
+                text : '编辑页面',
+                value : 'page.edit'
+            },
+            {
+                text : '发布页面',
+                value : 'page.publish'
+            },
+            {
+                text : '删除页面',
+                value : 'page.delete'
             }
         ],
 

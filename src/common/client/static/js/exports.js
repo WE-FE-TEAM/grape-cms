@@ -5,3 +5,5 @@
 
 
 require('moment');
+require('jsoneditor');
+require('glpb-components-common');

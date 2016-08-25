@@ -24,7 +24,7 @@ let channelSchema = new mongoose.Schema(
         },
         channelType : {
             type : String,
-            enum : [ 'container', 'article', 'data', 'resource', 'channelManage', 'roleManage', 'userManage' ],
+            enum : [ 'container', 'article', 'data', 'resource', 'page', 'channelManage', 'roleManage', 'userManage' ],
             default : 'container'
         },
         url : {
@@ -172,7 +172,7 @@ channelSchema.statics.getChannelPath = async function( channelId ){
  * @returns {boolean}
  */
 channelSchema.statics.isChannelTypeValida = function( channelType ){
-    const validArr = [ 'container', 'article', 'data', 'resource' ];
+    const validArr = [ 'container', 'article', 'data', 'resource', 'page' ];
     return validArr.indexOf( channelType ) >= 0;
 };
 
@@ -214,6 +214,7 @@ channelSchema.statics.getChannelUrlByType = function( channelType ){
         article : 'dash/channel/view',
         data : 'dash/channel/view',
         resource : 'dash/channel/view',
+        page : 'dash/channel/view',
 
         //下面是系统级的栏目类型
         channelManage : 'dash/home/channelManage',

@@ -112,7 +112,26 @@ let urlOperationGroupMap = {
     'dash/channel/resource' : 'channel.view',
     'dash/resource/ls' : 'channel.view',
     'dash/resource/mkdir' : 'resource.mkdir',
-    'dash/resource/upload' : 'resource.upload'
+    'dash/resource/upload' : 'resource.upload',
+
+    //查看页面栏目
+    'dash/channel/page' : 'channel.view',
+    //查看页面
+    'designer/app/view' : 'page.view',
+    'designer/app/list' : 'page.view',
+    'designer/app/detail' : 'page.view',
+    'designer/app/getEditHistory' : 'page.view',
+    //新增
+    'designer/app/add' : 'page.add',
+    'designer/app/doAdd' : 'page.add',
+    //编辑页面
+    'designer/app/edit' : 'page.edit',
+    'designer/app/doUpdate' : 'page.edit',
+    //删除页面
+    'designer/app/doDelete' : 'page.delete',
+    //发布页面
+    'designer/app/doPublish' : 'page.publish',
+    'designer/app/currentRelease' : 'page.publish'
 
 };
 
@@ -154,6 +173,17 @@ const channelTypeOperationMap = {
         'channel.delete',
         'resource.mkdir',
         'resource.upload'
+    ],
+    //页面栏目对应操作集合
+    page : [
+        'channel.view',
+        'channel.update',
+        'channel.delete',
+        'page.view',
+        'page.add',
+        'page.edit',
+        'page.publish',
+        'page.delete'
     ],
 
     //下面三个是系统自带的栏目

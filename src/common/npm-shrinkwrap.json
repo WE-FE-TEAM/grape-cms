@@ -162,6 +162,14 @@
       "from": "glob@>=7.0.3 <8.0.0",
       "resolved": "https://registry.npmjs.org/glob/-/glob-7.0.3.tgz"
     },
+    "glpb-components-common": {
+      "version": "1.0.5",
+      "from": "glpb-components-common@*"
+    },
+    "glpb-slick-carousel": {
+      "version": "1.6.0",
+      "from": "glpb-slick-carousel@>=1.6.0 <2.0.0"
+    },
     "html5shiv": {
       "version": "3.7.3",
       "from": "html5shiv@>=3.7.3 <4.0.0",

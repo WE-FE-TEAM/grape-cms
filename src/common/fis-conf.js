@@ -17,7 +17,7 @@ fis.set('namespace', 'common');
  * 静态资源url前添加前缀
  */
 let url_prefix = '/cmss';
-fis.match('**.{js,css,png,jpg,gif,jsx,scss,ts,eot,ttf,woff,svg,ico}', {
+fis.match('**.{js,css,png,jpg,gif,jsx,scss,ts,eot,ttf,woff,woff2,svg,ico}', {
     domain: url_prefix
 });
 
@@ -30,6 +30,25 @@ fis.set('distDir', distDir);
 //设置排除那些node_modules不添加短路径
 let excludeModules = ['classnames'];
 fis.set('excludeModules', excludeModules);
+
+
+fis.match('/node_modules/glpb-components-{common,pc,mobile}/(**.{css,scss})', {
+    parser: fis.plugin('node-sass'),
+    rExt: '.css'
+});
+
+fis.match('/node_modules/glpb-components-{common,pc,mobile}/(**.{js,jsx})', {
+    preprocessor: [
+        fis.plugin('js-require-file'),
+        fis.plugin('js-require-css')
+    ],
+    parser : fis.plugin('babel-5.x', {
+        blacklist: [ 'useStrict' ],
+        loose: ["es6.classes", "es6.properties.computed"]
+    }),
+    rExt: '.js'
+});
+
 
 /**
  * 打包策略 :

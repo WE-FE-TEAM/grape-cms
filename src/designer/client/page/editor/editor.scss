@@ -1,0 +1,86 @@
+
+html, body{
+  height: 100%;
+}
+
+.main-content{
+  height: 100%;
+  overflow: hidden;
+}
+
+#editor-app{
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction:column;
+
+  //头部栏
+  #editor-header{
+    height: 70px;
+    background: #1b1b1b;
+  }
+
+  #editor-main{
+    position: relative;
+    display: flex;
+    flex: 1;
+    background: #fff;
+
+    //左侧组件编辑/组件选择区域
+    #com-edit-section{
+      width: 280px;
+      background: #444;
+    }
+
+    //组件预览操作区域
+    #editor-panel{
+      flex: 1;
+    }
+  }
+}
+
+.glpb-component.ui-draggable-dragging{
+  width: 60px;
+  height: 60px;
+  outline: 2px dashed lightblue;
+  text-align: center;
+}
+
+//拖拽过程中的组件
+.gplb-com-drag-holder{
+  width: 100px;
+  height: 100px;
+  outline: 1px solid red;
+}
+
+#lpb-com-container{
+
+  margin: 50px auto;
+
+  .lpb-component{
+    float: left;
+    width: 60px;
+    height: 60px;
+    outline: 2px dashed lightblue;
+    text-align: center;
+    margin: 10px auto;
+  }
+}
+
+#lpb-com-editor{
+  height: 100%;
+  background: #ebfbe6;
+  overflow: auto;
+
+  .lpb-component{
+    width: 100%;
+    outline : 2px dashed gray;
+    min-height: 100px;
+  }
+
+  .ui-state-highlight{
+    height: 80px;
+    background: orange;
+  }
+}

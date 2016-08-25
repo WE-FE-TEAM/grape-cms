@@ -14,6 +14,7 @@ const roleService = require('./role-service.js');
 const articleService = require('./article-service.js');
 const resourceService = require('./resource-service.js');
 const dataService = require('./data-service.js');
+const pageService = require('./page-service.js');
 
 
 let serviceMap = {
@@ -23,7 +24,8 @@ let serviceMap = {
     role : roleService,
     article : articleService,
     resource : resourceService,
-    data : dataService
+    data : dataService,
+    page : pageService
 
 };
 
