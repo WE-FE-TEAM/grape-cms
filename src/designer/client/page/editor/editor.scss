@@ -3,6 +3,10 @@ html, body{
   height: 100%;
 }
 
+body{
+  min-width: initial;
+}
+
 .main-content{
   height: 100%;
   overflow: hidden;

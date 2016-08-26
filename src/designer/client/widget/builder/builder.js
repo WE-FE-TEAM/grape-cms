@@ -64,26 +64,55 @@ $.extend( Builder.prototype, {
         //初始化组件选择栏/编辑器区域
         let $editor = $('#lpb-com-editor');
 
-        $editor
-            .droppable({
-                // accept : '.lpb-component',
-                accept : '[data-com-name=layout_row]',
-                classes: {
-                    "ui-droppable-active": "custom-state-active"
-                },
-                drop : function(e, ui){
-                    let $draggable = ui.draggable;
-                    let componentId = $draggable.attr('data-glpb-com-id');
-                    if( ! componentId ){
+        let $editorFrame = $(`<iframe src="/cms/designer/view/mobile?" frameborder="0" style="width: 100%; height: 100%;"></iframe>`);
+        $editorFrame.on('load', function(){
+            let frameDoc = $editorFrame[0].contentDocument;
+            let $editor = $( frameDoc.getElementById('lpb-com-editor'));
+            $editor
+                .droppable({
+                    // accept : '.lpb-component',
+                    accept : '[data-com-name=layout_row]',
+                    classes: {
+                        "ui-droppable-active": "custom-state-active"
+                    },
+                    drop : function(e, ui){
+                        let $draggable = ui.draggable;
+                        let componentId = $draggable.attr('data-glpb-com-id');
+                        if( ! componentId ){
 
-                        that.addNewRow();
+                            that.addNewRow();
 
-                    }else{
-                        that.addExistRow(componentId);
+                        }else{
+                            that.addExistRow(componentId);
+                        }
+
                     }
+                });
+            that.$editor = $editor;
+        } );
 
-                }
-            });
+        $editor.append( $editorFrame );
+
+        // $editor
+        //     .droppable({
+        //         // accept : '.lpb-component',
+        //         accept : '[data-com-name=layout_row]',
+        //         classes: {
+        //             "ui-droppable-active": "custom-state-active"
+        //         },
+        //         drop : function(e, ui){
+        //             let $draggable = ui.draggable;
+        //             let componentId = $draggable.attr('data-glpb-com-id');
+        //             if( ! componentId ){
+        //
+        //                 that.addNewRow();
+        //
+        //             }else{
+        //                 that.addExistRow(componentId);
+        //             }
+        //
+        //         }
+        //     });
 
 
         this.$editor = $editor;

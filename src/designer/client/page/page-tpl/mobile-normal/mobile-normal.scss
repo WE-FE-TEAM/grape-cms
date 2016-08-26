@@ -1,0 +1,51 @@
+
+html, body{
+  height: 100%;
+}
+
+
+body{
+  min-width: initial;
+}
+
+
+.main-content{
+  height: 100%;
+  overflow: hidden;
+}
+
+
+.glpb-component.ui-draggable-dragging{
+  width: 60px;
+  height: 60px;
+  outline: 2px dashed lightblue;
+  text-align: center;
+}
+
+//拖拽过程中的组件
+.gplb-com-drag-holder{
+  width: 100px;
+  height: 100px;
+  outline: 1px solid red;
+}
+
+
+
+#lpb-com-editor{
+  width: 100%;
+  height: 100%;
+  background: #ebfbe6;
+  margin: 0;
+  overflow: auto;
+
+  .lpb-component{
+    width: 100%;
+    outline : 2px dashed gray;
+    min-height: 100px;
+  }
+
+  .ui-state-highlight{
+    height: 80px;
+    background: orange;
+  }
+}

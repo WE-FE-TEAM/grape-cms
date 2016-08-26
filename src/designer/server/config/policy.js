@@ -13,5 +13,9 @@ const accessFilter = [ 'session_user', 'login_filter', 'channel_permission_check
 
 module.exports = {
 
-    '*' : accessFilter
+    '*' : accessFilter,
+
+    'view' : {
+        '*' : []
+    }
 };

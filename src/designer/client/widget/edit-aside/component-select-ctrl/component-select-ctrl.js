@@ -48,7 +48,8 @@ $.extend( ComponentSelectCtrl.prototype, {
         this.$el.find('.glpb-component').draggable({
             revert : 'invalid',
             helper: "clone",
-            appendTo: "body"
+            appendTo: "body",
+            iframeFix: true
         });
     },
 
