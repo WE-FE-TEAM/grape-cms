@@ -69,9 +69,13 @@ html, body{
 }
 
 #lpb-com-editor{
+  width: 100%;
   height: 100%;
   background: #ebfbe6;
+  margin: 0;
   overflow: auto;
+  -webkit-transition: all .1s ease-out 1s;
+  transition: all .1s ease-out 1s;
 
   .lpb-component{
     width: 100%;
