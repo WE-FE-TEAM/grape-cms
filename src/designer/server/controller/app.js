@@ -118,6 +118,22 @@ class DesignerController extends ControllerBase{
         http.render('designer/page/editor/editor.tpl');
     }
 
+    //同步接口: 查看某个页面
+    async editAction() {
+        const Channel = this.model('Channel');
+
+        let http = this.http;
+
+        let channelId = http.getChannelId();
+
+        let channel = await Channel.findOne({_id: channelId}).lean(true);
+
+        http.assign('channel', channel);
+        http.assign('action', 'edit');
+
+        http.render('designer/page/editor/editor.tpl');
+    }
+
     //异步接口: 获取某个指定文章的详情数据
     async detailAction() {
 

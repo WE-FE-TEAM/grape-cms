@@ -97,7 +97,8 @@ $.extend( PageSettingEditor.prototype, EventEmitter.prototype, {
         this.trigger('change', {
             pageName : pageName,
             title : title,
-            platform : platform
+            platform : platform,
+            templateId : 'mobile-normal'
         } );
         
         this.hide();

@@ -28,10 +28,12 @@ function Builder( config ){
     this.title = config.title || '新页面';
     this.meta = config.meta || [];
     this.components = config.components || [];
-    this.componentStyles = config.componentStyles || {};
+
+    //当前页面中实时的顶级组件
+    this.componentRefs = [];
 
     //当前页面中所有的组件ID到组件实例的map
-    this.componentRefs = {};
+    this.pageComponentMap = {};
 
     this.editCtrl = null;
 
@@ -89,6 +91,8 @@ $.extend( Builder.prototype, {
                     }
                 });
             that.$editor = $editor;
+
+            that.initPageComponents();
         } );
 
         $editor.append( $editorFrame );
@@ -119,13 +123,21 @@ $.extend( Builder.prototype, {
 
         this.updateEditorViewPort();
     },
+
+    //在编辑器ready的时候,渲染当前页面中的组件
+    initPageComponents : function(){
+        let components = this.components || [];
+        for( let i = 0, len = components.length; i < len; i++ ){
+            this.appendRow( components[i] );
+        }
+    },
     
     createComponentInstance : function(conf){
         conf.page = this;
         let component = componentFactory.createComponentInstance(conf);
         if( component ){
             let componentId = component.getComponentId();
-            this.componentRefs[componentId] = component;
+            this.pageComponentMap[componentId] = component;
         }
         return component;
     },
@@ -135,12 +147,17 @@ $.extend( Builder.prototype, {
             parentId : null,
             componentName : 'layout_row'
         };
+
+        this.appendRow( conf );
+    },
+
+    appendRow : function( conf ){
         let component = this.createComponentInstance(conf);
         component.render();
         let $el = component.$getElement();
         this.$editor.append( $el );
         component.bindEvent();
-        this.components.push( component.toJSON() );
+        this.componentRefs.push( component );
     },
     
     addExistRow : function(componentId){
@@ -152,7 +169,7 @@ $.extend( Builder.prototype, {
             }
             let oldParentComponent = component.getParentComponent();
             oldParentComponent.editorRemoveComponent(componentId);
-            this.components.push( component.toJSON() );
+            this.componentRefs.push( component );
             this.$editor.append( component.$getElement() );
         }
     },
@@ -175,15 +192,15 @@ $.extend( Builder.prototype, {
 
     //根据组件ID, 获取已经存在的组件实例
     getComponentById : function(componentId){
-        return this.componentRefs[componentId];
+        return this.pageComponentMap[componentId];
     },
 
     editorRemoveComponent : function(componentId){
-        let components = this.components || [];
-        for( var i = 0, len = components.length; i < len; i++ ){
-            let conf = components[i];
-            if( conf.componentId === componentId ){
-                components.splice(i, 1);
+        let componentRefs = this.componentRefs || [];
+        for( var i = 0, len = componentRefs.length; i < len; i++ ){
+            let conf = componentRefs[i];
+            if( conf.getComponentId() === componentId ){
+                componentRefs.splice(i, 1);
                 return true;
             }
         }
@@ -196,13 +213,13 @@ $.extend( Builder.prototype, {
             console.warn(`子组件移动方向值[${direction}]非法!!只能是 up/down/left/right 之一`);
             return false;
         }
-        let components = this.components || [];
+        let componentRefs = this.componentRefs || [];
         let oldIndex = -1;
         let childConf = null;
-        let len = components.length;
+        let len = componentRefs.length;
         for( var i = 0; i < len; i++ ){
-            let temp = components[i];
-            if( temp.componentId === componentId ){
+            let temp = componentRefs[i];
+            if( temp.getComponentId() === componentId ){
                 oldIndex = i;
                 childConf = temp;
                 break;
@@ -234,9 +251,9 @@ $.extend( Builder.prototype, {
             return false;
         }
         //先从老的位置删除
-        components.splice(oldIndex, 1);
+        componentRefs.splice(oldIndex, 1);
         //插入到新位置
-        components.splice(newIndex, 0, childConf);
+        componentRefs.splice(newIndex, 0, childConf);
 
         //移动DOM
         let targetComponent = this.getComponentById(componentId);
@@ -259,6 +276,7 @@ $.extend( Builder.prototype, {
         this.pageName = data.pageName;
         this.title = data.title;
         this.platform = data.platform;
+        this.templateId = data.templateId;
 
         this.updateEditorViewPort();
     },
@@ -267,7 +285,8 @@ $.extend( Builder.prototype, {
         return {
             pageName : this.pageName,
             title : this.title,
-            platform : this.platform
+            platform : this.platform,
+            templateId : this.templateId
         };
     },
 
@@ -286,6 +305,28 @@ $.extend( Builder.prototype, {
             editorStyle.marginTop = '50px';
         }
         this.$editor.css( editorStyle );
+    },
+    
+    //后去当前整个页面的JSON数据(包含所有的子孙节点)
+    toJSON : function(){
+        
+        let resultComponents = [];
+        
+        let componentRefs = this.componentRefs || [];
+        for( let i = 0, len = componentRefs.length; i < len; i++ ){
+            let temp = componentRefs[i];
+            let componentJSON = temp.toJSON();
+            resultComponents.push( componentJSON );
+        }
+        
+        return {
+            platform : this.platform,
+            templateId : this.templateId,
+            pageName : this.pageName,
+            title : this.title,
+            meta : this.meta || [],
+            components : resultComponents || []
+        };
     }
 
 } );

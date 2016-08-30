@@ -125,7 +125,7 @@ class PageList extends React.Component {
         let viewUrl = '';
 
         let viewBtn = (
-            <a title="点击查看页面" className="" target="_self" onClick={ this.onPageView.bind( this, rowData) }>{ rowData.articleName }</a>
+            <a title="点击查看页面" className="" target="_self" onClick={ this.onPageView.bind( this, rowData) }>{ rowData.pageName }</a>
         );
 
         // <td className="text-center"><button onClick={ this.onPagePublish.bind( this, rowData) } className="btn btn-info">发布</button></td>

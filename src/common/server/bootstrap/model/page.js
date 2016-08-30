@@ -48,7 +48,8 @@ let pageSchema = new mongoose.Schema(
             },
             //该页面包含的组件树JSON
             components : {
-                type : mongoose.Schema.Types.Mixed
+                type : mongoose.Schema.Types.Mixed,
+                required : true
             }
         },
         //最后修改文章内容的用户ID
@@ -270,9 +271,9 @@ pageSchema.statics.getEditHistory = async function( pageId ){
  * 获取某篇页面最新的内容
  * @param channelId {string} 该文章所属的栏目ID
  * @param pageId {string} 该页面的惟一ID
- * @returns {object} 文章数据
+ * @returns {object} 页面数据
  */
-pageSchema.statics.getLatestArticle = async function( channelId, pageId ){
+pageSchema.statics.getLatestPage = async function( channelId, pageId ){
 
     const Page = mongoose.model('Page');
 
