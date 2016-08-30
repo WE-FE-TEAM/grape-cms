@@ -22,6 +22,8 @@ function Builder( config ){
 
     config = config || {};
 
+    this.isEditMode = config.isEditMode;
+
     this.platform = config.platform;
     this.templateId = config.templateId || '';
     this.pageName = config.pageName || '';
@@ -117,6 +119,13 @@ $.extend( Builder.prototype, {
         //
         //         }
         //     });
+
+        if( ! this.isEditMode ){
+            //查看页面, 不显示编辑区域
+            this.editCtrl.hide();
+        }else{
+            this.editCtrl.show();
+        }
 
 
         this.$editor = $editor;

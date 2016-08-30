@@ -315,6 +315,47 @@ utils.releaseData = async function (data, releaseType) {
 };
 
 
+///////////////  发布  页面  /////
+
+/**
+ * 根据页面以及发布类型, 返回页面应该发布到的文件绝对路径
+ * @param page {object} 文章数据
+ * @param releaseType {string} 发布类型, 可能是  publish, preview
+ * @returns {string} 文章发布到磁盘上文件的绝对路径
+ */
+utils.getPageReleaseFileName = function (page, releaseType) {
+    let path = '';
+    if (releaseType === 'publish') {
+        //获取正式发布的路径
+        path = cmsConfig.pagePublishRootPath;
+    } else {
+        //默认返回 预览 的路径
+        path = cmsConfig.pagePreviewRootPath;
+    }
+    path += sep;
+
+    return `${path}${page.pageId}${cmsConfig.articleReleaseFileSuffix}`;
+};
+
+/**
+ * 发布页面到磁盘上的具体文件
+ * @param page {object} 页面数据对象
+ * @param releaseType {string} 发布类型
+ * @returns {*}
+ */
+utils.releasePage = async function (page, releaseType) {
+    if (!page || !page.pageId) {
+        return Promise.reject(new Error(`要发布的页面数据异常, 为 null 或 缺少 pageId`));
+    }
+    let filePath = utils.getPageReleaseFileName(page, releaseType);
+
+    let data = JSON.stringify(page.data);
+    let result = await utils.writeFile(filePath, data);
+
+    return Promise.resolve(result);
+};
+
+
 ////////////  文件/目录 相关操作   //////////////////////
 
 /**

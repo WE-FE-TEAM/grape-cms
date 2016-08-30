@@ -52,7 +52,7 @@ class DeletePageDialog extends React.Component {
             pageId : page.pageId
         };
         console.log(data.channelId+"pageId"+page.pageId);
-        pageService.deleteArticle( data )
+        pageService.deletePage( data )
             .then( ( req ) => {
                 if( req.requestStatus === pageService.STATUS.SUCCESS ){
                     let out = req.data;

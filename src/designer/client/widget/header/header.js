@@ -27,12 +27,57 @@ class Header extends React.Component{
 
         let channelURL = `/cms/dash/channel/view?channelId=${encodeURIComponent(channel._id)}`;
 
+        //保存按钮
         let saveBtn = null;
+        //进入编辑按钮
+        let editBtn = null;
+        //退出编辑按钮
+        let exitEditBtn = null;
+        //预览按钮
+        let previewBtn = null;
+        //发布按钮
+        let publishBtn = null;
+        //删除页面按钮
+        let deleteBtn = null;
+
         if( props.isEdit ){
+            //编辑模式
             saveBtn = (
                 <li className="header-op-btn" title="保存当前页面" onClick={ props.onSave }>
                     <i className="fa fa-floppy-o" aria-hidden="true"></i>
                     <div>保存</div>
+                </li>
+            );
+            exitEditBtn = (
+                <li className="header-op-btn" title="退出编辑" onClick={ props.onExit }>
+                    <i className="fa fa-frown-o" aria-hidden="true"></i>
+                    <div>退出编辑</div>
+                </li>
+            );
+            deleteBtn = (
+                <li className="header-op-btn  danger-action" title="删除当前页面" onClick={ props.onDelete }>
+                    <i className="fa fa-exclamation-circle" aria-hidden="true"></i>
+                    <div>删除页面</div>
+                </li>
+            );
+        }else{
+            //只读模式
+            editBtn = (
+                <li className="header-op-btn" title="编辑当前页面" onClick={ props.onEdit }>
+                    <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    <div>编辑页面</div>
+                </li>
+            );
+            previewBtn = (
+                <li className="header-op-btn" title="预览当前页面" onClick={ props.onPreview }>
+                    <i className="fa fa-video-camera" aria-hidden="true"></i>
+                    <div>预览</div>
+                </li>
+            );
+            publishBtn = (
+                <li className="header-op-btn  danger-action" title="发布当前页面" onClick={ props.onPublish }>
+                    <i className="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                    <div>发布</div>
                 </li>
             );
         }
@@ -43,6 +88,15 @@ class Header extends React.Component{
                 <a target="_self" href={ channelURL }>返回当前栏目</a>
                 <ul className="header-aside">
                     { saveBtn }
+                    { exitEditBtn }
+                    { deleteBtn }
+                    { editBtn }
+                    { previewBtn }
+                    { publishBtn }
+                    <li className="header-op-btn" title="查看当前已发布的数据" onClick={ props.onCurrentRelease }>
+                        <i className="fa fa-eye" aria-hidden="true"></i>
+                        <div>查看已发布数据</div>
+                    </li>
                 </ul>
             </div>
         );
@@ -56,10 +110,20 @@ Header.defautProps = {
     isEdit: false,
     //当前栏目信息
     channel: null,
+    //编辑页面点击
+    onEdit : noop,
     //点击保存按钮
     onSave: noop,
     //退出按钮
-    onExit : noop
+    onExit : noop,
+    //预览
+    onPreview : noop,
+    //点击发布按钮
+    onPublish : noop,
+    //查看当前已发布数据
+    onCurrentRelease : noop,
+    //删除
+    onDelete : noop
 };
 
 

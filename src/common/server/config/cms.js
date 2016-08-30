@@ -227,10 +227,18 @@ module.exports = {
     articlePreviewRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_publish/article_preview`,
     //文章的发布根目录
     articlePublishRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_publish/article`,
+    
     //数据的预览 根目录
     dataPreviewRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_publish/data_preview`,
     //数据的发布根目录
     dataPublishRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_publish/data`,
+
+    //页面的预览 根目录
+    pagePreviewRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_publish/page_preview`,
+    //页面的发布根目录
+    pagePublishRootPath : `${path.dirname(grape.path.APP_PATH)}${sep}cms_publish/page`,
+    
+    
     //richtext富文本编辑器上传图片的目录
     ueditorUploadRootPath:`${path.dirname(grape.path.APP_PATH)}${sep}cms_upload/ueditor`,
     ueditorUploadUrlPrefix : 'http://some.we.com/ueditor',

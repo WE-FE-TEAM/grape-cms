@@ -28,7 +28,7 @@ class PageList extends React.Component {
         
         this.state = {
             isLoading : false,
-            articleList : null,
+            pageDataList : null,
             count : 0,
             //用户点击翻页后, 要跳转到的页码
             targetPage : 0,
@@ -79,7 +79,7 @@ class PageList extends React.Component {
                             currentPage : pageIndex,
                             isLoading : false,
                             count : data.total,
-                            articleList : data.list
+                            pageDataList : data.list
                         });
 
                         return null;
@@ -141,27 +141,32 @@ class PageList extends React.Component {
     }
 
     onPageView( rowData ){
-        console.log( 'view article: ', rowData );
+        console.log( 'view page: ', rowData );
         let data = {
             channelId : rowData.channelId,
-            articleId : rowData.articleId
+            pageId : rowData.pageId
         };
         let viewUrl = '/cms/designer/app/view?' + utils.json2query( data );
         location.href = viewUrl;
     }
 
     onPageEdit( rowData ){
-        console.log( 'edit article: ', rowData );
-        this.props.onPageEdit( rowData );
+        console.log( 'edit page: ', rowData );
+        let data = {
+            channelId : rowData.channelId,
+            pageId : rowData.pageId
+        };
+        let viewUrl = '/cms/designer/app/edit?' + utils.json2query( data );
+        location.href = viewUrl;
     }
 
     onPageDelete( rowData ){
-        console.log( 'delete article: ', rowData );
+        console.log( 'delete page: ', rowData );
         this.props.onPageDelete( rowData );
     }
 
     onPagePublish( rowData ){
-        console.log( 'publish article: ', rowData );
+        console.log( 'publish page: ', rowData );
         this.props.onPagePublish( rowData );
     }
 
@@ -180,7 +185,7 @@ class PageList extends React.Component {
         }
 
         let table = null;
-        if( state.articleList ){
+        if( state.pageDataList ){
 
             let count = state.count;
             let pageSize = state.pageSize;
@@ -193,7 +198,7 @@ class PageList extends React.Component {
                 totalPage={ totalPage }
                 currentPage={ state.currentPage }
                 onPageChange={ this.onPageChange }
-                data={ state.articleList }
+                data={ state.pageDataList }
                 headerRenderer={ this.tableHeaderRenderer }
                 rowRenderer={ this.tableRowRenderer }
             />

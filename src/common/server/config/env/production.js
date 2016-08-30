@@ -46,10 +46,16 @@ const finalCmsConfig = Object.assign( {}, cmsConf, {
     articlePreviewRootPath : `/cms/article_preview`,
     //文章的发布根目录
     articlePublishRootPath : `/cms/article`,
+
     //数据的预览 根目录
     dataPreviewRootPath : `/cms/data_preview`,
     //数据的发布根目录
     dataPublishRootPath : `/cms/data`,
+
+    //数据的预览 根目录
+    pagePreviewRootPath : `/cms/page_preview`,
+    //数据的发布根目录
+    pagePublishRootPath : `/cms/page`,
 
     ueditorUploadRootPath:`/cms/static/ueditor`,
     ueditorUploadUrlPrefix : 'http://www.we.com/cms',

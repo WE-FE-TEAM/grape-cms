@@ -107,6 +107,18 @@ $.extend( EditAsideCtrl.prototype, {
 
     editComponentData : function(args){
         this.dataEditor.editComponent( args.component );
+    },
+
+    hide : function(){
+        this.$el.css({
+            width : 0
+        });
+    },
+
+    show : function(){
+        this.$el.css({
+            width : '280px'
+        });
     }
     
 } );

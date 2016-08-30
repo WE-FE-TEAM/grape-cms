@@ -27,6 +27,8 @@
       background: #444;
       color: #c9c9c9;
       cursor: pointer;
+      float: left;
+      margin-left: 2px;
 
       i{
         font-size: 25px;
@@ -35,6 +37,10 @@
       &:hover{
         color: #2bc0e4;
       }
+    }
+
+    .danger-action{
+      color: #f00;
     }
   }
 }
