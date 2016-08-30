@@ -97,6 +97,11 @@ let singleton = {
             componentFactory.enableEditMode();
             isEdit = true;
             this.isEditMode = true;
+
+            //防止用户误操作, 导致的页面关闭
+            window.onbeforeunload = function(){
+                return '确认离开么? 请确保已经保存了页面的最新修改!!!';
+            };
         }
 
         if (action === ACTION_ADD) {
@@ -266,7 +271,13 @@ let singleton = {
     //跳转到只读模式
     handleExit : function(){
         let data = this.pageData;
-        let url = `/cms/designer/app/view?channelId=${encodeURIComponent(this.channel._id)}&pageId=${encodeURIComponent(data.pageId)}`;
+        let url = '';
+        if( this.isAddMode ){
+            url = `/cms/dash/channel/view?channelId=${encodeURIComponent(this.channel._id)}`;
+        }else{
+            url = `/cms/designer/app/view?channelId=${encodeURIComponent(this.channel._id)}&pageId=${encodeURIComponent(data.pageId)}`;
+        }
+
         location.href = url;
     },
 
@@ -372,6 +383,8 @@ Object.defineProperty(window, 'editor', {
     writable : false,
     value : singleton
 } );
+
+
 
 
 module.exports = singleton;
