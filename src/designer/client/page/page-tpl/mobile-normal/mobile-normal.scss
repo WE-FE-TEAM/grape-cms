@@ -6,13 +6,13 @@ html{
 
 body{
   min-width: initial;
-  min-height: 100%;
+  //height: 100%;
   background: #ebfbe6;
 }
 
 
 .main-content{
-  min-height: 100%;
+  //min-height: 100%;
 }
 
 
@@ -34,8 +34,13 @@ body{
 
 #lpb-com-editor{
   width: 100%;
-  min-height: 100%;
+  //min-height: 100%;
   margin: 0;
+  //padding-bottom: 100px;
+
+  //.glpb-com-layout_row:last-of-type{
+  //  margin-bottom: 100px;
+  //}
 
   .lpb-component{
     width: 100%;
@@ -43,8 +48,24 @@ body{
     min-height: 100px;
   }
 
+  .top-droppable-holder{
+    height: 200px;
+    line-height: 200px;
+    font-size: 34px;
+    text-align: center;
+    outline: 2px dashed blueviolet;
+  }
+
   .ui-state-highlight{
     height: 80px;
     background: orange;
+  }
+
+  .custom-state-active{
+    outline: 2px dashed green;
+  }
+
+  .custom-state-hover{
+    background: lightgreen;
   }
 }

@@ -74,13 +74,18 @@ $.extend( Builder.prototype, {
             let frameDoc = $editorFrame[0].contentDocument;
             let $editorBody = $( frameDoc.body );
             let $editor = $( frameDoc.getElementById('lpb-com-editor'));
-            $editor
+
+            let $droppableHolder = $('<div class="top-droppable-holder"><i class="fa fa-plus" aria-hidden="true"></i>追加组件到最后</div>').appendTo( frameDoc.getElementById('lpb-com-editor') );
+
+            $droppableHolder
                 .droppable({
                     // accept : '.lpb-component',
                     accept : '[data-com-name=layout_row]',
                     classes: {
-                        "ui-droppable-active": "custom-state-active"
+                        "ui-droppable-active": "custom-state-active",
+                        "ui-droppable-hover": "custom-state-hover"
                     },
+                    tolerance: "pointer",
                     drop : function(e, ui){
                         let $draggable = ui.draggable;
                         let componentId = $draggable.attr('data-glpb-com-id');
@@ -96,6 +101,7 @@ $.extend( Builder.prototype, {
                 });
             that.$editor = $editor;
             that.$editorBody = $editorBody;
+            that.$droppableHolder = $droppableHolder;
 
             that.updatePageStyle();
             that.initPageComponents();
@@ -170,7 +176,7 @@ $.extend( Builder.prototype, {
         let component = this.createComponentInstance(conf);
         component.render();
         let $el = component.$getElement();
-        this.$editor.append( $el );
+        this.$droppableHolder.before( $el );
         component.bindEvent();
         this.componentRefs.push( component );
     },
@@ -185,7 +191,7 @@ $.extend( Builder.prototype, {
             let oldParentComponent = component.getParentComponent();
             oldParentComponent.editorRemoveComponent(componentId);
             this.componentRefs.push( component );
-            this.$editor.append( component.$getElement() );
+            this.$droppableHolder.before( component.$getElement() );
         }
     },
 
