@@ -70,6 +70,7 @@ let singleton = {
         this.handlePreview = this.handlePreview.bind( this );
         this.handlePublish = this.handlePublish.bind( this );
         this.viewCurrentRelease = this.viewCurrentRelease.bind( this );
+        this.showPageSetting = this.showPageSetting.bind( this );
 
         //全局的加载中提示
         let loadIndicator = new LoadIndicator();
@@ -156,6 +157,7 @@ let singleton = {
             onPublish={ singleton.handlePublish }
             onSave={ singleton.handleSave }
             onCurrentRelease={ singleton.viewCurrentRelease }
+            onEditPage={ singleton.showPageSetting }
         />, document.getElementById('editor-header') );
         
     },
@@ -375,6 +377,14 @@ let singleton = {
         let data = this.pageData;
         let url = `/cms/designer/app/currentRelease?channelId=${encodeURIComponent(this.channel._id)}&pageId=${encodeURIComponent(data.pageId)}`;
         window.open( url );
+    },
+
+    showPageSetting : function(){
+        if( this.builder ){
+            let setting = this.builder.getPageSetting();
+            this.pageSettingEditor.setPageSetting( setting );
+        }
+        this.pageSettingEditor.show();
     }
 
 };

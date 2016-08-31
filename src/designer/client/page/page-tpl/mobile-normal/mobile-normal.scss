@@ -1,17 +1,18 @@
 
-html, body{
+html{
   height: 100%;
 }
 
 
 body{
   min-width: initial;
+  min-height: 100%;
+  background: #ebfbe6;
 }
 
 
 .main-content{
-  height: 100%;
-  overflow: hidden;
+  min-height: 100%;
 }
 
 
@@ -33,10 +34,8 @@ body{
 
 #lpb-com-editor{
   width: 100%;
-  height: 100%;
-  background: #ebfbe6;
+  min-height: 100%;
   margin: 0;
-  overflow: auto;
 
   .lpb-component{
     width: 100%;

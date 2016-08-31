@@ -8,7 +8,7 @@
     <section id="editor-main">
         <aside id="com-edit-section"></aside>
         <article id="editor-panel">
-            <div id="lpb-com-editor" class="glpb-sortable gplb-sys-editor">
+            <div id="lpb-editor-frame-wrap" class="glpb-sortable gplb-sys-editor">
 
             </div>
         </article>

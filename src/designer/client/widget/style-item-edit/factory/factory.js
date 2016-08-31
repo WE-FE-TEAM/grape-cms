@@ -9,13 +9,17 @@
 
 const InputEditor = require('designer:widget/style-item-edit/supported-editors/input-editor/input-editor.js');
 const MarginEditor = require('designer:widget/style-item-edit/supported-editors/margin-editor/margin-editor.js');
+const PaddingEditor = require('designer:widget/style-item-edit/supported-editors/padding-editor/padding-editor.js');
+const BackgroundEditor = require('designer:widget/style-item-edit/supported-editors/background-editor/background-editor.js');
 
 
 
 const styleKey2EditorClass = {
     width : InputEditor,
     height : InputEditor,
-    margin : MarginEditor
+    margin : MarginEditor,
+    padding : PaddingEditor,
+    background : BackgroundEditor
 };
 
 const styleKeyLabel = {

@@ -27,6 +27,8 @@ class Header extends React.Component{
 
         let channelURL = `/cms/dash/channel/view?channelId=${encodeURIComponent(channel._id)}`;
 
+        //编辑页面信息按钮
+        let editPageBtn = null;
         //保存按钮
         let saveBtn = null;
         //进入编辑按钮
@@ -60,6 +62,12 @@ class Header extends React.Component{
                     <div>删除页面</div>
                 </li>
             );
+            editPageBtn = (
+                <li className="header-op-btn" title="页面设置" onClick={ props.onEditPage }>
+                    <i className="fa fa-cog" aria-hidden="true"></i>
+                    <div>页面设置</div>
+                </li>
+            );
         }else{
             //只读模式
             editBtn = (
@@ -87,6 +95,7 @@ class Header extends React.Component{
                 <a target="_self" href="/cms/dash/home/index">CMS首页</a>
                 <a target="_self" href={ channelURL }>返回当前栏目</a>
                 <ul className="header-aside">
+                    { editPageBtn }
                     { saveBtn }
                     { exitEditBtn }
                     { deleteBtn }
@@ -123,7 +132,9 @@ Header.defautProps = {
     //查看当前已发布数据
     onCurrentRelease : noop,
     //删除
-    onDelete : noop
+    onDelete : noop,
+    //编辑页面信息
+    onEditPage : noop
 };
 
 

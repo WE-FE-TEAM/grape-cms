@@ -46,6 +46,10 @@ let pageSchema = new mongoose.Schema(
                 required : true,
                 default : '新页面'
             },
+            //body 上的样式
+            style : {
+                type : mongoose.Schema.Types.Mixed
+            },
             //该页面包含的组件树JSON
             components : {
                 type : mongoose.Schema.Types.Mixed,

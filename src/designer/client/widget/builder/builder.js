@@ -29,6 +29,7 @@ function Builder( config ){
     this.pageName = config.pageName || '';
     this.title = config.title || '新页面';
     this.meta = config.meta || [];
+    this.style = config.style || {};
     this.components = config.components || [];
 
     //当前页面中实时的顶级组件
@@ -66,11 +67,12 @@ $.extend( Builder.prototype, {
         this.editCtrl.bindEvent();
 
         //初始化组件选择栏/编辑器区域
-        let $editor = $('#lpb-com-editor');
+        let $frameWrap = $('#lpb-editor-frame-wrap');
 
         let $editorFrame = $(`<iframe src="/cms/designer/view/mobile?" frameborder="0" style="width: 100%; height: 100%;"></iframe>`);
         $editorFrame.on('load', function(){
             let frameDoc = $editorFrame[0].contentDocument;
+            let $editorBody = $( frameDoc.body );
             let $editor = $( frameDoc.getElementById('lpb-com-editor'));
             $editor
                 .droppable({
@@ -93,11 +95,13 @@ $.extend( Builder.prototype, {
                     }
                 });
             that.$editor = $editor;
+            that.$editorBody = $editorBody;
 
+            that.updatePageStyle();
             that.initPageComponents();
         } );
 
-        $editor.append( $editorFrame );
+        $frameWrap.append( $editorFrame );
 
         // $editor
         //     .droppable({
@@ -128,7 +132,7 @@ $.extend( Builder.prototype, {
         }
 
 
-        this.$editor = $editor;
+        this.$frameWrap = $frameWrap;
 
         this.updateEditorViewPort();
     },
@@ -139,6 +143,8 @@ $.extend( Builder.prototype, {
         for( let i = 0, len = components.length; i < len; i++ ){
             this.appendRow( components[i] );
         }
+
+
     },
     
     createComponentInstance : function(conf){
@@ -180,22 +186,6 @@ $.extend( Builder.prototype, {
             oldParentComponent.editorRemoveComponent(componentId);
             this.componentRefs.push( component );
             this.$editor.append( component.$getElement() );
-        }
-    },
-
-    /**
-     * 批量修改组件样式
-     * @param conf {object} 包含组件ID及该组件要修改的样式 { com-id : {}, com-id-2 : {} }
-     */
-    updateStyle : function( conf ){
-
-        for( var componentId in conf ){
-            if( conf.hasOwnProperty(componentId) ){
-                let com = this.getComponentById(componentId);
-                if( com ){
-                    com.setStyle( conf[componentId] );
-                }
-            }
         }
     },
 
@@ -286,8 +276,10 @@ $.extend( Builder.prototype, {
         this.title = data.title;
         this.platform = data.platform;
         this.templateId = data.templateId;
+        this.style = data.style || {};
 
         this.updateEditorViewPort();
+        this.updatePageStyle();
     },
 
     getPageSetting : function(){
@@ -295,7 +287,8 @@ $.extend( Builder.prototype, {
             pageName : this.pageName,
             title : this.title,
             platform : this.platform,
-            templateId : this.templateId
+            templateId : this.templateId,
+            style : this.style
         };
     },
 
@@ -313,7 +306,12 @@ $.extend( Builder.prototype, {
             editorStyle.height = '667px';
             editorStyle.marginTop = '50px';
         }
-        this.$editor.css( editorStyle );
+        this.$frameWrap.css( editorStyle );
+    },
+
+    updatePageStyle : function(){
+        let cssStyle = utils.translateComponentStyle( this.style || {} );
+        this.$editorBody.css( cssStyle );
     },
     
     //后去当前整个页面的JSON数据(包含所有的子孙节点)
@@ -334,6 +332,7 @@ $.extend( Builder.prototype, {
             pageName : this.pageName,
             title : this.title,
             meta : this.meta || [],
+            style : this.style,
             components : resultComponents || []
         };
     }
