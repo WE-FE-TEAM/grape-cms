@@ -41,6 +41,81 @@ body{
     #editor-panel{
       flex: 1;
     }
+
+    $tree-section-width: 300px;
+
+    #page-tree-section{
+      display: flex;
+      flex-direction:column;
+      position: absolute;
+      width: 40px;
+      height: 100%;
+      top: 0;
+      right: 0;
+      padding-top: 64px;
+      overflow: hidden;
+      background: #333;
+      transition: all 0.4s ease-out .1s;
+
+      .head{
+        position: absolute;
+        left:0;
+        top:0;
+        width: 100%;
+        line-height: 30px;
+        font-size: 18px;
+        //border-bottom: 2px solid #fff;
+        padding: 15px 0;
+        margin: 0 auto;
+        text-align: center;
+        color: #fff;
+        opacity:0;
+        transform: scale(0.1);
+        transition: all 0.3s ease-out .2s;
+      }
+
+      .toggle-btn{
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 50px;
+        color: #fff;
+        width: 40px;
+        height: 70px;
+        line-height: 70px;
+        text-align: center;
+        cursor: pointer;
+
+        .toggle-arrow{
+          transition: all 0.2s ease-out 0.5s;
+        }
+      }
+
+      .page-com-outline-tree{
+        flex:1;
+        width: $tree-section-width;
+        overflow: auto;
+        background: #fff;
+        border-left: 1px solid #333;
+        padding: 20px 0 0 20px;
+      }
+
+      &.tree-visible{
+        width: $tree-section-width;
+
+        .head{
+          transform: scale(1);
+          opacity: 1;
+        }
+
+        .toggle-btn{
+
+          .toggle-arrow{
+            transform: rotateZ(180deg);
+          }
+        }
+      }
+    }
   }
 }
 

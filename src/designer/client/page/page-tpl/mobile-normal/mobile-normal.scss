@@ -49,11 +49,13 @@ body{
   }
 
   .top-droppable-holder{
-    height: 200px;
-    line-height: 200px;
-    font-size: 34px;
+    height: 120px;
+    line-height: 120px;
+    font-size: 24px;
     text-align: center;
     outline: 2px dashed blueviolet;
+    width: 72%;
+    margin: 20px auto 0;
   }
 
   .ui-state-highlight{

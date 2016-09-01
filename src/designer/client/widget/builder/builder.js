@@ -10,6 +10,8 @@
 
 const $ = require('common:widget/lib/jquery/jquery.js');
 
+const EventEmitter = require('common:widget/lib/EventEmitter/EventEmitter.js');
+
 const glpbBase = require('glpb-components-common');
 
 const utils = glpbBase.utils;
@@ -17,6 +19,9 @@ const utils = glpbBase.utils;
 const componentFactory = glpbBase.factory;
 
 const EditAsideCtrl = require('designer:widget/edit-aside/edit-aside-ctrl/edit-aside-ctrl.js');
+
+const PageOutlineView = require('designer:widget/page-outline-view/page-outline-view.js');
+
 
 function Builder( config ){
 
@@ -36,7 +41,7 @@ function Builder( config ){
     this.componentRefs = [];
 
     //当前页面中所有的组件ID到组件实例的map
-    this.pageComponentMap = {};
+    // this.pageComponentMap = {};
 
     this.editCtrl = null;
 
@@ -58,6 +63,13 @@ $.extend( Builder.prototype, {
 
         this.editCtrl.render();
 
+        this.pageOutlineView = new PageOutlineView({
+            builder : this,
+            el : '#page-tree-section'
+        });
+
+        this.pageOutlineView.render();
+
     },
     
     bindEvent : function(){
@@ -65,6 +77,12 @@ $.extend( Builder.prototype, {
         let that = this;
 
         this.editCtrl.bindEvent();
+
+        this.pageOutlineView.bindEvent();
+
+        EventEmitter.eventCenter.on('component.list.show', function(){
+            that.showComponentList();
+        } );
 
         //初始化组件选择栏/编辑器区域
         let $frameWrap = $('#lpb-editor-frame-wrap');
@@ -150,16 +168,16 @@ $.extend( Builder.prototype, {
             this.appendRow( components[i] );
         }
 
-
+        this.renderOutlineTree();
     },
     
     createComponentInstance : function(conf){
         conf.page = this;
         let component = componentFactory.createComponentInstance(conf);
-        if( component ){
-            let componentId = component.getComponentId();
-            this.pageComponentMap[componentId] = component;
-        }
+        // if( component ){
+        //     let componentId = component.getComponentId();
+        //     this.pageComponentMap[componentId] = component;
+        // }
         return component;
     },
 
@@ -197,7 +215,8 @@ $.extend( Builder.prototype, {
 
     //根据组件ID, 获取已经存在的组件实例
     getComponentById : function(componentId){
-        return this.pageComponentMap[componentId];
+        return componentFactory.getComponentById( componentId );
+        // return this.pageComponentMap[componentId];
     },
 
     editorRemoveComponent : function(componentId){
@@ -274,6 +293,16 @@ $.extend( Builder.prototype, {
         console.log(`编辑组件${componentId}`);
         let component = this.getComponentById(componentId);
         this.editCtrl.showEdit( component );
+        //将要编辑的组件滚动到可视区域内
+        let $el = component.$getElement();
+        if( $el.length ){
+            $el[0].scrollIntoView();
+        }
+    },
+
+    showComponentList : function(){
+        this.editCtrl.showComponentList();
+        this.pageOutlineView.unselectNode();
     },
 
 
@@ -341,6 +370,52 @@ $.extend( Builder.prototype, {
             style : this.style,
             components : resultComponents || []
         };
+    },
+
+    toSimpleJSON : function(){
+        let resultComponents = [];
+
+        let componentRefs = this.componentRefs || [];
+        for( let i = 0, len = componentRefs.length; i < len; i++ ){
+            let temp = componentRefs[i];
+            let componentJSON = temp.toSimpleJSON();
+            resultComponents.push( componentJSON );
+        }
+
+        return resultComponents;
+    },
+
+    /**
+     * 销毁某个组件ID对应的组件机器子孙组件
+     * @param componentId {string} 组件ID
+     */
+    destroyComponentById : function( componentId ){
+        let component = this.getComponentById( componentId );
+        if( ! component ){
+            alert(`要销毁的组件ID[${componentId}]找不到对应组件!!`);
+            return;
+        }
+
+        //先将要销毁的组件, 从父组件中删除
+        let parentComponent = component.getParentComponent();
+        parentComponent.editorRemoveComponent( componentId );
+
+        //执行组件的销毁方法, 该方法内部会递归的销毁其包含的子孙组件
+        component.destroy();
+    },
+
+    /**
+     * 组件销毁前, 回调
+     * @param component
+     */
+    beforeComponentDestroy : function( component ){
+        this.editCtrl.exitEditComponent( component );
+    },
+
+    //刷新整个组件抽象树
+    renderOutlineTree : function(){
+        let data = this.toSimpleJSON();
+        this.pageOutlineView.setData( data );
     }
 
 } );

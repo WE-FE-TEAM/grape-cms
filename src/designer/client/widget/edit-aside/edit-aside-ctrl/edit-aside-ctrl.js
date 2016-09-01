@@ -64,10 +64,6 @@ $.extend( EditAsideCtrl.prototype, {
 
         this.componentListCtrl.bindEvent();
 
-        EventEmitter.eventCenter.on('component.list.show', function(){
-            that.showComponentList();
-        } );
-
         EventEmitter.eventCenter.on('component.data.edit', function( args ){
             that.editComponentData( args );
         } );
@@ -103,6 +99,19 @@ $.extend( EditAsideCtrl.prototype, {
         this.currentEdit = edit;
 
         edit.show();
+    },
+
+    /**
+     * 如果当前编辑的是该组件, 退出编辑状态
+     * @param component
+     */
+    exitEditComponent : function( component ){
+        if( this.currentEdit ){
+            if( this.currentEdit.getComponent() === component ){
+                this.currentEdit.destroy();
+                this.componentListCtrl.show();
+            }
+        }
     },
 
     editComponentData : function(args){

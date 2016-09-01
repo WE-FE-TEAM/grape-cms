@@ -12,6 +12,13 @@
 
             </div>
         </article>
+        <aside id="page-tree-section" class="tree-visible">
+            <h2 class="head">页面结构</h2>
+            <div class="toggle-btn">
+                <i class="fa fa-angle-double-left toggle-arrow" aria-hidden="true"></i>
+            </div>
+            <div class="page-com-outline-tree"></div>
+        </aside>
     </section>
 </div>
 
