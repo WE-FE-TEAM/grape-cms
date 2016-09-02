@@ -2989,10 +2989,15 @@ JqTreeWidget = (function(superClass) {
     if (id_is_changed) {
       this.tree.addNodeToIndex(node);
     }
-    if (typeof data === 'object' && data.children && data.children.length) {
+    //不判断data.children的长度, 空数组就清空当前节点的所有子节点
+    if (typeof data === 'object' && data.children ) {
       node.removeChildren();
       node.loadFromData(data.children);
     }
+    // if (typeof data === 'object' && data.children && data.children.length) {
+    //   node.removeChildren();
+    //   node.loadFromData(data.children);
+    // }
     this.renderer.renderFromNode(node);
     this._selectCurrentNode();
     return this.element;

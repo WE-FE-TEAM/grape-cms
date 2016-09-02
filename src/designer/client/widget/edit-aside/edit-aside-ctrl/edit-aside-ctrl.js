@@ -109,6 +109,7 @@ $.extend( EditAsideCtrl.prototype, {
         if( this.currentEdit ){
             if( this.currentEdit.getComponent() === component ){
                 this.currentEdit.destroy();
+                this.currentEdit = null;
                 this.componentListCtrl.show();
             }
         }

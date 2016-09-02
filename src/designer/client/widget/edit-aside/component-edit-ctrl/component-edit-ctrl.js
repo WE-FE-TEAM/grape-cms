@@ -23,6 +23,7 @@ function ComponentEditCtrl(args){
     this.component = args.component;
 
     this.$el = null;
+    this.$instanceNameInput = null;
     this.styleCtrl = null;
 
 
@@ -43,6 +44,10 @@ $.extend( ComponentEditCtrl.prototype, {
         let tpl = `<div class="editor-com-edit-ctrl">
         <div class="editor-com-edit-inner">
             <h2 class="editor-back-to-list"><i class="fa fa-angle-left" aria-hidden="true"></i>返回组件列表</h2>
+            <div class="editor-com-name-edit-wrap">
+                <label>组件名:</label>
+                <input type="text" class="com-instance-name-input" />
+            </div>
             <ul class="tab-nav clearfix">
                 <li class="tab-nav-item ${TAB_NAV_ITEM_ACTIVE}" data-for="style">编辑样式</li>
                 <li class="tab-nav-item" data-for="data">编辑数据</li>
@@ -53,6 +58,8 @@ $.extend( ComponentEditCtrl.prototype, {
 
         let $el = $(tpl);
         this.$el = $el;
+        
+        this.$instanceNameInput = $el.find('.com-instance-name-input');
         
         this.styleCtrl.render();
         $el.find('.tab-con').append( this.styleCtrl.$getElement() );
@@ -82,6 +89,16 @@ $.extend( ComponentEditCtrl.prototype, {
 
             that.showView( forData );
         } );
+
+        this.$instanceNameInput.on('input', function(){
+            let value = ( that.$instanceNameInput.val() || '').trim();
+            if( value ){
+                EventEmitter.eventCenter.trigger('component.name.change', {
+                    componentId : that.component.getComponentId(),
+                    value : value
+                } );
+            }
+        } );
         
         this.styleCtrl.bindEvent();
     },
@@ -106,6 +123,8 @@ $.extend( ComponentEditCtrl.prototype, {
     },
 
     show : function(){
+        let instanceName = this.component.getInstanceName();
+        this.$instanceNameInput.val( instanceName );
         this.$el.show();
         this.component.addEditingState();
     },

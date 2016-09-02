@@ -84,6 +84,12 @@ $.extend( Builder.prototype, {
             that.showComponentList();
         } );
 
+        EventEmitter.eventCenter.on('component.name.change', function( args ){
+            let componentId = args.componentId;
+            let value = args.value;
+            that.updateComponentName( componentId, value );
+        });
+
         //初始化组件选择栏/编辑器区域
         let $frameWrap = $('#lpb-editor-frame-wrap');
 
@@ -97,8 +103,8 @@ $.extend( Builder.prototype, {
 
             $droppableHolder
                 .droppable({
-                    // accept : '.lpb-component',
-                    accept : '[data-com-name=layout_row]',
+                    accept : '[data-com-name]:not([data-com-name=layout_column])',
+                    // accept : '[data-com-name=layout_row]',
                     classes: {
                         "ui-droppable-active": "custom-state-active",
                         "ui-droppable-hover": "custom-state-hover"
@@ -107,9 +113,10 @@ $.extend( Builder.prototype, {
                     drop : function(e, ui){
                         let $draggable = ui.draggable;
                         let componentId = $draggable.attr('data-glpb-com-id');
-                        if( ! componentId ){
 
-                            that.addNewRow();
+                        if( ! componentId ){
+                            let componentName = $draggable.attr('data-com-name');
+                            that.addNewComponent( componentName );
 
                         }else{
                             that.addExistRow(componentId);
@@ -126,27 +133,6 @@ $.extend( Builder.prototype, {
         } );
 
         $frameWrap.append( $editorFrame );
-
-        // $editor
-        //     .droppable({
-        //         // accept : '.lpb-component',
-        //         accept : '[data-com-name=layout_row]',
-        //         classes: {
-        //             "ui-droppable-active": "custom-state-active"
-        //         },
-        //         drop : function(e, ui){
-        //             let $draggable = ui.draggable;
-        //             let componentId = $draggable.attr('data-glpb-com-id');
-        //             if( ! componentId ){
-        //
-        //                 that.addNewRow();
-        //
-        //             }else{
-        //                 that.addExistRow(componentId);
-        //             }
-        //
-        //         }
-        //     });
 
         if( ! this.isEditMode ){
             //查看页面, 不显示编辑区域
@@ -165,7 +151,7 @@ $.extend( Builder.prototype, {
     initPageComponents : function(){
         let components = this.components || [];
         for( let i = 0, len = components.length; i < len; i++ ){
-            this.appendRow( components[i] );
+            this.appendComponent( components[i] );
         }
 
         this.renderOutlineTree();
@@ -174,29 +160,28 @@ $.extend( Builder.prototype, {
     createComponentInstance : function(conf){
         conf.page = this;
         let component = componentFactory.createComponentInstance(conf);
-        // if( component ){
-        //     let componentId = component.getComponentId();
-        //     this.pageComponentMap[componentId] = component;
-        // }
+
         return component;
     },
 
-    addNewRow : function(){
+    addNewComponent : function( componentName ){
         let conf = {
             parentId : null,
-            componentName : 'layout_row'
+            componentName : componentName
         };
 
-        this.appendRow( conf );
+        this.appendComponent( conf );
     },
 
-    appendRow : function( conf ){
+    appendComponent : function( conf ){
         let component = this.createComponentInstance(conf);
         component.render();
         let $el = component.$getElement();
         this.$droppableHolder.before( $el );
         component.bindEvent();
         this.componentRefs.push( component );
+
+        this.renderOutlineTree();
     },
     
     addExistRow : function(componentId){
@@ -211,6 +196,8 @@ $.extend( Builder.prototype, {
             this.componentRefs.push( component );
             this.$droppableHolder.before( component.$getElement() );
         }
+
+        this.renderOutlineTree();
     },
 
     //根据组件ID, 获取已经存在的组件实例
@@ -220,16 +207,25 @@ $.extend( Builder.prototype, {
     },
 
     editorRemoveComponent : function(componentId){
+
+        let out = false;
+
         let componentRefs = this.componentRefs || [];
         for( var i = 0, len = componentRefs.length; i < len; i++ ){
             let conf = componentRefs[i];
             if( conf.getComponentId() === componentId ){
                 componentRefs.splice(i, 1);
-                return true;
+                out = true;
+                break;
             }
         }
-        console.warn(`(editorRemoveComponent) : 页面不包含子组件${componentId}`);
-        return false;
+        if( out ){
+            this.renderOutlineTree();
+        }else{
+            console.warn(`(editorRemoveComponent) : 页面不包含子组件${componentId}`);
+        }
+
+        return out;
     },
 
     editorHandleChildMove : function(componentId, direction){
@@ -250,7 +246,7 @@ $.extend( Builder.prototype, {
             }
         }
         if( ! childConf ){
-            console.error(`父组件[${this.componentId}]不包含子组件[${componentId}]!!`);
+            console.error(`页面不包含子组件[${componentId}]!!`);
             return false;
         }
         let newIndex = oldIndex;
@@ -283,6 +279,8 @@ $.extend( Builder.prototype, {
         let targetComponent = this.getComponentById(componentId);
         let $target = targetComponent.$getElement();
         utils.moveChildInParent($target, this.$editor, newIndex);
+
+        this.renderOutlineTree();
     },
 
     /**
@@ -293,6 +291,7 @@ $.extend( Builder.prototype, {
         console.log(`编辑组件${componentId}`);
         let component = this.getComponentById(componentId);
         this.editCtrl.showEdit( component );
+        this.pageOutlineView.selectNodeById( componentId );
         //将要编辑的组件滚动到可视区域内
         let $el = component.$getElement();
         if( $el.length ){
@@ -390,6 +389,11 @@ $.extend( Builder.prototype, {
      * @param componentId {string} 组件ID
      */
     destroyComponentById : function( componentId ){
+
+        if( ! window.confirm(`是否确定删除组件??\n\n一旦删除, 不能回退, 请务必慎重!!!`)){
+            return;
+        }
+        
         let component = this.getComponentById( componentId );
         if( ! component ){
             alert(`要销毁的组件ID[${componentId}]找不到对应组件!!`);
@@ -402,6 +406,9 @@ $.extend( Builder.prototype, {
 
         //执行组件的销毁方法, 该方法内部会递归的销毁其包含的子孙组件
         component.destroy();
+
+        //更新右侧的组件树
+        // this.renderOutlineTree();
     },
 
     /**
@@ -412,10 +419,96 @@ $.extend( Builder.prototype, {
         this.editCtrl.exitEditComponent( component );
     },
 
+    /**
+     * 在某个组件内包含的子组件有 增加/排序/删除 等操作发生后, 回调
+     * @param component {object}  子组件发生改变的父组件
+     */
+    afterComponentChildChange : function(component){
+        this.updateOutlineNode( component.getComponentId() );
+    },
+
     //刷新整个组件抽象树
     renderOutlineTree : function(){
         let data = this.toSimpleJSON();
         this.pageOutlineView.setData( data );
+    },
+
+    /**
+     * 更新组件树下某个节点的数据
+     * @param componentId {string} 组件ID
+     */
+    updateOutlineNode : function(componentId){
+        let component = this.getComponentById( componentId );
+        if( component ){
+            let data = component.toSimpleJSON();
+            this.pageOutlineView.updateNodeDataById( componentId, data );
+        }
+    },
+
+    /**
+     * 更新组件实例的名字
+     * @param componentId {string} 组件ID
+     * @param name {string} 组件实例的名字
+     */
+    updateComponentName : function( componentId, name){
+        let component = this.getComponentById( componentId );
+        if( component ){
+            component.setInstanceName( name );
+            this.pageOutlineView.updateNodeNameById( componentId, component.getInstanceName() );
+        }else{
+            console.error(`试图修改不存在的组件ID[${componentId}]对应的instanceName`);
+        }
+    },
+
+    /**
+     * 尝试将 componentId 对应的组件, 插入到 targetContainerId 对应的组件下的 insertIndex 位置上
+     * @param componentId {string} 要移动的组件ID
+     * @param targetContainerId {string} 要移动到的父组件ID
+     * @param insertIndex {int} 要插入到父组件的位置需要, 从0开始
+     */
+    tryMoveComponentById : function( componentId, targetContainerId, insertIndex){
+        let component = this.getComponentById( componentId );
+        if( ! component ){
+            alert(`组件ID[${componentId}]对应的组件不存在!!!`);
+            return;
+        }
+        let targetParent = this;
+        if( targetContainerId ){
+            targetParent = this.getComponentById( targetContainerId );
+        }
+        
+        let componentName = component.getComponentName();
+        
+        //先检查目标父组件, 是否支持接收对应类型的子组件
+        if( ! targetParent.canAcceptChildComponentName(componentName) ){
+            alert(`目标组件不能包含拖动的组件!!`);
+            return;
+        }
+
+        targetParent.insertChildAtIndex(component, insertIndex);
+    },
+
+    canAcceptChildComponentName : function(componentName){
+        return [ 'layout_column'].indexOf( componentName ) < 0;
+    },
+
+    insertChildAtIndex : function(component, index){
+        let componentRefs = this.componentRefs;
+
+        //将组件从原来的父组件中删除
+        let oldParent = component.getParentComponent();
+        oldParent.editorRemoveComponent( component.getComponentId() );
+
+        //修改组件的 parentId
+        component.editorSetParentId( null );
+
+        index = Math.min( componentRefs.length, index );
+        this.componentRefs.splice(index, 0, component);
+
+        let $componentEl = component.$getElement();
+        utils.insertElement( $componentEl, this.$editor, index );
+
+        this.renderOutlineTree();
     }
 
 } );

@@ -17,6 +17,7 @@
   .editor-back-to-list{
     height: 60px;
     line-height: 60px;
+    margin: 0 0 10px;
     font-size: 20px;
     color: #fff;
     background: #9ea0a5;
@@ -32,6 +33,29 @@
     }
   }
 
+  //编辑组件名字区域
+  .editor-com-name-edit-wrap{
+    $height: 32px;
+
+    display: flex;
+    height: $height;
+    line-height: $height;
+    color: #fff;
+
+    label{
+      margin: 0 10px;
+    }
+
+    input{
+      flex: 1;
+      margin-right: 15px;
+      padding: 0 15px;
+      border: 0 none;
+      color: #000;
+    }
+
+  }
+
   .tab-nav{
     height: 50px;
     line-height: 50px;
@@ -41,7 +65,7 @@
       float: left;
       width: 50%;
       height: 100%;
-      color: #000;
+      color: #fff;
       text-align: center;
       font-size: 16px;
       cursor: pointer;
