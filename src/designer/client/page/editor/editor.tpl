@@ -12,7 +12,7 @@
 
             </div>
         </article>
-        <aside id="page-tree-section" class="tree-visible">
+        <aside id="page-tree-section" class="">
             <h2 class="head">页面结构</h2>
             <div class="toggle-btn">
                 <i class="fa fa-angle-double-left toggle-arrow" aria-hidden="true"></i>

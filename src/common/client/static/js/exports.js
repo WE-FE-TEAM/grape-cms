@@ -7,3 +7,4 @@
 require('moment');
 require('jsoneditor');
 require('glpb-components-common');
+require('glpb-we-mobile');

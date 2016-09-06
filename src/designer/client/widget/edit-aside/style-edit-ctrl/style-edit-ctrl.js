@@ -59,7 +59,7 @@ $.extend(StyleEditCtrl.prototype, {
                 this.styleEditors.push( view );
             }
         }else{
-            $el.append(`该组件不支持编辑样式`);
+            $el.append(`<div class="not-support-style-info">该组件不支持编辑样式:(</div>`);
         }
     },
 

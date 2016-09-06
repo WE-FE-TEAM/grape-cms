@@ -427,10 +427,23 @@ class DesignerController extends ControllerBase{
             }
 
         }
+        
+        let accessUrl = channel.onlineUrl || '';
+        if( accessUrl ){
+            accessUrl = accessUrl.replace(/\{\{pageId\}\}/g, encodeURIComponent(page.pageId) );
+            if( releaseType !== 'publish' ){
+                //预览页面, 需要加上预览参数
+                accessUrl += accessUrl.indexOf('?') >= 0 ? '&' : '?';
+                accessUrl += 'cmsPreview=1';
+            }
+        }
+        
         this.json({
             status: 0,
             message: '发布页面成功',
-            data: data
+            data: {
+                pageUrl : accessUrl
+            }
         });
 
 

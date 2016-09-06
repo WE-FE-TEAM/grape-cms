@@ -34,6 +34,7 @@ body{
     //左侧组件编辑/组件选择区域
     #com-edit-section{
       //width: 280px;
+      overflow: hidden;
       background: #444;
     }
 
@@ -151,10 +152,13 @@ body{
   width: 100%;
   height: 100%;
   background: #ebfbe6;
-  margin: 0;
-  overflow: auto;
+  margin: 0 auto;
+  overflow: hidden;
   -webkit-transition: all .1s ease-out 1s;
   transition: all .1s ease-out 1s;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
 
   .lpb-component{
     width: 100%;
@@ -165,5 +169,14 @@ body{
   .ui-state-highlight{
     height: 80px;
     background: orange;
+  }
+
+  &.editor-iphone-view{
+    width: 375px;
+    height: 667px;
+    padding: 109px 40px;
+    margin : 0px auto 0;
+    background: url(./assets/iphone-6.png) no-repeat center center;
+    background-size:455px auto;
   }
 }

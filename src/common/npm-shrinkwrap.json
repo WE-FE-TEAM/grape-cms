@@ -163,12 +163,16 @@
       "resolved": "https://registry.npmjs.org/glob/-/glob-7.0.3.tgz"
     },
     "glpb-components-common": {
-      "version": "1.0.5",
-      "from": "glpb-components-common@*"
+      "version": "1.0.10",
+      "from": "glpb-components-common@1.0.10"
     },
     "glpb-slick-carousel": {
       "version": "1.6.0",
       "from": "glpb-slick-carousel@>=1.6.0 <2.0.0"
+    },
+    "glpb-we-mobile": {
+      "version": "1.0.0",
+      "from": "glpb-we-mobile@1.0.0"
     },
     "html5shiv": {
       "version": "3.7.3",
@@ -436,6 +440,11 @@
       "version": "0.7.10",
       "from": "ua-parser-js@>=0.7.9 <0.8.0",
       "resolved": "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-0.7.10.tgz"
+    },
+    "underscore": {
+      "version": "1.8.3",
+      "from": "underscore@1.8.3",
+      "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.8.3.tgz"
     },
     "unpipe": {
       "version": "1.0.0",

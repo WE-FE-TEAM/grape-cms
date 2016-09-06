@@ -7,6 +7,7 @@
 
 
 const glpbCommon = require('glpb-components-common');
+require('glpb-we-mobile');
 
 require('./mobile-normal.scss');
 

@@ -53,6 +53,20 @@ $.extend( ComponentEditCtrl.prototype, {
                 <li class="tab-nav-item" data-for="data">编辑数据</li>
             </ul>
             <div class="tab-con"></div>
+            <div class="com-op-bar flex-horizontal">
+                <div class="glpb-editor-op-btn glpb-editor-op-btn-move" data-action="up" title="向前移动一位">
+                    <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
+                    <div class="btn-text">向前移动一位</div>
+                </div>
+                <div class="glpb-editor-op-btn glpb-editor-op-btn-move" data-action="down"  title="向后移动一位">
+                    <i class="fa fa-arrow-circle-down" aria-hidden="true"></i>
+                    <div class="btn-text">向后移动一位</div>
+                </div>
+                <div class="glpb-editor-op-btn glpb-editor-op-btn-delete" data-action="delete" title="!!删除!!">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                    <div class="btn-text">删除本组件</div>
+                </div>
+            </div>
         </div>
 </div>`;
 
@@ -100,6 +114,12 @@ $.extend( ComponentEditCtrl.prototype, {
             }
         } );
         
+        this.$el.on('click', '.glpb-editor-op-btn', function(e){
+            let $target = $(e.currentTarget);
+            let action = $target.attr('data-action');
+            that.operateComponent( action );
+        } );
+        
         this.styleCtrl.bindEvent();
     },
 
@@ -136,6 +156,21 @@ $.extend( ComponentEditCtrl.prototype, {
     
     getComponent : function(){
         return this.component;
+    },
+
+    operateComponent : function(action){
+
+        switch( action ){
+            case 'up':
+            case 'down':
+                this.component.editorMoveInParent( action );
+                break;
+            case 'delete':
+                this.component.triggerDestroy();
+                break;
+            default:
+                alert('不支持的组件操作!!');
+        }
     },
 
     destroy : function(){

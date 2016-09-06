@@ -122,7 +122,7 @@ let urlOperationGroupMap = {
     'designer/app/detail' : 'page.view',
     'designer/app/getEditHistory' : 'page.view',
     //新增
-    'designer/app/add' : 'page.add',
+    'designer/app/create' : 'page.add',
     'designer/app/doAdd' : 'page.add',
     //编辑页面
     'designer/app/edit' : 'page.edit',

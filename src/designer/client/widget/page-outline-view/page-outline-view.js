@@ -11,6 +11,10 @@ const $ = require('common:widget/lib/jquery/jquery.js');
 
 const EventEmitter = require('common:widget/lib/EventEmitter/EventEmitter.js');
 
+const glpbBase = require('glpb-components-common');
+
+const componentFactory = glpbBase.factory;
+
 
 function PageOutlineView(args){
 
@@ -27,10 +31,13 @@ function PageOutlineView(args){
 $.extend( PageOutlineView.prototype, {
     
     render( ){
+
+        let draggable = componentFactory.isEditMode();
+
         this.$treeEl.tree({
             data : this.data,
             autoOpen : true,
-            dragAndDrop : true
+            dragAndDrop : draggable
         })
     },
     
@@ -51,13 +58,20 @@ $.extend( PageOutlineView.prototype, {
             }
         } );
 
+        if( ! componentFactory.isEditMode() ){
+            //非编辑模式下, 不能拖动节点
+            return;
+        }
+
         this.$treeEl.bind('tree.move', function(event){
 
             event.preventDefault();
 
+            let movedNode = event.move_info.moved_node;
+
             let targetNode = event.move_info.target_node;
 
-            let movedComponentId = event.move_info.moved_node.id;
+            let movedComponentId = movedNode.id;
 
             let position = event.move_info.position;
 
@@ -73,10 +87,12 @@ $.extend( PageOutlineView.prototype, {
                 targetParentId = targetParent.id || null;
                 let children = targetParent.children;
                 let targetNodeIndex = -1;
+                let movedNodeCurrentIndex = -1;
                 for( var i = 0, len = children.length; i < len; i++ ){
                     if( children[i] === targetNode ){
                         targetNodeIndex = i;
-                        break;
+                    }else if( children[i] === movedNode ){
+                        movedNodeCurrentIndex = i;
                     }
                 }
 
@@ -86,7 +102,16 @@ $.extend( PageOutlineView.prototype, {
                     newPositionIndex = targetNodeIndex + 1;
                 }
 
+                if( movedNode.parent === targetNode.parent ){
+                    //节点在父节点内改变位置, 需要重新处理新的位置
+                    if( movedNodeCurrentIndex < targetNodeIndex && position === 'after' ){
+                        newPositionIndex = Math.max(0, newPositionIndex - 1);
+                    }
+                }
+
             }
+
+
             
             console.log('moved_node', event.move_info.moved_node);
             console.log('target_node', event.move_info.target_node);
@@ -99,6 +124,14 @@ $.extend( PageOutlineView.prototype, {
     
     toggle : function(){
         this.$el.toggleClass('tree-visible');
+    },
+
+    show : function(){
+        this.$el.addClass('tree-visible');
+    },
+
+    hide : function(){
+        this.$el.removeClass('tree-visible');
     },
 
     setData : function( data ){

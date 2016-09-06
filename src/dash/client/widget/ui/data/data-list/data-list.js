@@ -122,7 +122,7 @@ class DataList extends React.Component {
 
         let rowClass = '';
         let viewBtn = (
-            <a title="点击查看数据" className="" target="_self"
+            <a title="点击查看数据" className="view-data-link" target="_self"
                onClick={ this.onDataView.bind( this, rowData) }>{ rowData.dataName }</a>
         );
 

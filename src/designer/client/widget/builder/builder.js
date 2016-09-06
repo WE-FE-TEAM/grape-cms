@@ -139,6 +139,7 @@ $.extend( Builder.prototype, {
             this.editCtrl.hide();
         }else{
             this.editCtrl.show();
+            this.pageOutlineView.show();
         }
 
 
@@ -288,15 +289,24 @@ $.extend( Builder.prototype, {
      * @param componentId {string} 组件ID
      */
     editComponent : function(componentId){
+
         console.log(`编辑组件${componentId}`);
         let component = this.getComponentById(componentId);
-        this.editCtrl.showEdit( component );
-        this.pageOutlineView.selectNodeById( componentId );
+
         //将要编辑的组件滚动到可视区域内
         let $el = component.$getElement();
         if( $el.length ){
             $el[0].scrollIntoView();
         }
+
+        if( ! this.isEditMode ){
+            return;
+        }
+
+
+        this.editCtrl.showEdit( component );
+        this.pageOutlineView.selectNodeById( componentId );
+
     },
 
     showComponentList : function(){
@@ -336,11 +346,14 @@ $.extend( Builder.prototype, {
             marginTop : '0'
         };
         if( platform === 'mobile' ){
-            editorStyle.width = '375px';
-            editorStyle.height = '667px';
-            editorStyle.marginTop = '50px';
+            // editorStyle.width = '375px';
+            // editorStyle.height = '667px';
+            // editorStyle.marginTop = '50px';
+            this.$frameWrap.addClass('editor-iphone-view');
+        }else{
+            this.$frameWrap.removeClass('editor-iphone-view');
         }
-        this.$frameWrap.css( editorStyle );
+        // this.$frameWrap.css( editorStyle );
     },
 
     updatePageStyle : function(){

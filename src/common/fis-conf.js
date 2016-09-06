@@ -32,12 +32,31 @@ let excludeModules = ['classnames'];
 fis.set('excludeModules', excludeModules);
 
 
-fis.match('/node_modules/glpb-components-{common,pc,mobile}/(**.{css,scss})', {
+//glpb common
+fis.match('/node_modules/glpb-components-common/(**.{css,scss})', {
     parser: fis.plugin('node-sass'),
     rExt: '.css'
 });
 
 fis.match('/node_modules/glpb-components-{common,pc,mobile}/(**.{js,jsx})', {
+    preprocessor: [
+        fis.plugin('js-require-file'),
+        fis.plugin('js-require-css')
+    ],
+    parser : fis.plugin('babel-5.x', {
+        blacklist: [ 'useStrict' ],
+        loose: ["es6.classes", "es6.properties.computed"]
+    }),
+    rExt: '.js'
+});
+
+//glpb mobile and pc for we.com
+fis.match('/node_modules/glpb-we-{mobile,pc}/(**.{css,scss})', {
+    parser: fis.plugin('node-sass'),
+    rExt: '.css'
+});
+
+fis.match('/node_modules/glpb-we-{mobile,pc}/(**.{js,jsx})', {
     preprocessor: [
         fis.plugin('js-require-file'),
         fis.plugin('js-require-css')

@@ -111,7 +111,8 @@ dataSchema.statics.getDataNumberOfChannel = async function (channelId) {
     let out = await Data.aggregate([
         {
             $match: {
-                channelId: channelId
+                channelId: channelId,
+                publishUserId : null
             }
         },
         {
@@ -156,7 +157,8 @@ dataSchema.statics.getDataList = async function (channelId, start, num) {
     out = await Data.aggregate([
         {
             $match: {
-                channelId: channelId
+                channelId: channelId,
+                publishUserId : null
             }
         },
         {

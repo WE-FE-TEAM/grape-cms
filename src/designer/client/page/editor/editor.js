@@ -10,6 +10,7 @@ const ReactDOM = require('react-dom');
 
 const $ = require('common:widget/lib/jquery/jquery.js');
 const glpbBase = require('glpb-components-common');
+const glpbWeMobile = require('glpb-we-mobile');
 const glpbUtils = glpbBase.utils;
 const componentFactory = glpbBase.factory;
 
@@ -103,6 +104,8 @@ let singleton = {
             window.onbeforeunload = function(){
                 return '确认离开么? 请确保已经保存了页面的最新修改!!!';
             };
+        }else{
+            componentFactory.enablePreviewMode();
         }
 
         if (action === ACTION_ADD) {
@@ -361,6 +364,12 @@ let singleton = {
                     if( result.status === 0 ){
                         //发布/预览成功
                         alert(`${text}成功 :) `);
+                        let viewUrl = result.data.pageUrl;
+                        if( viewUrl ){
+                            window.open(viewUrl);
+                        }else{
+                            alert(`该栏目未配置访问的线上URL, 不能预览`);
+                        }
                         return;
                     }
                     return Promise.reject( new Error(result.message));

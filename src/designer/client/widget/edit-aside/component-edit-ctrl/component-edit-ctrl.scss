@@ -56,6 +56,7 @@
 
   }
 
+  //tab 切换栏
   .tab-nav{
     height: 50px;
     line-height: 50px;
@@ -76,8 +77,35 @@
     }
   }
 
+  //tab 的内容区域
   .tab-con{
+    position: relative;
     flex:1;
     overflow: auto;
+  }
+
+  .com-op-bar{
+
+    height: 50px;
+    margin: 15px 0;
+
+    .glpb-editor-op-btn{
+      flex: 1;
+      color: #fff;
+      text-align: center;
+      cursor: pointer;
+
+      .fa{
+        font-size: 32px;
+      }
+
+      &:hover{
+        color: #2bc0e4;
+      }
+    }
+
+    .glpb-editor-op-btn-delete{
+      color: #f00;
+    }
   }
 }
