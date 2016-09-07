@@ -38,6 +38,9 @@
         {% block block_head_css %}
         {% endblock %}
 
+        <script src="/client/static/ueditor/ueditor.config.js"></script>
+        <script src="/client/static/ueditor/ueditor.all.js"></script>
+
         {% script %}
             require(["common:page/designer-layout.js"] , function(app){
 

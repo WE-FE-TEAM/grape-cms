@@ -23,10 +23,14 @@ const styleKey2EditorClass = {
 };
 
 const styleKeyLabel = {
-    width : '宽度',
-    height : '高度',
+    width : '宽度(移动端使用 rem 为单位)',
+    height : '高度(移动端使用 rem 为单位)',
     background : '背景',
-    'borderRadius' : '圆角'
+    'borderRadius' : '圆角',
+    fontSize : '字体大小(移动端使用 rem 为单位)',
+    lineHeight : '行高(移动端使用 rem 为单位)',
+    color : '文字颜色',
+    textAlign : '文字水平排列方向: left/center/right'
 };
 
 let singleton = {};

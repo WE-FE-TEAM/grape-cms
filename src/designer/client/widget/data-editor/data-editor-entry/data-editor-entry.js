@@ -9,6 +9,7 @@
 const $ = require('common:widget/lib/jquery/jquery.js');
 
 const JSONEditCtrl = require('designer:widget/data-editor/json-edit-ctrl/json-edit-ctrl.js');
+const RichTextEditCtrl = require('designer:widget/data-editor/rich-text-edit-ctrl/rich-text-edit-ctrl.js');
 
 
 function DataEditorEntry(args){
@@ -26,6 +27,8 @@ $.extend( DataEditorEntry.prototype, {
                 this.showJSONEditor( component );
                 break;
             case 'richtext':
+                this.showRichTextEditor( component );
+                break;
             default:
                 alert(`暂不支持的编辑的组件数据类型: ${dataType}`);
         }
@@ -48,13 +51,28 @@ $.extend( DataEditorEntry.prototype, {
     },
     
     showRichTextEditor : function(component){
-        
+        if( ! this.richTextEditor ){
+            this.richTextEditor = new RichTextEditCtrl({
+                component : component
+            });
+            this.richTextEditor.render();
+            this.richTextEditor.$getElement().appendTo( document.body );
+            this.richTextEditor.bindEvent();
+        }
+
+        this.richTextEditor.setComponent( component );
+
+        this.richTextEditor.show();
     },
 
     destroy : function(){
         if( this.jsonEditor ){
             this.jsonEditor.destroy();
             this.jsonEditor = null;
+        }
+        if( this.richTextEditor ){
+            this.richTextEditor.destroy();
+            this.richTextEditor = null;
         }
     }
 } );
