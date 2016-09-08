@@ -163,16 +163,16 @@
       "resolved": "https://registry.npmjs.org/glob/-/glob-7.0.3.tgz"
     },
     "glpb-components-common": {
-      "version": "1.0.11",
-      "from": "glpb-components-common@1.0.11"
+      "version": "1.0.12",
+      "from": "glpb-components-common@1.0.12"
     },
     "glpb-slick-carousel": {
       "version": "1.6.0",
       "from": "glpb-slick-carousel@>=1.6.0 <2.0.0"
     },
     "glpb-we-mobile": {
-      "version": "1.0.2",
-      "from": "glpb-we-mobile@1.0.2"
+      "version": "1.0.3",
+      "from": "glpb-we-mobile@1.0.3"
     },
     "html5shiv": {
       "version": "3.7.3",
