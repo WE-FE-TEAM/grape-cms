@@ -171,8 +171,8 @@
       "from": "glpb-slick-carousel@>=1.6.0 <2.0.0"
     },
     "glpb-we-mobile": {
-      "version": "1.0.3",
-      "from": "glpb-we-mobile@1.0.3"
+      "version": "1.0.4",
+      "from": "glpb-we-mobile@1.0.4"
     },
     "html5shiv": {
       "version": "3.7.3",
